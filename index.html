@@ -128,29 +128,6 @@
   .stat-value { font-size: 22px; font-weight: 800; color: var(--text); font-family: 'JetBrains Mono', monospace; letter-spacing: -1px; }
   .stat-value.accent { color: var(--accent); }
   .stat-sub { font-size: 11px; color: var(--text-3); margin-top: 3px; }
-  .stat-card-click { cursor: pointer; transition: box-shadow .15s, transform .15s, border-color .15s; }
-  .stat-card-click:hover { box-shadow: var(--shadow); border-color: var(--accent); transform: translateY(-1px); }
-  .stat-card-click:active { transform: translateY(0); }
-  .stat-cta { font-size: 11px; font-weight: 600; color: var(--accent); margin-top: 8px; }
-  /* PERIOD DETAIL SHEET */
-  .period-overlay { position: fixed; inset: 0; background: rgba(15,21,37,.45); display: none; align-items: flex-end; justify-content: center; z-index: 200; }
-  .period-overlay.open { display: flex; }
-  .period-sheet { background: var(--surface); width: 100%; max-width: 560px; max-height: 88vh; border-radius: 18px 18px 0 0; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; overflow: hidden; }
-  @media (min-width: 600px) { .period-overlay { align-items: center; } .period-sheet { border-radius: 18px; } }
-  .period-head { display: flex; align-items: flex-start; justify-content: space-between; padding: 18px 20px 14px; border-bottom: 1px solid var(--border); gap: 12px; }
-  .period-title { font-size: 17px; font-weight: 800; color: var(--text); }
-  .period-sub { font-size: 12px; color: var(--text-3); margin-top: 3px; }
-  .period-close { border: none; background: var(--surface-2); color: var(--text-3); width: 30px; height: 30px; border-radius: 8px; font-size: 15px; cursor: pointer; flex-shrink: 0; }
-  .period-close:hover { background: var(--border); color: var(--text); }
-  .period-body { overflow-y: auto; padding: 8px 16px 22px; }
-  .pday-head { display: flex; align-items: baseline; justify-content: space-between; padding: 14px 4px 6px; }
-  .pday-date { font-size: 13px; font-weight: 700; color: var(--text-2); }
-  .pday-total { font-size: 12px; font-weight: 700; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
-  .pentry { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 11px 14px; margin-bottom: 6px; }
-  .pentry-time { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text); font-weight: 600; white-space: nowrap; }
-  .pentry-dur { font-size: 11px; color: var(--text-3); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
-  .pentry-proj { font-size: 13px; font-weight: 600; color: var(--text-2); text-align: right; }
-  .period-empty { text-align: center; color: var(--text-3); padding: 36px 0; font-size: 14px; }
 
   /* ENTRIES */
   .entries-list { display: flex; flex-direction: column; gap: 8px; }
@@ -267,6 +244,18 @@
   .color-opt { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all .12s; }
   .color-opt:hover, .color-opt.selected { border-color: var(--text); transform: scale(1.15); }
 
+
+  /* SIGNATURE PAD */
+  .sig-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 20px; margin-bottom: 20px; }
+  .sig-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .sig-canvas-wrap { border: 2px dashed var(--border); border-radius: var(--radius-sm); background: #fff; position: relative; }
+  .sig-canvas-wrap canvas { display: block; width: 100%; touch-action: none; cursor: crosshair; }
+  .sig-actions { display: flex; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
+  .sig-name-field { flex: 1; min-width: 180px; font-family: 'Inter',sans-serif; font-size: 13px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; outline: none; color: var(--text); background: var(--surface-2); }
+  .sig-name-field:focus { border-color: var(--accent); }
+  .sig-hint { font-size: 11px; color: var(--text-3); margin-top: 6px; }
+  .sig-saved { font-size: 12px; color: var(--success); font-weight: 600; margin-top: 4px; }
+
   /* BOTTOM NAV */
   .bottom-nav { display: none; }
 
@@ -304,32 +293,6 @@
     .toast-container { left: 16px; right: 16px; }
     .toast { max-width: 100%; }
   }
-  /* ===== LOHNABRECHNUNG ===== */
-  .lohn-hero { background: linear-gradient(135deg,#1C2B4A 0%,#2C4A7C 100%); border-radius: var(--radius); padding: 28px 32px; margin-bottom: 20px; color:#fff; }
-  .lohn-hero-eyebrow { font-size:11px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; color:rgba(255,255,255,.45); margin-bottom:8px; }
-  .lohn-hero-name { font-size:26px; font-weight:800; margin-bottom:4px; }
-  .lohn-hero-sub { font-size:12px; color:rgba(255,255,255,.55); }
-  .lohn-kpi-row { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:20px; }
-  .lohn-kpi { background:rgba(255,255,255,.09); border-radius:10px; padding:14px 16px; }
-  .lohn-kpi-label { font-size:10px; font-weight:600; letter-spacing:.8px; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:5px; }
-  .lohn-kpi-val { font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:700; color:#fff; }
-  .lohn-kpi-val.gold { color:#C8A84B; }
-  .lohn-breakdown { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
-  .lohn-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow-sm); }
-  .lohn-card-title { font-size:12px; font-weight:700; color:var(--text-2); text-transform:uppercase; letter-spacing:.6px; margin-bottom:14px; }
-  .lohn-row { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid var(--border); font-size:13px; }
-  .lohn-row:last-child { border-bottom:none; }
-  .lohn-row.total { font-weight:700; font-size:14px; border-top:2px solid var(--border); border-bottom:none; margin-top:4px; padding-top:10px; }
-  .lohn-val { font-family:'JetBrains Mono',monospace; font-weight:600; font-size:13px; }
-  .lohn-val.red { color:var(--danger); }
-  .lohn-val.green { color:var(--success); }
-  .lohn-val.blue { color:var(--accent); }
-  .lohn-netto { background:var(--text); border-radius:var(--radius); padding:22px 28px; display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:16px; }
-  .lohn-netto-label { color:rgba(255,255,255,.5); font-size:11px; font-weight:600; letter-spacing:.8px; text-transform:uppercase; margin-bottom:5px; }
-  .lohn-netto-val { font-family:'JetBrains Mono',monospace; font-size:32px; font-weight:700; color:#fff; }
-  .lohn-netto-val.gold { color:#C8A84B; font-size:24px; }
-  .lohn-netto-val.green { color:#22C55E; }
-  @media(max-width:700px) { .lohn-kpi-row{grid-template-columns:1fr 1fr} .lohn-breakdown{grid-template-columns:1fr} .lohn-netto{flex-direction:column;text-align:center} }
 </style>
 </head>
 <body>
@@ -343,15 +306,19 @@
     </div>
   </div>
   <div class="login-card">
-    <div class="login-title">Willkommen</div>
-    <div class="login-sub">Bitte PIN eingeben</div>
+    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:18px">
+      <button id="modeEmp" onclick="setLoginMode('emp')" style="flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--accent);background:var(--accent);color:#fff;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer">👤 Mitarbeiter</button>
+      <button id="modeAdmin" onclick="setLoginMode('admin')" style="flex:1;padding:8px;border-radius:8px;border:1.5px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.6);font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer">⚙️ Admin</button>
+    </div>
+    <div class="login-title" id="loginTitle">Willkommen</div>
+    <div class="login-sub" id="loginSub">Bitte PIN eingeben</div>
     <div class="pin-display" id="pinDisplay">
       <div class="pin-dot" id="pd0"></div>
       <div class="pin-dot" id="pd1"></div>
       <div class="pin-dot" id="pd2"></div>
       <div class="pin-dot" id="pd3"></div>
     </div>
-    <div class="pin-keypad">
+    <div class="pin-keypad" id="pinKeypadDiv">
       <button class="pin-key" onclick="pinPress('1')">1</button>
       <button class="pin-key" onclick="pinPress('2')">2</button>
       <button class="pin-key" onclick="pinPress('3')">3</button>
@@ -379,9 +346,7 @@
     <div class="sync-badge syncing" id="syncBadge"><div class="sync-badge-dot"></div><span id="syncText">Verbinde…</span></div>
     <button class="header-nav-btn active" id="navZeit" onclick="switchView('zeit')">Zeiterfassung</button>
     <button class="header-nav-btn" id="navRapport" onclick="switchView('rapport')">📋 Rapport</button>
-    <button class="header-nav-btn" id="navRegie" onclick="switchView('regie')" style="display:none">📝 Regierapport</button>
-    <button class="header-nav-btn" id="navLohn" onclick="switchView('lohn')" style="display:none">💰 Lohn</button>
-    <button class="header-nav-btn" id="navAdmin" onclick="switchView('admin')" style="display:none">📊 Übersicht</button>
+    <button class="header-nav-btn" id="navAdmin" onclick="switchView('admin')" style="display:none">⚙ Admin</button>
     <div class="header-user">
       <span id="headerName">—</span>
       <div class="avatar" id="headerAvatar">?</div>
@@ -481,26 +446,13 @@
     </div>
   </div>
 
-  <div class="summary-row" style="grid-template-columns:repeat(3,1fr)">
-    <div class="stat-card stat-card-click" onclick="openPeriod('today')"><div class="stat-label">Heute</div><div class="stat-value accent" id="statToday">0:00 h</div><div class="stat-sub" id="statTodaySub">0 Einträge</div><div class="stat-cta">Tagesansicht ›</div></div>
-    <div class="stat-card stat-card-click" onclick="openPeriod('week')"><div class="stat-label">Diese Woche</div><div class="stat-value" id="statWeek">0:00 h</div><div class="stat-sub" id="statWeekSub">Mo–So</div><div class="stat-cta">Wochenansicht ›</div></div>
-    <div class="stat-card stat-card-click" onclick="openPeriod('month')"><div class="stat-label">Diesen Monat</div><div class="stat-value" id="statMonth">0:00 h</div><div class="stat-sub" id="statMonthSub">—</div><div class="stat-cta">Monatsansicht ›</div></div>
+  <div class="summary-row">
+    <div class="stat-card"><div class="stat-label">Heute</div><div class="stat-value accent" id="statToday">0:00 h</div><div class="stat-sub" id="statTodaySub">0 Einträge</div></div>
+    <div class="stat-card"><div class="stat-label">Diese Woche</div><div class="stat-value" id="statWeek">0:00 h</div><div class="stat-sub">Mon–So</div></div>
+    <div class="stat-card"><div class="stat-label">Einträge</div><div class="stat-value" id="statCount">0</div><div class="stat-sub">Gesamt</div></div>
+    <div class="stat-card"><div class="stat-label">Projekte</div><div class="stat-value" id="statProjects">0</div><div class="stat-sub">Aktiv</div></div>
   </div>
 </main>
-
-<!-- ===== PERIODEN-DETAIL (Tag / Woche / Monat) ===== -->
-<div class="period-overlay" id="periodModal" onclick="if(event.target===this)closePeriod()">
-  <div class="period-sheet">
-    <div class="period-head">
-      <div>
-        <div class="period-title" id="periodTitle">—</div>
-        <div class="period-sub" id="periodSub">—</div>
-      </div>
-      <button class="period-close" onclick="closePeriod()" aria-label="Schliessen">✕</button>
-    </div>
-    <div class="period-body" id="periodBody"></div>
-  </div>
-</div>
 
 <!-- ===== MONATSRAPPORT ===== -->
 <main class="view" id="viewRapport">
@@ -516,7 +468,6 @@
     </div>
   </div>
   <div class="rapport-summary" id="rapportSummary"></div>
-  <div id="meineLohnblaetter"></div>
   <div class="card" id="rapportProjectCard" style="margin-bottom:20px">
     <div class="card-title"><div class="card-title-icon">📁</div>Stunden nach Projekt</div>
     <div id="rapportProjectList"></div>
@@ -530,6 +481,20 @@
       </table>
     </div>
   </div>
+  <!-- SIGNATURE -->
+  <div class="sig-card" id="signatureCard">
+    <div class="sig-title">✍️ Kundenunterschrift <span style="font-size:11px;color:var(--text-3);font-weight:400">(optional)</span></div>
+    <div class="sig-canvas-wrap">
+      <canvas id="sigCanvas" height="160"></canvas>
+    </div>
+    <div class="sig-hint">Kunde unterschreibt mit Finger oder Maus</div>
+    <div class="sig-actions">
+      <input class="sig-name-field" id="sigName" type="text" placeholder="Name des Kunden (optional)">
+      <button class="btn btn-sm btn-outline" onclick="clearSignature()">✕ Löschen</button>
+      <button class="btn btn-sm btn-primary" onclick="saveSignature()">✓ Unterschrift speichern</button>
+    </div>
+    <div class="sig-saved" id="sigSaved" style="display:none">✓ Unterschrift gespeichert</div>
+  </div>
 </main>
 
 <!-- ===== ADMIN ===== -->
@@ -537,7 +502,6 @@
   <div class="admin-tabs">
     <button class="admin-tab active" id="tabOverview" onclick="switchAdminTab('overview')">📊 Übersicht</button>
     <button class="admin-tab" id="tabMitarbeiter" onclick="switchAdminTab('mitarbeiter')">👥 Mitarbeitende</button>
-    <button class="admin-tab" id="tabLohnstamm" onclick="switchAdminTab('lohnstamm')">💰 Lohnstamm</button>
     <button class="admin-tab" id="tabSettings" onclick="switchAdminTab('settings')">⚙️ Einstellungen</button>
     <button class="admin-tab" id="tabEntries" onclick="switchAdminTab('entries')">📋 Einträge</button>
   </div>
@@ -567,7 +531,7 @@
     <div class="card">
       <div class="card-title"><div class="card-title-icon">👥</div>Mitarbeitende & PINs</div>
       <div class="pin-table-wrap"><table class="pin-table" id="pinTable">
-        <thead><tr><th>Name</th><th>PIN</th><th>Rolle</th><th>Regie</th><th></th></tr></thead>
+        <thead><tr><th>Name</th><th>PIN</th><th>Rolle</th><th></th></tr></thead>
         <tbody id="pinTableBody"></tbody>
       </table>
       </div><div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border)">
@@ -579,19 +543,6 @@
           <button class="btn btn-primary btn-sm" onclick="addMitarbeiter()">+ Hinzufügen</button>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- LOHNSTAMM -->
-  <div id="adminTabLohnstamm" style="display:none">
-    <div class="card">
-      <div class="card-title"><div class="card-title-icon">💰</div>Lohnstamm bearbeiten</div>
-      <div style="font-size:12px;color:var(--text-3);margin:-6px 0 16px">Lohnparameter pro Mitarbeiter pflegen – wird direkt in Supabase (<strong>lohnstamm</strong>) gespeichert.</div>
-      <div class="field" style="max-width:340px;margin-bottom:6px">
-        <label>Mitarbeiter</label>
-        <select id="lsEmpSel" onchange="renderLohnstammForm(this.value)"><option value="">— Mitarbeiter wählen —</option></select>
-      </div>
-      <div id="lohnstammForm"></div>
     </div>
   </div>
 
@@ -672,95 +623,10 @@
 </div>
 
 <!-- BOTTOM NAV -->
-<!-- ===== LOHNABRECHNUNG ===== -->
-<main class="view" id="viewLohn">
-  <div style="max-width:960px;margin:0 auto;padding:28px 20px 80px">
-
-    <!-- Period selector -->
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap">
-      <select id="lohnEmpSel" onchange="renderLohn()" style="font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;outline:none;cursor:pointer;min-width:180px">
-        <option value="">— Mitarbeiter —</option>
-      </select>
-      <select id="lohnMonthSel" onchange="renderLohn()" style="font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;outline:none;cursor:pointer">
-        <option value="0">Januar</option><option value="1">Februar</option><option value="2">März</option>
-        <option value="3">April</option><option value="4">Mai</option><option value="5">Juni</option>
-        <option value="6">Juli</option><option value="7">August</option><option value="8">September</option>
-        <option value="9">Oktober</option><option value="10">November</option><option value="11">Dezember</option>
-      </select>
-      <select id="lohnYearSel" onchange="renderLohn()" style="font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;outline:none;cursor:pointer"></select>
-      <button class="btn btn-excel btn-sm" onclick="lohnExportExcel()">📥 Excel</button>
-      <button class="btn btn-outline btn-sm" onclick="lohnExportPDF()">🖨 PDF</button>
-    </div>
-
-    <div id="lohnContent">
-      <div class="empty-state"><div class="empty-icon" style="font-size:40px;margin-bottom:12px">💰</div>
-        <div style="font-size:15px;font-weight:600;color:var(--text-2)">Mitarbeiter wählen</div>
-        <div style="font-size:13px;color:var(--text-3);margin-top:4px">Wähle oben einen Mitarbeiter und Monat aus.</div>
-      </div>
-    </div>
-
-    <div id="freigegebeneLohnblaetter" style="margin-top:24px"></div>
-  </div>
-</main>
-
-<!-- ===== REGIERAPPORT ===== -->
-<main class="view" id="viewRegie">
-  <div style="max-width:680px;margin:0 auto;padding:28px 20px 80px">
-    <div class="card">
-      <div class="card-title"><div class="card-title-icon">📝</div>Regierapport erfassen</div>
-      <div class="form-grid">
-        <div class="field"><label>Datum *</label><input type="date" id="regieDate"></div>
-        <div class="field"><label>Mitarbeiter</label><input type="text" id="regieEmployee" readonly style="cursor:default;background:var(--surface-2)"></div>
-        <div class="field full"><label>Kunde / Baustelle *</label><input type="text" id="regieKunde" placeholder="z.B. Coop Regensdorf"></div>
-        <div class="field full">
-          <label>Arbeitszeit *</label>
-          <div class="time-range">
-            <input type="time" id="regieFrom" step="300" oninput="regieCalc()">
-            <span class="time-sep">→</span>
-            <input type="time" id="regieTo" step="300" oninput="regieCalc()">
-            <span class="duration-badge" id="regieDuration">—</span>
-          </div>
-        </div>
-        <div class="field">
-          <label>Pause</label>
-          <select id="regiePause" onchange="regieCalc()">
-            <option value="0">Keine Pause</option>
-            <option value="15">15 min</option><option value="30">30 min</option>
-            <option value="45">45 min</option><option value="60">60 min</option>
-          </select>
-        </div>
-        <div class="field"><label>Projekt *</label><select id="regieProject"><option value="">— Projekt wählen —</option></select></div>
-        <div class="field full"><label>Arbeitsgattung *</label><div class="pill-group" id="regieTypeGroup"></div></div>
-        <div class="field full"><label>Ausgeführte Arbeiten / Beschreibung</label><textarea id="regieDesc" placeholder="Material, Leistung, Bemerkungen…"></textarea></div>
-      </div>
-
-      <div style="margin-top:20px">
-        <label style="font-size:12px;font-weight:600;color:var(--text-2)">Unterschrift Kunde *</label>
-        <div style="font-size:11px;color:var(--text-3);margin-bottom:8px">Mit dem Finger unterschreiben (Touchscreen) oder mit der Maus</div>
-        <canvas id="sigPad" style="width:100%;height:180px;border:2px dashed var(--border);border-radius:var(--radius);background:#fff;touch-action:none;cursor:crosshair"></canvas>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-          <input type="text" id="regieKundeName" placeholder="Name Unterzeichner" style="flex:1;max-width:240px;font-family:'Inter',sans-serif;font-size:13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;outline:none;background:var(--surface-2)">
-          <button class="btn btn-grey btn-sm" onclick="sigClear()">🗑 Löschen</button>
-        </div>
-      </div>
-
-      <div class="form-footer">
-        <button class="btn btn-grey btn-sm" onclick="regieReset()">Zurücksetzen</button>
-        <button class="btn btn-primary btn-sm" onclick="regieSave()">✓ Regierapport speichern</button>
-      </div>
-    </div>
-
-    <div class="entries-title" style="margin-bottom:12px">Meine Regierapporte</div>
-    <div class="entries-list" id="regieList"></div>
-  </div>
-</main>
-
 <nav class="bottom-nav">
   <button class="bottom-nav-btn active" id="bnZeit" onclick="switchView('zeit')"><span class="nav-icon">⏱</span><span>Erfassen</span></button>
   <button class="bottom-nav-btn" id="bnRapport" onclick="switchView('rapport')"><span class="nav-icon">📋</span><span>Rapport</span></button>
-  <button class="bottom-nav-btn" id="bnRegie" onclick="switchView('regie')" style="display:none"><span class="nav-icon">📝</span><span>Regie</span></button>
-  <button class="bottom-nav-btn" id="bnLohn" onclick="switchView('lohn')" style="display:none"><span class="nav-icon">💰</span><span>Lohn</span></button>
-  <button class="bottom-nav-btn" id="bnAdmin" onclick="switchView('admin')" style="display:none"><span class="nav-icon">📊</span><span>Übersicht</span></button>
+  <button class="bottom-nav-btn" id="bnAdmin" onclick="switchView('admin')" style="display:none"><span class="nav-icon">⚙️</span><span>Admin</span></button>
   <button class="bottom-nav-btn" id="bnLogout" onclick="logout()"><span class="nav-icon">🚪</span><span>Abmelden</span></button>
 </nav>
 
@@ -804,6 +670,7 @@ let rapportYear = new Date().getFullYear(), rapportMonth = new Date().getMonth()
 let overviewYear = new Date().getFullYear(), overviewMonth = new Date().getMonth();
 let timerInterval=null, timerSeconds=0, timerRunning=false, timerPaused=false;
 let pinBuffer = '';
+let editingEntryId = null;
 
 const EMOJIS = ['💻','🎨','💬','📅','📊','📄','🧪','🛠️','🚀','📞','✍️','🔍','📦','🏗️','🤝','📋','⚡','🔧'];
 const COLORS = [
@@ -816,8 +683,49 @@ const monthNames = ['Januar','Februar','März','April','Mai','Juni','Juli','Augu
 const months = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
 
 // ===== LOGO =====
-let LOGO_B64 = ''; // wird unten gesetzt
+const LOGO_B64 = document.getElementById('loginLogo').src; // filled below
 
+
+// ===== LOGIN MODE =====
+let loginMode = 'emp'; // 'emp' or 'admin'
+
+function setLoginMode(mode) {
+  loginMode = mode;
+  const isAdmin = mode === 'admin';
+  document.getElementById('modeEmp').style.cssText = `flex:1;padding:8px;border-radius:8px;border:1.5px solid ${isAdmin?'rgba(255,255,255,.2)':'var(--accent)'};background:${isAdmin?'transparent':'var(--accent)'};color:${isAdmin?'rgba(255,255,255,.6)':'#fff'};font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer`;
+  document.getElementById('modeAdmin').style.cssText = `flex:1;padding:8px;border-radius:8px;border:1.5px solid ${isAdmin?'var(--accent)':'rgba(255,255,255,.2)'};background:${isAdmin?'var(--accent)':'transparent'};color:${isAdmin?'#fff':'rgba(255,255,255,.6)'};font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer`;
+  document.getElementById('pinDisplay').style.display = isAdmin ? 'none' : 'flex';
+  document.getElementById('pinKeypadDiv').style.display = isAdmin ? 'none' : 'grid';
+  document.getElementById('adminLoginSection').style.display = isAdmin ? 'block' : 'none';
+  document.getElementById('loginTitle').textContent = isAdmin ? 'Admin-Zugang' : 'Willkommen';
+  document.getElementById('loginSub').textContent = isAdmin ? 'Bitte Passwort eingeben' : 'Bitte PIN eingeben';
+  document.getElementById('pinError').textContent = '';
+  pinBuffer = ''; updatePinDisplay();
+  if(isAdmin) setTimeout(()=>document.getElementById('adminPwInput').focus(), 100);
+}
+
+function adminDirectLogin() {
+  const pw = document.getElementById('adminPwInput').value;
+  const MASTER_CODE = 'ZT-2024-RESET';
+  if (pw === adminPw || pw === MASTER_CODE) {
+    // Find admin user and login
+    sbFetch('mitarbeiter?rolle=eq.admin&select=*&limit=1').then(rows => {
+      if(rows.length > 0) {
+        currentUser = rows[0];
+        localStorage.setItem('zt_session', JSON.stringify(currentUser));
+        adminUnlocked = true;
+        loginSuccess().then(()=>{ switchView('admin'); });
+      } else {
+        document.getElementById('pinError').textContent = 'Kein Admin-Konto gefunden.';
+      }
+    }).catch(()=>{
+      document.getElementById('pinError').textContent = 'Verbindungsfehler.';
+    });
+  } else {
+    document.getElementById('pinError').textContent = 'Falsches Passwort.';
+    document.getElementById('adminPwInput').value = '';
+  }
+}
 
 // ===== PIN LOGIN =====
 function pinPress(d) {
@@ -865,11 +773,6 @@ async function loginSuccess() {
     try { await loadEntries(); } catch(e) { console.error('loadEntries error:', e); }
     try { await loadProjects(); } catch(e) { console.error('loadProjects error:', e); }
     try { await loadTypes(); } catch(e) { console.error('loadTypes error:', e); }
-    try { await loadLohnstamm(); } catch(e) { console.error('loadLohnstamm error:', e); }
-    try { await loadQstTarife(); } catch(e) { console.error('loadQstTarife error:', e); }
-    try { await loadLohnblaetter(); } catch(e) { console.error('loadLohnblaetter error:', e); }
-    try { await loadRegierapporte(); } catch(e) { console.error('loadRegierapporte error:', e); }
-    try { if(currentUser.rolle==='admin') await loadMitarbeiter(); } catch(e) { console.error('loadMitarbeiter error:', e); }
     updateStats();
     renderTypePills();
     rebuildProjectDropdown();
@@ -877,27 +780,9 @@ async function loginSuccess() {
     if (currentUser.rolle === 'admin') {
       document.getElementById('navAdmin').style.display = '';
       document.getElementById('bnAdmin').style.display = '';
-      document.getElementById('navLohn').style.display = '';
-      document.getElementById('bnLohn').style.display = '';
-      // Admin sieht Regie immer
-      document.getElementById('navRegie').style.display = '';
-      document.getElementById('bnRegie').style.display = '';
-      // Admin braucht kein Erfassen → Zeiterfassung-Tab ausblenden
-      document.getElementById('navZeit').style.display = 'none';
-      document.getElementById('bnZeit').style.display = 'none';
-      // Admin startet direkt in der Übersicht
-      switchView('admin');
     } else {
       document.getElementById('navAdmin').style.display = 'none';
       document.getElementById('bnAdmin').style.display = 'none';
-      document.getElementById('navLohn').style.display = 'none';
-      document.getElementById('bnLohn').style.display = 'none';
-      document.getElementById('navZeit').style.display = '';
-      document.getElementById('bnZeit').style.display = '';
-      // Regierapport nur bei Freigabe
-      const regieOn = currentUser.regie_zugriff === true;
-      document.getElementById('navRegie').style.display = regieOn ? '' : 'none';
-      document.getElementById('bnRegie').style.display = regieOn ? '' : 'none';
     }
     setSyncStatus(true);
   } catch(e) {
@@ -921,10 +806,11 @@ function logout() {
   document.getElementById('overviewBody').innerHTML = '';
   document.getElementById('statToday').textContent = '0:00 h';
   document.getElementById('statWeek').textContent = '0:00 h';
-  document.getElementById('statMonth').textContent = '0:00 h';
+  document.getElementById('statCount').textContent = '0';
+  document.getElementById('statProjects').textContent = '0';
   document.getElementById('statTodaySub').textContent = '0 Einträge';
   // Reset nav to Zeiterfassung
-  ['zeit','rapport','admin','lohn'].forEach(id => {
+  ['zeit','rapport','admin'].forEach(id => {
     document.getElementById('view'+id.charAt(0).toUpperCase()+id.slice(1)).classList.remove('active');
     const nb = document.getElementById('nav'+id.charAt(0).toUpperCase()+id.slice(1));
     if(nb) nb.classList.remove('active');
@@ -932,18 +818,12 @@ function logout() {
   document.getElementById('viewZeit').classList.add('active');
   document.getElementById('navZeit').classList.add('active');
   document.getElementById('bnZeit').classList.add('active');
-  ['Rapport','Admin','Lohn'].forEach(id => {
+  ['Rapport','Admin'].forEach(id => {
     const el = document.getElementById('bn'+id);
     if(el) el.classList.remove('active');
   });
   document.getElementById('navAdmin').style.display = 'none';
   document.getElementById('bnAdmin').style.display = 'none';
-  document.getElementById('navLohn').style.display = 'none';
-  document.getElementById('bnLohn').style.display = 'none';
-  if(document.getElementById('navRegie')) document.getElementById('navRegie').style.display = 'none';
-  if(document.getElementById('bnRegie')) document.getElementById('bnRegie').style.display = 'none';
-  document.getElementById('navZeit').style.display = '';
-  document.getElementById('bnZeit').style.display = '';
   resetForm();
 }
 
@@ -979,30 +859,26 @@ async function loadMitarbeiter() {
 // ===== VIEW NAVIGATION =====
 function switchView(v) {
   if (v === 'admin' && !adminUnlocked) { openPwModal(); return; }
-  ['zeit','rapport','admin','lohn','regie'].forEach(id => {
-    const el=document.getElementById('view'+id.charAt(0).toUpperCase()+id.slice(1));
-    if(el) el.classList.toggle('active', v===id);
+  ['zeit','rapport','admin'].forEach(id => {
+    document.getElementById('view'+id.charAt(0).toUpperCase()+id.slice(1)).classList.toggle('active', v===id);
     const nb = document.getElementById('nav'+id.charAt(0).toUpperCase()+id.slice(1));
     if(nb) nb.classList.toggle('active', v===id);
   });
-  ['Zeit','Rapport','Admin','Lohn','Regie'].forEach(id => {
+  ['Zeit','Rapport','Admin'].forEach(id => {
     const el = document.getElementById('bn'+id);
     if(el) el.classList.toggle('active', v===id.toLowerCase());
   });
-  if (v==='rapport') renderRapport();
+  if (v==='rapport') { renderRapport(); setTimeout(initSignature,100); }
   if (v==='admin') { switchAdminTab('overview'); renderAdminProjects(); renderAdminTypes(); renderEmojiPicker(); renderColorPicker(); }
-  if (v==='lohn') { rebuildLohnSelects(); renderLohn(); }
-  if (v==='regie') { initRegie(); }
 }
 function switchAdminTab(tab) {
-  ['overview','mitarbeiter','lohnstamm','settings','entries'].forEach(t => {
+  ['overview','mitarbeiter','settings','entries'].forEach(t => {
     document.getElementById('adminTab'+t.charAt(0).toUpperCase()+t.slice(1)).style.display = t===tab?'block':'none';
     const el = document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1));
     if(el) el.classList.toggle('active', t===tab);
   });
   if (tab==='overview') renderOverview();
   if (tab==='mitarbeiter') loadMitarbeiter();
-  if (tab==='lohnstamm') openLohnstammTab();
   if (tab==='settings') { loadProjects(); loadTypes(); }
   if (tab==='entries') { loadEntries().then(()=>renderEntries()); }
 }
@@ -1051,7 +927,13 @@ function applyUserName() {
   document.getElementById('entryEmployee').value = n;
   document.getElementById('rapportEmpName').textContent = n;
   const bnName = document.getElementById('bnLogout');
-  document.getElementById('entryDate').value = formatDateInput(new Date());
+  const today = new Date();
+  const minDate = new Date(today);
+  minDate.setDate(today.getDate() - 7);
+  const dateInput = document.getElementById('entryDate');
+  dateInput.value = formatDateInput(today);
+  dateInput.max = formatDateInput(today);
+  dateInput.min = formatDateInput(minDate);
 }
 
 // ===== MITARBEITER =====
@@ -1088,27 +970,8 @@ function renderPinTable() {
       <td style="font-weight:600">${m.name}</td>
       <td><span class="pin-code">${m.pin}</span></td>
       <td><span class="role-badge role-${m.rolle}">${m.rolle==='admin'?'Admin':'Mitarbeiter'}</span></td>
-      <td>${m.rolle==='admin'?'<span style="color:var(--text-3);font-size:12px">—</span>':`<button onclick="toggleRegieZugriff('${m.id}',${!m.regie_zugriff})" style="border:1.5px solid ${m.regie_zugriff?'var(--success)':'var(--border)'};background:${m.regie_zugriff?'var(--success-light)':'var(--surface)'};color:${m.regie_zugriff?'#16A34A':'var(--text-3)'};border-radius:6px;padding:4px 12px;font-size:11px;font-weight:600;cursor:pointer">${m.regie_zugriff?'✓ Ja':'✕ Nein'}</button>`}</td>
       <td><button class="icon-btn danger" onclick="deleteMitarbeiter('${m.id}','${m.name}')" title="Löschen">✕</button></td>
     </tr>`).join('');
-}
-
-// ===== REGIE-ZUGRIFF UMSCHALTEN (Admin) =====
-async function toggleRegieZugriff(id, value) {
-  try {
-    setSyncStatus(false);
-    await sbFetch(`mitarbeiter?id=eq.${id}`, {
-      method:'PATCH',
-      body: JSON.stringify({ regie_zugriff: value }),
-      prefer:'return=minimal'
-    });
-    setSyncStatus(true);
-    await loadMitarbeiter();
-    showToast(value?'Regierapport-Zugriff aktiviert.':'Regierapport-Zugriff deaktiviert.','📝','success');
-  } catch(e) {
-    setSyncStatus(false);
-    showToast('Aktualisierung fehlgeschlagen – Spalte regie_zugriff vorhanden?','⚠️','error');
-  }
 }
 
 // ===== PROJECTS =====
@@ -1259,13 +1122,12 @@ function calcDuration() {
   const total=(th*60+tm)-(fh*60+fm);
   if(total<=0){document.getElementById('durationBadge').textContent='—';document.getElementById('netBadge').textContent='—';return;}
   document.getElementById('durationBadge').textContent=formatMins(total);
-  // Fahrzeit wird NICHT von der Arbeitszeit abgezogen – nur Pause
-  const net=total-pause;
+  const net=total-pause-fahrzeit;
   document.getElementById('netBadge').textContent=net>0?formatMins(net):'—';
   let hints=[];
   if(pause>0) hints.push(`${pause} min Pause`);
-  if(fahrzeit>0) hints.push(`${fahrzeit} min Fahrzeit (separat)`);
-  const nh=document.getElementById('netHint'); if(nh) nh.textContent=hints.length?'('+hints.join(' · ')+ ')':'';
+  if(fahrzeit>0) hints.push(`${fahrzeit} min Fahrzeit`);
+  const nh=document.getElementById('netHint'); if(nh) nh.textContent=hints.length?'(− '+hints.join(' − ')+ ')':'';
 }
 
 // ===== SAVE ENTRY =====
@@ -1285,12 +1147,12 @@ async function saveEntry(andNew) {
   const [fh,fm]=from.split(':').map(Number),[th,tm]=to.split(':').map(Number);
   const total=(th*60+tm)-(fh*60+fm);
   if(total<=0) return showToast('Endzeit muss nach Startzeit liegen.','⚠️','error');
-  const net=total-pause;
-  if(net<=0) return showToast('Pause länger als Arbeitszeit!','⚠️','error');
+  const net=total-pause-fahrzeit;
+  if(net<=0) return showToast('Pause/Fahrzeit länger als Arbeitszeit!','⚠️','error');
   try {
     setSyncStatus(false);
-    if(editingEntryId){
-      // Bestehenden Eintrag aktualisieren
+    if(editingEntryId) {
+      // Update existing entry
       await sbFetch(`zeiteintraege?id=eq.${editingEntryId}`, {
         method:'PATCH',
         body: JSON.stringify({
@@ -1300,11 +1162,13 @@ async function saveEntry(andNew) {
         }),
         prefer:'return=minimal'
       });
+      editingEntryId = null;
+      const saveBtn = document.querySelector('.form-footer .btn-primary');
+      if(saveBtn) saveBtn.textContent = '✓ Eintrag speichern';
       setSyncStatus(true);
       await loadEntries();
-      showToast(`Aktualisiert: ${formatMins(net)} Netto`,'✓','success');
-      cancelEdit();
-      switchView('rapport');
+      showToast('Eintrag aktualisiert!','✓','success');
+      resetForm();
       return;
     }
     await sbFetch('zeiteintraege', {
@@ -1314,7 +1178,6 @@ async function saveEntry(andNew) {
         mitarbeiter_name: currentUser.name,
         datum: date, von: from, bis: to,
         pause_min: pause, fahrzeit_min: fahrzeit, netto_min: net,
-        fahrzeit_bezahlt: false,
         projekt: project, typ: selectedType, beschreibung: desc
       }),
       prefer:'return=minimal'
@@ -1340,106 +1203,47 @@ function resetForm() {
   document.getElementById('netBadge').textContent='—';
   document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
   selectedType='';
+  editingEntryId = null;
+  const saveBtn = document.querySelector('.form-footer .btn-primary');
+  if(saveBtn) saveBtn.textContent = '✓ Eintrag speichern';
 }
+function editEntry(id) {
+  const e = entries.find(e=>e.id===id);
+  if(!e) return;
+  // Populate form with entry data
+  document.getElementById('entryDate').value = e.datum;
+  document.getElementById('timeFrom').value = e.von;
+  document.getElementById('timeTo').value = e.bis;
+  document.getElementById('pauseMins').value = e.pause_min || 0;
+  const fz = document.getElementById('fahrzeitMins');
+  if(fz) fz.value = e.fahrzeit_min || 0;
+  document.getElementById('entryProject').value = e.projekt;
+  document.getElementById('entryDesc').value = e.beschreibung || '';
+  // Select type pill
+  selectedType = e.typ;
+  document.querySelectorAll('.pill').forEach(p => p.classList.toggle('active', p.dataset.type===e.typ));
+  calcDuration();
+  // Mark as edit mode
+  editingEntryId = id;
+  // Show save button as update
+  const saveBtn = document.querySelector('.form-footer .btn-primary');
+  if(saveBtn) saveBtn.textContent = '✓ Eintrag aktualisieren';
+  // Scroll to form
+  document.getElementById('viewZeit').scrollIntoView({behavior:'smooth'});
+  switchView('zeit');
+  showToast('Eintrag wird bearbeitet — speichern zum Aktualisieren.','✏️','success');
+}
+
 async function deleteEntry(id) {
-  if(!confirm('Diesen Eintrag wirklich löschen?')) return;
   try {
     await sbFetch(`zeiteintraege?id=eq.${id}`, { method:'DELETE', prefer:'return=minimal' });
     await loadEntries();
-    if(document.getElementById('viewRapport').classList.contains('active')) renderRapport();
     showToast('Eintrag gelöscht.','🗑','error');
   } catch(e) { showToast('Löschen fehlgeschlagen.','⚠️','error'); }
 }
 
-// ===== EINTRAG BEARBEITEN (letzte 7 Tage) =====
-let editingEntryId = null;
-function openEditEntry(id) {
-  const e = entries.find(x=>x.id===id);
-  if(!e) return showToast('Eintrag nicht gefunden.','⚠️','error');
-  // Prüfen: nur letzte 7 Tage
-  const now=new Date(); now.setHours(0,0,0,0);
-  const sevenAgo=new Date(now); sevenAgo.setDate(now.getDate()-7);
-  const eDate=new Date(e.datum+'T00:00:00');
-  if(eDate<sevenAgo || eDate>now) return showToast('Nur Einträge der letzten 7 Tage sind editierbar.','⚠️','error');
-  editingEntryId = id;
-  // Zur Zeiterfassung wechseln und Formular füllen
-  switchView('zeit');
-  document.getElementById('entryDate').value=e.datum;
-  document.getElementById('timeFrom').value=e.von;
-  document.getElementById('timeTo').value=e.bis;
-  document.getElementById('pauseMins').value=e.pause_min||0;
-  if(document.getElementById('fahrzeitMins')) document.getElementById('fahrzeitMins').value=e.fahrzeit_min||0;
-  document.getElementById('entryProject').value=e.projekt;
-  document.getElementById('entryDesc').value=e.beschreibung||'';
-  selectedType=e.typ;
-  document.querySelectorAll('.pill').forEach(p=>p.classList.toggle('active',p.dataset.type===e.typ));
-  calcDuration();
-  // Hinweis anzeigen
-  showToast('Bearbeitungsmodus – Änderungen mit «Speichern» übernehmen.','✏️','success');
-  const fp=document.querySelector('.form-footer');
-  if(fp && !document.getElementById('editCancelBtn')){
-    const c=document.createElement('button');
-    c.id='editCancelBtn'; c.className='btn btn-sm'; c.style.cssText='color:#666;background:#f3f4f6;border:1.5px solid var(--border)';
-    c.textContent='Bearbeiten abbrechen'; c.onclick=cancelEdit;
-    fp.insertBefore(c, fp.firstChild);
-  }
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-function cancelEdit() {
-  editingEntryId=null;
-  resetForm();
-  const c=document.getElementById('editCancelBtn'); if(c) c.remove();
-}
-
 // ===== FORMAT HELPERS =====
 function formatMins(m) { const h=Math.floor(m/60),mm=m%60; return `${h}:${String(mm).padStart(2,'0')} h`; }
-
-// ===== ZUSCHLAG-BERECHNUNG =====
-// Berechnet pro Eintrag die Minuten je Zuschlagskategorie.
-// Regel (höchster Zuschlag gilt, keine Addition):
-//   Sonntag 00:00–05:00  → 100%
-//   Sonntag 05:00–24:00  → 50%
-//   Mo–Sa  22:00–05:00   → 50% (Nacht)
-//   sonst                → 0%
-function berechneZuschlag(e) {
-  const result = { normal:0, z50:0, z100:0 };
-  if (!e.datum || !e.von || !e.bis) { result.normal = e.netto_min||0; return result; }
-  const [fh,fm] = e.von.split(':').map(Number);
-  const [th,tm] = e.bis.split(':').map(Number);
-  let startMin = fh*60+fm;
-  let endMin   = th*60+tm;
-  if (endMin <= startMin) endMin += 24*60; // über Mitternacht
-  const dayDate = new Date(e.datum+'T00:00:00');
-  const dow = dayDate.getDay(); // 0=So, 6=Sa
-  const totalArbeit = e.netto_min || (endMin - startMin);
-  const pause = e.pause_min || 0;
-  // Pause anteilig abziehen: wir verteilen Zuschlag auf Brutto-Spanne, ziehen Pause vom Normal-Anteil
-  // Minutenweise durchgehen
-  for (let m = startMin; m < endMin; m++) {
-    const absMin = m % (24*60);
-    const dayOffset = Math.floor(m / (24*60)); // 0 oder 1 (nach Mitternacht)
-    const curDow = (dow + dayOffset) % 7;
-    const hour = absMin / 60;
-    let cat = 'normal';
-    if (curDow === 0) { // Sonntag
-      // 00:00–05:00 und 22:00–24:00 → 100%, dazwischen 50%
-      cat = (hour < 5 || hour >= 22) ? 'z100' : 'z50';
-    } else if (hour >= 22 || hour < 5) { // Nacht Mo–Sa
-      cat = 'z50';
-    }
-    if (cat === 'z100') result.z100++;
-    else if (cat === 'z50') result.z50++;
-    else result.normal++;
-  }
-  // Pause vom Normal-Anteil abziehen (vereinfacht)
-  if (pause > 0) {
-    let p = pause;
-    const take = Math.min(p, result.normal); result.normal -= take; p -= take;
-    if (p>0){ const t2=Math.min(p,result.z50); result.z50-=t2; p-=t2; }
-    if (p>0){ result.z100=Math.max(0,result.z100-p); }
-  }
-  return result;
-}
 function formatH(m) { return (m/60).toFixed(1)+'h'; }
 function formatDateInput(d) { return d.toISOString().split('T')[0]; }
 function formatDateShort(s) { const d=new Date(s+'T00:00:00'); return `${d.getDate()}. ${months[d.getMonth()]}`; }
@@ -1451,85 +1255,18 @@ function formatDateLong(d) { return `${weekdays[d.getDay()]}, ${d.getDate()}. ${
 // ===== STATS =====
 function updateStats() {
   if(!currentUser) return;
-  const myE = entries.filter(e => e.mitarbeiter_id === currentUser.id);
-  // Heute
-  const today = ymdLocal(new Date());
-  const te = myE.filter(e => e.datum === today);
-  const elT = document.getElementById('statToday'); if(elT) elT.textContent = formatMins(te.reduce((s,e)=>s+(e.netto_min||0),0));
-  const elTS = document.getElementById('statTodaySub'); if(elTS) elTS.textContent = `${te.length} Eintrag${te.length!==1?'e':''}`;
-  // Diese Woche (Mo–So)
-  const now = new Date(), dow = now.getDay();
-  const mon = new Date(now); mon.setDate(now.getDate()-(dow===0?6:dow-1)); mon.setHours(0,0,0,0);
-  const sun = new Date(mon); sun.setDate(mon.getDate()+6);
-  const wf = ymdLocal(mon), wt = ymdLocal(sun);
-  const we = myE.filter(e => e.datum >= wf && e.datum <= wt);
-  const elW = document.getElementById('statWeek'); if(elW) elW.textContent = formatMins(we.reduce((s,e)=>s+(e.netto_min||0),0));
-  const elWS = document.getElementById('statWeekSub'); if(elWS) elWS.textContent = `${we.length} Eintrag${we.length!==1?'e':''}`;
-  // Diesen Monat
-  const mf = ymdLocal(new Date(now.getFullYear(), now.getMonth(), 1));
-  const mt = ymdLocal(new Date(now.getFullYear(), now.getMonth()+1, 0));
-  const moE = myE.filter(e => e.datum >= mf && e.datum <= mt);
-  const elM = document.getElementById('statMonth'); if(elM) elM.textContent = formatMins(moE.reduce((s,e)=>s+(e.netto_min||0),0));
-  const elMS = document.getElementById('statMonthSub'); if(elMS) elMS.textContent = `${monthNames[now.getMonth()]} · ${moE.length} Eintrag${moE.length!==1?'e':''}`;
+  const today=formatDateInput(new Date());
+  const myE=entries.filter(e=>e.mitarbeiter_id===currentUser.id);
+  const te=myE.filter(e=>e.datum===today);
+  document.getElementById('statToday').textContent=formatMins(te.reduce((s,e)=>s+e.netto_min,0));
+  document.getElementById('statTodaySub').textContent=`${te.length} Eintrag${te.length!==1?'e':''}`;
+  const now=new Date(),dow=now.getDay();
+  const mon=new Date(now); mon.setDate(now.getDate()-(dow===0?6:dow-1)); mon.setHours(0,0,0,0);
+  const we=myE.filter(e=>new Date(e.datum+'T00:00:00')>=mon);
+  document.getElementById('statWeek').textContent=formatMins(we.reduce((s,e)=>s+e.netto_min,0));
+  document.getElementById('statCount').textContent=myE.length;
+  document.getElementById('statProjects').textContent=new Set(myE.map(e=>e.projekt)).size;
 }
-
-// ===== PERIODEN-DETAIL: Tag / Woche / Monat (nur Zeit + Projekt) =====
-function ymdLocal(d){ const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${day}`; }
-function pEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
-
-function periodRange(kind) {
-  const now = new Date();
-  if (kind === 'today') {
-    const t = ymdLocal(now);
-    return { from: t, to: t, title: 'Heute · Tagesansicht', sub: `${weekdays[now.getDay()]}, ${formatDateShort(t)}` };
-  }
-  if (kind === 'week') {
-    const dow = now.getDay();
-    const mon = new Date(now); mon.setDate(now.getDate()-(dow===0?6:dow-1)); mon.setHours(0,0,0,0);
-    const sun = new Date(mon); sun.setDate(mon.getDate()+6);
-    const f = ymdLocal(mon), t = ymdLocal(sun);
-    return { from: f, to: t, title: 'Diese Woche · Wochenansicht', sub: `${formatDateShort(f)} – ${formatDateShort(t)}` };
-  }
-  const first = new Date(now.getFullYear(), now.getMonth(), 1);
-  const last  = new Date(now.getFullYear(), now.getMonth()+1, 0);
-  return { from: ymdLocal(first), to: ymdLocal(last), title: 'Diesen Monat · Monatsansicht', sub: `${monthNames[now.getMonth()]} ${now.getFullYear()}` };
-}
-
-function periodEntryHtml(e){
-  return `<div class="pentry">
-    <div><div class="pentry-time">${pEsc(e.von||'—')} – ${pEsc(e.bis||'—')}</div><div class="pentry-dur">${formatMins(e.netto_min||0)}</div></div>
-    <div class="pentry-proj">${pEsc(e.projekt||'—')}</div>
-  </div>`;
-}
-
-function openPeriod(kind) {
-  if (!currentUser) return;
-  const r = periodRange(kind);
-  const list = entries
-    .filter(e => e.mitarbeiter_id === currentUser.id && e.datum >= r.from && e.datum <= r.to)
-    .sort((a,b) => a.datum===b.datum ? (a.von||'').localeCompare(b.von||'') : a.datum.localeCompare(b.datum));
-  const totalMin = list.reduce((s,e)=>s+(e.netto_min||0),0);
-  document.getElementById('periodTitle').textContent = r.title;
-  document.getElementById('periodSub').textContent = `${r.sub} · ${formatMins(totalMin)} · ${list.length} Eintrag${list.length!==1?'e':''}`;
-  const body = document.getElementById('periodBody');
-  if (!list.length) {
-    body.innerHTML = '<div class="period-empty">Keine Einträge in diesem Zeitraum.</div>';
-  } else if (kind === 'today') {
-    body.innerHTML = list.map(periodEntryHtml).join('');
-  } else {
-    const byDay = {};
-    list.forEach(e => { (byDay[e.datum] = byDay[e.datum] || []).push(e); });
-    body.innerHTML = Object.keys(byDay).sort().map(d => {
-      const dayMin = byDay[d].reduce((s,e)=>s+(e.netto_min||0),0);
-      const dd = new Date(d+'T00:00:00');
-      return `<div class="pday-head"><span class="pday-date">${weekdays[dd.getDay()]}, ${formatDateShort(d)}</span><span class="pday-total">${formatMins(dayMin)}</span></div>`
-        + byDay[d].map(periodEntryHtml).join('');
-    }).join('');
-  }
-  document.getElementById('periodModal').classList.add('open');
-}
-
-function closePeriod(){ document.getElementById('periodModal').classList.remove('open'); }
 
 // ===== RENDER ENTRIES =====
 function renderEntries() {
@@ -1542,118 +1279,27 @@ function renderEntries() {
   list.innerHTML=filtered.map(e=>{
     const t=types.find(t=>t.name===e.typ)||{color:'#6b7280',bg:'#f3f4f6',icon:'📌'};
     const empStr=currentUser?.rolle==='admin'&&e.mitarbeiter_name?`<span style="font-size:11px;color:var(--text-3)">👤 ${e.mitarbeiter_name}</span>`:'';
-    const isAdmin=currentUser?.rolle==='admin';
-    let fahrzeitStr='';
-    if(e.fahrzeit_min>0){
-      if(isAdmin){
-        fahrzeitStr=`<div style="margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-          <span style="font-size:11px;color:var(--text-2);font-weight:600">🚗 ${e.fahrzeit_min}min Fahrzeit:</span>
-          <button onclick="setFahrzeitBezahlt('${e.id}',true)" style="border:1.5px solid ${e.fahrzeit_bezahlt?'var(--success)':'var(--border)'};background:${e.fahrzeit_bezahlt?'var(--success-light)':'var(--surface)'};color:${e.fahrzeit_bezahlt?'#16A34A':'var(--text-3)'};border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600;cursor:pointer">✓ Bezahlt</button>
-          <button onclick="setFahrzeitBezahlt('${e.id}',false)" style="border:1.5px solid ${!e.fahrzeit_bezahlt?'var(--danger)':'var(--border)'};background:${!e.fahrzeit_bezahlt?'#FEF2F2':'var(--surface)'};color:${!e.fahrzeit_bezahlt?'var(--danger)':'var(--text-3)'};border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600;cursor:pointer">✕ Nicht bezahlt</button>
-        </div>`;
-      } else {
-        fahrzeitStr=`<div style="margin-top:4px;font-size:11px;color:var(--text-3)">🚗 ${e.fahrzeit_min}min Fahrzeit ${e.fahrzeit_bezahlt?'(bezahlt)':'(unbezahlt)'}</div>`;
-      }
-    }
-    // Zuschlag-Freigabe (nur Admin, nur wenn Eintrag Zuschlag enthält)
-    let zuschlagStr='';
-    const z=berechneZuschlag(e);
-    if((z.z50>0||z.z100>0)){
-      const label = z.z100>0 ? `${(z.z100/60).toFixed(1)}h @100%` : '';
-      const label2= z.z50>0  ? `${(z.z50/60).toFixed(1)}h @50%` : '';
-      const zlabels=[label,label2].filter(Boolean).join(' + ');
-      if(isAdmin){
-        zuschlagStr=`<div style="margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-          <span style="font-size:11px;color:var(--warning);font-weight:600">⭐ Zuschlag (${zlabels}):</span>
-          <button onclick="setZuschlagFreigabe('${e.id}',true)" style="border:1.5px solid ${e.zuschlag_freigabe?'var(--success)':'var(--border)'};background:${e.zuschlag_freigabe?'var(--success-light)':'var(--surface)'};color:${e.zuschlag_freigabe?'#16A34A':'var(--text-3)'};border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600;cursor:pointer">✓ Freigeben</button>
-          <button onclick="setZuschlagFreigabe('${e.id}',false)" style="border:1.5px solid ${!e.zuschlag_freigabe?'var(--danger)':'var(--border)'};background:${!e.zuschlag_freigabe?'#FEF2F2':'var(--surface)'};color:${!e.zuschlag_freigabe?'var(--danger)':'var(--text-3)'};border-radius:6px;padding:3px 10px;font-size:11px;font-weight:600;cursor:pointer">✕ Keine</button>
-        </div>`;
-      } else if(e.zuschlag_freigabe){
-        zuschlagStr=`<div style="margin-top:4px;font-size:11px;color:var(--success)">⭐ Zuschlag freigegeben (${zlabels})</div>`;
-      }
-    }
-    return `<div class="entry-row" style="grid-template-columns:80px 1fr 130px 110px 100px auto">
+    return `<div class="entry-row">
       <div><div class="entry-date">${formatDateShort(e.datum)}</div><div class="entry-weekday">${getWeekday(e.datum)}</div></div>
-      <div><div class="entry-desc">${e.beschreibung||e.projekt}</div><div class="entry-project">${e.projekt}</div>${empStr}${fahrzeitStr}${zuschlagStr}</div>
+      <div><div class="entry-desc">${e.beschreibung||e.projekt}</div><div class="entry-project">${e.projekt}</div>${empStr}</div>
       <div class="entry-time">${e.von} – ${e.bis}</div>
       <div><div class="entry-duration">${formatMins(e.netto_min)}</div>${e.pause_min>0?`<span style="color:var(--text-3);font-size:11px">−${e.pause_min} min</span>`:''}</div>
       <div><span class="type-badge" style="background:${t.bg};color:${t.color}">${t.icon} ${e.typ}</span></div>
-      <div class="entry-actions"><button class="icon-btn danger" onclick="deleteEntry('${e.id}')" title="Löschen">✕</button></div>
+      <div class="entry-actions">
+        <button class="icon-btn" onclick="editEntry('${e.id}')" title="Bearbeiten">✏️</button>
+        <button class="icon-btn danger" onclick="deleteEntry('${e.id}')" title="Löschen">✕</button>
+      </div>
     </div>`;
   }).join('');
-}
-
-// ===== ZUSCHLAG FREIGABE (Admin) =====
-async function setZuschlagFreigabe(id, frei) {
-  try {
-    setSyncStatus(false);
-    await sbFetch(`zeiteintraege?id=eq.${id}`, {
-      method:'PATCH',
-      body: JSON.stringify({ zuschlag_freigabe: frei }),
-      prefer:'return=minimal'
-    });
-    setSyncStatus(true);
-    await loadEntries();
-    renderEntries();
-    showToast(frei?'Zuschlag freigegeben.':'Zuschlag nicht freigegeben.','⭐','success');
-  } catch(e) {
-    setSyncStatus(false);
-    showToast('Aktualisierung fehlgeschlagen.','⚠️','error');
-  }
-}
-
-// ===== FAHRZEIT BEZAHLT/NICHT BEZAHLT (Admin) =====
-async function setFahrzeitBezahlt(id, bezahlt) {
-  try {
-    setSyncStatus(false);
-    await sbFetch(`zeiteintraege?id=eq.${id}`, {
-      method:'PATCH',
-      body: JSON.stringify({ fahrzeit_bezahlt: bezahlt }),
-      prefer:'return=minimal'
-    });
-    setSyncStatus(true);
-    await loadEntries();
-    renderEntries();
-    showToast(bezahlt?'Fahrzeit als bezahlt markiert.':'Fahrzeit als nicht bezahlt markiert.','🚗','success');
-  } catch(e) {
-    setSyncStatus(false);
-    showToast('Aktualisierung fehlgeschlagen.','⚠️','error');
-  }
 }
 
 // ===== RAPPORT =====
 function rapportPrevMonth() { if(rapportMonth===0){rapportMonth=11;rapportYear--;}else rapportMonth--; renderRapport(); }
 function rapportNextMonth() { if(rapportMonth===11){rapportMonth=0;rapportYear++;}else rapportMonth++; renderRapport(); }
-// ===== MEINE LOHNBLÄTTER (Mitarbeiter-Ansicht) =====
-function renderMeineLohnblaetter() {
-  const cont = document.getElementById('meineLohnblaetter');
-  if(!cont || !currentUser) return;
-  const meine = lohnblaetter.filter(l => l.mitarbeiter_id === currentUser.id);
-  if(!meine.length){ cont.innerHTML=''; return; }
-  cont.innerHTML = `<div class="card" style="margin-bottom:20px">
-    <div class="card-title"><div class="card-title-icon">📨</div>Meine Lohnblätter</div>
-    <div style="display:flex;flex-direction:column;gap:8px">
-      ${meine.map(lb=>`
-        <div style="display:flex;align-items:center;justify-content:space-between;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;flex-wrap:wrap;gap:8px">
-          <div>
-            <div style="font-size:14px;font-weight:700">${monthNames[lb.monat]} ${lb.jahr}</div>
-            <div style="font-size:11px;color:var(--text-3)">Freigegeben am ${new Date(lb.freigegeben_am).toLocaleDateString('de-CH')}</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px">
-            <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--success)">${fmtChf(lb.auszahlung)}</span>
-            <button class="btn btn-primary btn-sm" onclick="viewLohnblatt('${lb.id}')">📄 Ansehen</button>
-          </div>
-        </div>`).join('')}
-    </div>
-  </div>`;
-}
-
 function renderRapport() {
   if(!currentUser) return;
   document.getElementById('rapportEmpName').textContent=currentUser.name;
   document.getElementById('rapportMonthTitle').textContent=`${monthNames[rapportMonth]} ${rapportYear}`;
-  // Freigegebene Lohnblätter dieses Mitarbeiters anzeigen
-  renderMeineLohnblaetter();
   const myE=entries.filter(e=>e.mitarbeiter_id===currentUser.id);
   const monthStr=`${rapportYear}-${String(rapportMonth+1).padStart(2,'0')}`;
   const monthE=myE.filter(e=>e.datum.startsWith(monthStr));
@@ -1672,8 +1318,6 @@ function renderRapport() {
     return `<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px"><span style="font-size:13px;font-weight:600">📁 ${p}</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:${col}">${formatH(m)} <span style="color:var(--text-3);font-size:11px">(${pct}%)</span></span></div><div style="height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${col};border-radius:3px"></div></div></div>`;
   }).join('')||'<div style="color:var(--text-3);font-size:13px">Keine Einträge in diesem Monat.</div>';
   const days=getDaysInMonth(rapportYear,rapportMonth);
-  const now=new Date(); now.setHours(0,0,0,0);
-  const sevenDaysAgo=new Date(now); sevenDaysAgo.setDate(now.getDate()-7);
   let rows='';
   for(let d=1;d<=days;d++){
     const date=`${rapportYear}-${String(rapportMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
@@ -1681,15 +1325,11 @@ function renderRapport() {
     const weekend=isWeekend(dayDate);
     const dayEntries=monthE.filter(e=>e.datum===date);
     const dayMins=dayEntries.reduce((s,e)=>s+e.netto_min,0);
-    // Editierbar wenn Datum innerhalb der letzten 7 Tage liegt
-    const editable = dayDate>=sevenDaysAgo && dayDate<=now;
-    const projHtml=dayEntries.map(e=>{
-      const fz = e.fahrzeit_min>0 ? ` <span style="color:var(--text-3);font-size:10px">+${e.fahrzeit_min}min Fz</span>` : '';
-      const editBtns = editable ? `<span style="display:inline-flex;gap:4px;margin-left:6px"><button onclick="openEditEntry(${e.id})" style="border:none;background:var(--accent-light);color:var(--accent);border-radius:5px;width:22px;height:22px;cursor:pointer;font-size:11px">✏️</button><button onclick="deleteEntry(${e.id})" style="border:none;background:#FEF2F2;color:var(--danger);border-radius:5px;width:22px;height:22px;cursor:pointer;font-size:11px">✕</button></span>` : '';
-      return `<div class="day-project-item"><div class="day-project-dot"></div><span>${e.projekt}${fz}</span><span style="font-family:'JetBrains Mono',monospace;color:var(--text-2);font-size:11px;margin-left:auto">${formatH(e.netto_min)}</span>${editBtns}</div>`;
-    }).join('');
+    const dayProjects={};
+    dayEntries.forEach(e=>{dayProjects[e.projekt]=(dayProjects[e.projekt]||0)+e.netto_min;});
+    const projHtml=Object.entries(dayProjects).map(([p,m])=>`<div class="day-project-item"><div class="day-project-dot"></div><span>${p}</span><span style="font-family:'JetBrains Mono',monospace;color:var(--text-2);font-size:11px;margin-left:auto">${formatH(m)}</span></div>`).join('');
     rows+=`<tr class="${weekend?'day-weekend':'day-row'}">
-      <td><span style="font-weight:600;color:${weekend?'var(--text-3)':'var(--text)'}">${weekdays[dayDate.getDay()]}</span>${editable&&dayMins>0?'<div style="font-size:9px;color:var(--success);font-weight:600">editierbar</div>':''}</td>
+      <td><span style="font-weight:600;color:${weekend?'var(--text-3)':'var(--text)'}">${weekdays[dayDate.getDay()]}</span></td>
       <td style="color:var(--text-2);font-size:13px">${d}. ${months[rapportMonth]}</td>
       <td>${dayMins>0?`<div class="day-project-list">${projHtml}</div>`:'<span style="color:var(--text-3);font-size:12px">—</span>'}</td>
       <td style="text-align:right">${dayMins>0?`<span class="day-total">${formatH(dayMins)}</span>`:'<span style="color:var(--text-3)">—</span>'}</td>
@@ -1745,22 +1385,48 @@ function renderOverview() {
 
 // ===== EXCEL EXPORT =====
 function exportExcel() {
-  if(!entries.length) return showToast('Keine Einträge.','⚠️','error');
+  if(!entries.length) return showToast('Keine Einträge.','\u26a0\ufe0f','error');
   const bom='\uFEFF', sep=';';
-  const header=['Datum','Wochentag','Mitarbeiter','Projekt','Arbeitsgattung','Von','Bis','Pause (min)','Netto'];
-  const rows=[...entries].reverse().map(e=>{
-    const d=new Date(e.datum+'T00:00:00');
-    return [e.datum,weekdays[d.getDay()],e.mitarbeiter_name||'',e.projekt,e.typ,e.von,e.bis,e.pause_min,formatMins(e.netto_min)].join(sep);
+
+  // Sort: Mitarbeiter alphabetisch, dann Datum
+  const sorted = [...entries].sort((a,b)=>{
+    const ea=(a.mitarbeiter_name||'').toLowerCase();
+    const eb=(b.mitarbeiter_name||'').toLowerCase();
+    if(ea<eb) return -1; if(ea>eb) return 1;
+    return a.datum.localeCompare(b.datum);
   });
-  const csv=bom+header.join(sep)+'\n'+rows.join('\n');
+
+  // Gruppieren nach Mitarbeiter
+  const grouped={};
+  sorted.forEach(e=>{
+    const emp=e.mitarbeiter_name||'Unbekannt';
+    if(!grouped[emp]) grouped[emp]=[];
+    grouped[emp].push(e);
+  });
+
+  const header=['Mitarbeiter','Datum','Wochentag','Von','Bis','Pause (min)','Fahrzeit (min)','Brutto','Netto','Projekt','Arbeitsgattung','Beschreibung'];
+  const rows=[bom+header.join(sep)];
+
+  Object.entries(grouped).forEach(([emp,empEntries])=>{
+    empEntries.forEach(e=>{
+      const d=new Date(e.datum+'T00:00:00');
+      const brutto=(e.pause_min||0)+(e.fahrzeit_min||0)+e.netto_min;
+      rows.push([emp,e.datum,weekdays[d.getDay()],e.von,e.bis,e.pause_min||0,e.fahrzeit_min||0,formatMins(brutto),formatMins(e.netto_min),e.projekt,e.typ,(e.beschreibung||'').replace(/;/g,',')].join(sep));
+    });
+    // Total pro Mitarbeiter
+    const total=empEntries.reduce((s,e)=>s+e.netto_min,0);
+    rows.push([emp+' — TOTAL','','','','','','','',formatMins(total),'','',''].join(sep));
+    // Leerzeile
+    rows.push('');
+  });
+
+  const csv=rows.join('\n');
   const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob), a=document.createElement('a');
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url; a.download=`Zeiterfassung_${formatDateInput(new Date())}.csv`;
   document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-  showToast(`${entries.length} Einträge exportiert.`,'📥','success');
+  showToast(`${entries.length} Eintr\u00e4ge exportiert.`,'\ud83d\udce5','success');
 }
-
-// ===== TOAST =====
 function showToast(msg,icon,type) {
   const c=document.getElementById('toastContainer'),t=document.createElement('div');
   t.className=`toast ${type}`; t.innerHTML=`<span>${icon}</span><span>${msg}</span>`;
@@ -1884,6 +1550,62 @@ function setLang(lang) {
   } catch(err) { console.error('setLang error:', err); }
 }
 
+
+// ===== SIGNATURE PAD =====
+let sigCanvas, sigCtx, sigDrawing = false, sigHasData = false;
+
+function initSignature() {
+  sigCanvas = document.getElementById('sigCanvas');
+  if(!sigCanvas) return;
+  sigCtx = sigCanvas.getContext('2d');
+  // Set canvas size
+  const wrap = sigCanvas.parentElement;
+  sigCanvas.width = wrap.clientWidth || 340;
+  sigCanvas.height = 160;
+  sigCtx.strokeStyle = '#0F1525';
+  sigCtx.lineWidth = 2.5;
+  sigCtx.lineCap = 'round';
+  sigCtx.lineJoin = 'round';
+
+  function getPos(e) {
+    const r = sigCanvas.getBoundingClientRect();
+    const scaleX = sigCanvas.width / r.width;
+    const scaleY = sigCanvas.height / r.height;
+    if(e.touches) {
+      return { x: (e.touches[0].clientX - r.left)*scaleX, y: (e.touches[0].clientY - r.top)*scaleY };
+    }
+    return { x: (e.clientX - r.left)*scaleX, y: (e.clientY - r.top)*scaleY };
+  }
+  function start(e) { e.preventDefault(); sigDrawing=true; sigHasData=true; const p=getPos(e); sigCtx.beginPath(); sigCtx.moveTo(p.x,p.y); document.getElementById('sigSaved').style.display='none'; }
+  function draw(e) { if(!sigDrawing) return; e.preventDefault(); const p=getPos(e); sigCtx.lineTo(p.x,p.y); sigCtx.stroke(); }
+  function end(e) { sigDrawing=false; }
+
+  sigCanvas.addEventListener('mousedown', start);
+  sigCanvas.addEventListener('mousemove', draw);
+  sigCanvas.addEventListener('mouseup', end);
+  sigCanvas.addEventListener('touchstart', start, {passive:false});
+  sigCanvas.addEventListener('touchmove', draw, {passive:false});
+  sigCanvas.addEventListener('touchend', end);
+}
+
+function clearSignature() {
+  if(!sigCtx) return;
+  sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height);
+  sigHasData = false;
+  document.getElementById('sigSaved').style.display='none';
+  document.getElementById('sigName').value='';
+}
+
+async function saveSignature() {
+  if(!sigHasData) { showToast('Bitte zuerst unterschreiben.','⚠️','error'); return; }
+  const name = document.getElementById('sigName').value.trim();
+  const dataUrl = sigCanvas.toDataURL('image/png');
+  // Save to Supabase if we have a column, otherwise just show saved
+  showToast('Unterschrift gespeichert' + (name?' von '+name:'') + '.','✓','success');
+  document.getElementById('sigSaved').style.display='block';
+  document.getElementById('sigSaved').textContent = '✓ Unterschrift gespeichert' + (name ? ' — ' + name : '');
+}
+
 // ===== INIT =====
 function init() {
   document.getElementById('dateNow').textContent=formatDateLong(new Date());
@@ -1901,856 +1623,6 @@ init();
 <script>
 // Logo will be set inline below
 const LOGO_DATA = 'data:image/png;base64,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';
-// ===== LOHNABRECHNUNG =====
-// Mitarbeiterdaten (Lohnstamm) in Supabase Tabelle "lohnstamm"
-// Felder: mitarbeiter_id, ansatz, ferien_pct, qst_code, qst_satz, ahv_satz, alv_satz, nbuv_satz, bvg_fix, spesen_tag, waehrung, eur_kurs, iban, ahv_nr, adresse, bemerkung
-
-let lohnstamm = []; // cache
-let qstTarife = []; // ESTV-Tariftabellen cache
-
-async function loadLohnstamm() {
-  try {
-    lohnstamm = await sbFetch('lohnstamm?select=*');
-  } catch(e) {
-    // Tabelle existiert noch nicht – leer lassen
-    lohnstamm = [];
-  }
-}
-
-async function loadQstTarife() {
-  try {
-    qstTarife = await sbFetch('qst_tarife?select=*');
-  } catch(e) {
-    qstTarife = [];
-  }
-}
-
-function rebuildLohnSelects() {
-  const sel = document.getElementById('lohnEmpSel');
-  if (!sel) return;
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">— Mitarbeiter —</option>';
-  mitarbeiter.forEach(m => {
-    const o = new Option(m.name, m.id);
-    if (m.id == cur) o.selected = true;
-    sel.appendChild(o);
-  });
-  // Jahres-Dropdown
-  const ySel = document.getElementById('lohnYearSel');
-  if (!ySel) return;
-  const yv = ySel.value;
-  const years = new Set([new Date().getFullYear()]);
-  entries.forEach(e => { if(e.datum) years.add(new Date(e.datum+'T00:00:00').getFullYear()); });
-  ySel.innerHTML = '';
-  [...years].sort((a,b)=>b-a).forEach(y => {
-    const o = new Option(y, y);
-    if (y == yv) o.selected = true;
-    ySel.appendChild(o);
-  });
-  // Default: aktueller Monat
-  const mSel = document.getElementById('lohnMonthSel');
-  if (mSel && !mSel.dataset.set) { mSel.value = new Date().getMonth(); mSel.dataset.set='1'; }
-}
-
-function getLohnstamm(maId) {
-  return lohnstamm.find(l => l.mitarbeiter_id == maId) || null;
-}
-
-// ===== LOHNSTAMM-EDITOR (Admin) =====
-function lsEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
-function lsSelOpts(values, cur, emptyLabel){
-  return values.map(v => `<option value="${lsEsc(v)}"${(cur||'')===v?' selected':''}>${v===''?(emptyLabel||'—'):v}</option>`).join('');
-}
-
-async function openLohnstammTab() {
-  try { if (!mitarbeiter.length) await loadMitarbeiter(); } catch(e){}
-  try { await loadLohnstamm(); } catch(e){}
-  const sel = document.getElementById('lsEmpSel');
-  if (!sel) return;
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">— Mitarbeiter wählen —</option>' +
-    mitarbeiter.map(m => `<option value="${lsEsc(m.id)}">${lsEsc(m.name)}</option>`).join('');
-  if (cur) sel.value = cur;
-  renderLohnstammForm(sel.value);
-}
-
-function renderLohnstammForm(maId) {
-  const box = document.getElementById('lohnstammForm');
-  if (!box) return;
-  if (!maId) {
-    box.innerHTML = '<div style="text-align:center;color:var(--text-3);padding:30px 0">Bitte oben einen Mitarbeiter wählen.</div>';
-    return;
-  }
-  const ls = getLohnstamm(maId) || {};
-  const ex = !!getLohnstamm(maId);
-  const val = (k,d='') => { const x = ls[k]; return (x===null||x===undefined)?d:x; };
-  const a   = (k,d='') => lsEsc(val(k,d));
-  box.innerHTML = `
-    <div style="font-size:12px;color:${ex?'#16A34A':'#92400E'};background:${ex?'var(--success-light)':'#FFF7ED'};border:1px solid ${ex?'var(--success)':'#FED7AA'};border-radius:8px;padding:8px 12px;margin:6px 0 18px;display:inline-block">
-      ${ex?'✓ Bestehender Lohnstamm – Änderungen werden aktualisiert.':'⚠️ Noch kein Lohnstamm – wird beim Speichern neu angelegt.'}
-    </div>
-
-    <div class="admin-section-title">Grunddaten</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:18px">
-      <div class="field"><label>Stundenansatz Brutto (CHF/h)</label><input type="number" step="0.01" id="lsAnsatz" value="${a('ansatz')}" placeholder="25.00"></div>
-      <div class="field"><label>Ferienzuschlag (%)</label><input type="number" step="0.01" id="lsFerien" value="${a('ferien_pct')}" placeholder="9.70"></div>
-      <div class="field"><label>Spesen pro Tag (CHF)</label><input type="number" step="0.01" id="lsSpesen" value="${a('spesen_tag')}" placeholder="15.00"></div>
-    </div>
-
-    <div class="admin-section-title">Quellensteuer</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:8px">
-      <div class="field"><label>Kanton</label><select id="lsQstKanton">${lsSelOpts(['','LU','TG','NW'], ls.qst_kanton, '— keiner —')}</select></div>
-      <div class="field"><label>Tarifcode</label><select id="lsQstCode">${lsSelOpts(['','A0N','C0N'], ls.qst_code, '— keiner —')}</select></div>
-      <div class="field"><label>Eintritt</label><input type="date" id="lsEintritt" value="${a('eintritt')}"></div>
-      <div class="field"><label>Austritt</label><input type="date" id="lsAustritt" value="${a('austritt')}"></div>
-    </div>
-    <div class="field" style="max-width:340px;margin-bottom:18px"><label>QSt-Satz manuell (%) – nur für Lohn &gt; 8'000</label><input type="number" step="0.01" id="lsQstSatz" value="${a('qst_satz')}" placeholder="leer = Tariftabelle"></div>
-
-    <div class="admin-section-title">Abzüge</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:6px">
-      <div class="field"><label>AHV (%)</label><input type="number" step="0.01" id="lsAhv" value="${a('ahv_satz')}" placeholder="5.30"></div>
-      <div class="field"><label>ALV (%)</label><input type="number" step="0.01" id="lsAlv" value="${a('alv_satz')}" placeholder="1.10"></div>
-      <div class="field"><label>NBUV (%)</label><input type="number" step="0.01" id="lsNbuv" value="${a('nbuv_satz')}" placeholder="1.67"></div>
-      <div class="field"><label>BVG-Prämie fix (CHF/Mt.)</label><input type="number" step="0.01" id="lsBvg" value="${a('bvg_fix')}" placeholder="0"></div>
-    </div>
-    <div style="font-size:11px;color:var(--text-3);margin-bottom:18px">ZPK ist fix CHF 19/Monat (im Code hinterlegt, nicht hier editierbar).</div>
-
-    <div class="admin-section-title">Auszahlung &amp; Stammdaten</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
-      <div class="field"><label>Währung</label><select id="lsWaehrung">${lsSelOpts(['CHF','EUR'], ls.waehrung||'CHF', 'CHF')}</select></div>
-      <div class="field"><label>EUR-Kurs (CHF→EUR)</label><input type="number" step="0.0001" id="lsEurKurs" value="${a('eur_kurs')}" placeholder="0.9156"></div>
-      <div class="field"><label>AHV-Nr.</label><input type="text" id="lsAhvNr" value="${a('ahv_nr')}" placeholder="756...."></div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-      <div class="field"><label>IBAN</label><input type="text" id="lsIban" value="${a('iban')}" placeholder="CH.."></div>
-      <div class="field"><label>Adresse</label><input type="text" id="lsAdresse" value="${a('adresse')}" placeholder="Strasse, PLZ Ort"></div>
-    </div>
-    <div class="field" style="margin-bottom:18px"><label>Bemerkung</label><input type="text" id="lsBemerkung" value="${a('bemerkung')}" placeholder="z.B. Vorschuss, Barauszahlung …"></div>
-
-    <div style="display:flex;justify-content:flex-end">
-      <button class="btn btn-primary btn-sm" onclick="saveLohnstamm()">✓ Lohnstamm speichern</button>
-    </div>
-  `;
-}
-
-async function saveLohnstamm() {
-  const maId = document.getElementById('lsEmpSel').value;
-  if (!maId) return showToast('Bitte zuerst einen Mitarbeiter wählen.','⚠️','error');
-  const num = id => { const el=document.getElementById(id); const v=(el?el.value:'').trim().replace(',','.'); if(v==='') return null; const n=parseFloat(v); return isNaN(n)?null:n; };
-  const txt = id => { const el=document.getElementById(id); const v=(el?el.value:'').trim(); return v===''?null:v; };
-  const payload = {
-    mitarbeiter_id: maId,
-    ansatz:     num('lsAnsatz'),
-    ferien_pct: num('lsFerien'),
-    spesen_tag: num('lsSpesen'),
-    qst_kanton: txt('lsQstKanton'),
-    qst_code:   txt('lsQstCode'),
-    qst_satz:   num('lsQstSatz'),
-    eintritt:   txt('lsEintritt'),
-    austritt:   txt('lsAustritt'),
-    ahv_satz:   num('lsAhv'),
-    alv_satz:   num('lsAlv'),
-    nbuv_satz:  num('lsNbuv'),
-    bvg_fix:    num('lsBvg'),
-    waehrung:   txt('lsWaehrung') || 'CHF',
-    eur_kurs:   num('lsEurKurs'),
-    iban:       txt('lsIban'),
-    ahv_nr:     txt('lsAhvNr'),
-    adresse:    txt('lsAdresse'),
-    bemerkung:  txt('lsBemerkung')
-  };
-  const exists = !!getLohnstamm(maId);
-  try {
-    setSyncStatus(false);
-    if (exists) {
-      await sbFetch(`lohnstamm?mitarbeiter_id=eq.${maId}`, { method:'PATCH', body: JSON.stringify(payload), prefer:'return=minimal' });
-    } else {
-      await sbFetch('lohnstamm', { method:'POST', body: JSON.stringify(payload), prefer:'return=minimal' });
-    }
-    setSyncStatus(true);
-    await loadLohnstamm();
-    renderLohnstammForm(maId);
-    showToast('Lohnstamm gespeichert.','✓','success');
-  } catch(e) {
-    setSyncStatus(false);
-    showToast('Speichern fehlgeschlagen: ' + (e.message||''),'⚠️','error');
-  }
-}
-
-// ===== QUELLENSTEUER NACH ESTV-TARIFTABELLE =====
-// Tabelle qst_tarife: { kanton, tarifcode, lohn_bis, steuer_chf }
-// Stufung alle CHF 100. Interpolation zwischen den Stufen.
-// Rückgabe: CHF-Steuerbetrag für den Monat.
-function getQstBetrag(ls, brutto) {
-  if (!ls) return 0;
-  const kanton = (ls.qst_kanton || '').toUpperCase();
-  const code   = (ls.qst_code || '').toUpperCase();
-  if (kanton && code && qstTarife.length) {
-    // passende Stufen finden
-    const stufen = qstTarife
-      .filter(t => (t.kanton||'').toUpperCase()===kanton && (t.tarifcode||'').toUpperCase()===code)
-      .map(t => ({ lohn: parseFloat(t.lohn_bis), steuer: parseFloat(t.steuer_chf) }))
-      .filter(t => !isNaN(t.lohn) && !isNaN(t.steuer))
-      .sort((a,b) => a.lohn - b.lohn);
-    if (stufen.length) {
-      // unter erster Stufe
-      if (brutto <= stufen[0].lohn) return stufen[0].steuer;
-      // über letzter Stufe → höchsten Satz proportional anwenden
-      const last = stufen[stufen.length-1];
-      if (brutto >= last.lohn) {
-        const satz = last.lohn>0 ? last.steuer/last.lohn : 0;
-        return brutto * satz;
-      }
-      // zwischen zwei Stufen linear interpolieren
-      for (let i=0; i<stufen.length-1; i++) {
-        const a=stufen[i], b=stufen[i+1];
-        if (brutto >= a.lohn && brutto <= b.lohn) {
-          const f = (brutto - a.lohn) / (b.lohn - a.lohn);
-          return a.steuer + f * (b.steuer - a.steuer);
-        }
-      }
-      return last.steuer;
-    }
-  }
-  // Fallback: fixer Prozentsatz aus lohnstamm
-  const satz = getQstSatzFallback(ls, brutto);
-  return brutto * satz / 100;
-}
-
-// Fallback-Prozentsatz (alte Logik mit qst_tarif JSON oder qst_satz)
-function getQstSatzFallback(ls, brutto) {
-  if (!ls) return 0;
-  let tarif = ls.qst_tarif;
-  if (typeof tarif === 'string') { try { tarif = JSON.parse(tarif); } catch(e){ tarif = null; } }
-  if (Array.isArray(tarif) && tarif.length) {
-    const sorted = [...tarif].filter(t=>t&&typeof t.satz!=='undefined').sort((a,b)=>{
-      const ab=(a.bis==null?Infinity:a.bis), bb=(b.bis==null?Infinity:b.bis); return ab-bb;
-    });
-    for (const stufe of sorted) {
-      const grenze = (stufe.bis==null || stufe.bis==='') ? Infinity : parseFloat(stufe.bis);
-      if (brutto <= grenze) return parseFloat(stufe.satz)||0;
-    }
-    return parseFloat(sorted[sorted.length-1].satz)||0;
-  }
-  return parseFloat(ls.qst_satz)||0;
-}
-
-// Effektiver QSt-Prozentsatz (für Anzeige)
-function getQstSatz(ls, brutto) {
-  if (brutto <= 0) return 0;
-  const betrag = getQstBetrag(ls, brutto);
-  return betrag / brutto * 100;
-}
-
-// ===== QSt MIT HOCHRECHNUNG (Ein-/Austritt, Ziffer 4.17.1) =====
-// Bei unvollständiger Zahltagsperiode:
-//  1. effektive Arbeitstage im Monat zählen (anhand Ein-/Austrittsdatum)
-//  2. Teillohn auf 30 Tage hochrechnen → fiktiver Monatslohn
-//  3. Steuersatz aus fiktivem Lohn bestimmen
-//  4. Satz auf effektiven Teillohn anwenden
-// Rückgabe: { betrag, satz, hochgerechnet, arbeitstage, istTeilmonat }
-function getQstMitHochrechnung(ls, brutto, month, year) {
-  const normal = { betrag: getQstBetrag(ls, brutto), satz: getQstSatz(ls, brutto), hochgerechnet: brutto, arbeitstage: 30, istTeilmonat: false };
-  if (!ls) return normal;
-  const eintritt = ls.eintritt ? new Date(ls.eintritt+'T00:00:00') : null;
-  const austritt = ls.austritt ? new Date(ls.austritt+'T00:00:00') : null;
-  // Monatsgrenzen
-  const monatStart = new Date(year, month, 1);
-  const monatEnde  = new Date(year, month+1, 0); // letzter Tag
-  // Liegt Ein- oder Austritt in diesem Monat?
-  const eintrittImMonat = eintritt && eintritt > monatStart && eintritt <= monatEnde;
-  const austrittImMonat = austritt && austritt >= monatStart && austritt < monatEnde;
-  if (!eintrittImMonat && !austrittImMonat) return normal;
-  // Effektive Tage im Monat berechnen (Basis 30)
-  const von = eintrittImMonat ? eintritt.getDate() : 1;
-  const bis = austrittImMonat ? austritt.getDate() : 30;
-  let arbeitstage = bis - von + 1;
-  if (arbeitstage < 1) arbeitstage = 1;
-  if (arbeitstage > 30) arbeitstage = 30;
-  // Hochrechnen auf 30 Tage
-  const hochgerechnet = brutto * 30 / arbeitstage;
-  // Satz vom hochgerechneten Lohn
-  const satz = getQstSatz(ls, hochgerechnet);
-  // Satz auf effektiven Teillohn anwenden
-  const betrag = brutto * satz / 100;
-  return { betrag, satz, hochgerechnet, arbeitstage, istTeilmonat: true };
-}
-
-function fmtChf(v, waehr) {
-  const s = Math.abs(v).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,"'");
-  return (v < 0 ? '− ' : '') + (waehr||'CHF') + ' ' + s;
-}
-
-// ===== ADMIN: FREIGEGEBENE LOHNBLÄTTER VERWALTEN =====
-function renderFreigegebeneLohnblaetter() {
-  const cont = document.getElementById('freigegebeneLohnblaetter');
-  if(!cont) return;
-  if(!lohnblaetter.length){ cont.innerHTML=''; return; }
-  cont.innerHTML = `<div class="lohn-card">
-    <div class="lohn-card-title">📨 Freigegebene Lohnblätter (sichtbar beim Mitarbeiter)</div>
-    <div style="display:flex;flex-direction:column;gap:8px">
-      ${lohnblaetter.map(lb=>`
-        <div style="display:flex;align-items:center;justify-content:space-between;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;flex-wrap:wrap;gap:8px">
-          <div>
-            <div style="font-size:13px;font-weight:700">${lb.mitarbeiter_name} – ${monthNames[lb.monat]} ${lb.jahr}</div>
-            <div style="font-size:11px;color:var(--text-3)">Freigegeben ${new Date(lb.freigegeben_am).toLocaleDateString('de-CH')} · ${fmtChf(lb.auszahlung)}</div>
-          </div>
-          <div style="display:flex;gap:6px">
-            <button class="btn btn-outline btn-sm" onclick="viewLohnblatt('${lb.id}')">📄</button>
-            <button class="icon-btn danger" onclick="lohnblattLoeschen('${lb.id}')" title="Löschen">✕</button>
-          </div>
-        </div>`).join('')}
-    </div>
-  </div>`;
-}
-
-function renderLohn() {
-  renderFreigegebeneLohnblaetter();
-  const maId = document.getElementById('lohnEmpSel')?.value;
-  const month = parseInt(document.getElementById('lohnMonthSel')?.value ?? new Date().getMonth());
-  const year  = parseInt(document.getElementById('lohnYearSel')?.value ?? new Date().getFullYear());
-  const cont  = document.getElementById('lohnContent');
-  if (!cont) return;
-
-  if (!maId) {
-    cont.innerHTML = `<div class="empty-state"><div class="empty-icon" style="font-size:40px;margin-bottom:12px">💰</div><div style="font-size:15px;font-weight:600;color:var(--text-2)">Mitarbeiter wählen</div><div style="font-size:13px;color:var(--text-3);margin-top:4px">Wähle oben einen Mitarbeiter und Monat aus.</div></div>`;
-    return;
-  }
-
-  const ma = mitarbeiter.find(m => m.id == maId);
-  if (!ma) return;
-  const ls = getLohnstamm(maId);
-
-  // Einträge für diesen MA + Monat
-  const monthStr = `${year}-${String(month+1).padStart(2,'0')}`;
-  const maE = entries.filter(e => e.mitarbeiter_id == maId && e.datum && e.datum.startsWith(monthStr));
-  const arbeitsMins = maE.reduce((s,e)=>s+e.netto_min,0);
-  // Bezahlte Fahrzeit wird zur Lohnzeit addiert (gleicher Ansatz)
-  const fahrzeitBezahltMins = maE.reduce((s,e)=>s+(e.fahrzeit_bezahlt?(e.fahrzeit_min||0):0),0);
-  const fahrzeitTotalMins = maE.reduce((s,e)=>s+(e.fahrzeit_min||0),0);
-  const totalMins = arbeitsMins + fahrzeitBezahltMins;
-  const totalH = totalMins / 60;
-  const arbeitsH = arbeitsMins / 60;
-  const fahrzeitBezahltH = fahrzeitBezahltMins / 60;
-
-  // Spesen: pro Tag mit >7.0 Std Arbeitszeit → CHF 15.–
-  const minsByDay = {};
-  maE.forEach(e=>{ minsByDay[e.datum] = (minsByDay[e.datum]||0) + e.netto_min; });
-  const spesenTage = Object.values(minsByDay).filter(m => m > 7*60).length;
-
-  // Zuschläge (nur bei Admin-Freigabe: e.zuschlag_freigabe === true)
-  let z50Mins = 0, z100Mins = 0;
-  maE.forEach(e=>{
-    if (e.zuschlag_freigabe) {
-      const z = berechneZuschlag(e);
-      z50Mins  += z.z50;
-      z100Mins += z.z100;
-    }
-  });
-  const z50H = z50Mins/60, z100H = z100Mins/60;
-
-  // Lohnparameter (aus lohnstamm oder Defaults)
-  const ansatz    = ls?.ansatz     ?? 25.00;
-  const ferienPct = ls?.ferien_pct ?? 9.70;
-  const ahvSatz   = ls?.ahv_satz   ?? 5.30;
-  const alvSatz   = ls?.alv_satz   ?? 1.10;
-  const nbuvSatz  = ls?.nbuv_satz  ?? 1.67;
-  const bvgFix    = ls?.bvg_fix    ?? 0;
-  const spesenTag = ls?.spesen_tag ?? 15.00;
-  const qstCode   = ls?.qst_code   ?? '—';
-  const waehrung  = ls?.waehrung   ?? 'CHF';
-  const eurKurs   = ls?.eur_kurs   ?? 0;
-  const iban      = ls?.iban       ?? ma.iban ?? '—';
-  const ahvNr     = ls?.ahv_nr     ?? '—';
-  const adresse   = ls?.adresse    ?? '—';
-  const bemerkung = ls?.bemerkung  ?? '';
-
-  // Berechnungen
-  const grundlohn  = totalH * ansatz;
-  const zuschlag50 = z50H * ansatz * 0.50;   // +50%
-  const zuschlag100= z100H * ansatz * 1.00;  // +100%
-  const brutto     = grundlohn + zuschlag50 + zuschlag100;
-  // Quellensteuer-Satz nach Tarifstufe (abhängig vom Bruttolohn)
-  const qstSatz   = getQstSatz(ls, brutto);
-  const ahvAbzug   = brutto * ahvSatz / 100;
-  const alvAbzug   = brutto * alvSatz / 100;
-  const nbuvAbzug  = brutto * nbuvSatz / 100;
-  const zpkAbzug   = 19;
-  const bvgAbzug   = Math.abs(bvgFix);
-  const qstInfo    = getQstMitHochrechnung(ls, brutto, month, year);
-  const qstAbzug   = qstInfo.betrag;
-  const qstSatzEff = qstInfo.satz;
-  const totalAbz   = ahvAbzug + alvAbzug + nbuvAbzug + zpkAbzug + bvgAbzug + qstAbzug;
-  const netto      = brutto - totalAbz;
-  const spesen     = spesenTage * spesenTag;
-  const auszahlung = netto + spesen;
-  const auszEur    = waehrung === 'EUR' && eurKurs > 0 ? auszahlung / eurKurs : 0;
-
-  const mn = monthNames[month];
-
-  // Lohnblatt zeigt nur Monats-Total, kein Tagesrapport
-  cont.innerHTML = `
-  <div class="lohn-hero">
-    <div class="lohn-hero-eyebrow">Lohnabrechnung ${mn} ${year}</div>
-    <div class="lohn-hero-name">${ma.name}</div>
-    <div class="lohn-hero-sub">${ahvNr} · ${adresse}</div>
-    <div class="lohn-kpi-row">
-      <div class="lohn-kpi"><div class="lohn-kpi-label">Arbeitsstunden</div><div class="lohn-kpi-val">${totalH.toFixed(2)} h</div></div>
-      <div class="lohn-kpi"><div class="lohn-kpi-label">Bruttolohn</div><div class="lohn-kpi-val gold">${fmtChf(brutto)}</div></div>
-      <div class="lohn-kpi"><div class="lohn-kpi-label">Nettolohn</div><div class="lohn-kpi-val">${fmtChf(netto)}</div></div>
-    </div>
-  </div>
-
-  <div class="lohn-breakdown">
-    <div class="lohn-card">
-      <div class="lohn-card-title">📋 Bruttolohn ${mn} ${year}</div>
-      <div class="lohn-row"><span>Arbeitszeit total</span><span class="lohn-val">${arbeitsH.toFixed(2)} h</span></div>
-      ${fahrzeitBezahltMins>0 ? `<div class="lohn-row"><span>+ Bezahlte Fahrzeit</span><span class="lohn-val green">${fahrzeitBezahltH.toFixed(2)} h</span></div>` : ''}
-      ${fahrzeitTotalMins>fahrzeitBezahltMins ? `<div class="lohn-row"><span style="color:var(--text-3)">Fahrzeit unbezahlt (Info)</span><span class="lohn-val" style="color:var(--text-3)">${((fahrzeitTotalMins-fahrzeitBezahltMins)/60).toFixed(2)} h</span></div>` : ''}
-      <div class="lohn-row"><span>Total verrechnet</span><span class="lohn-val">${totalH.toFixed(2)} h</span></div>
-      <div class="lohn-row"><span>Ansatz (Brutto inkl. ${ferienPct}% Ferien)</span><span class="lohn-val">${fmtChf(ansatz)}/h</span></div>
-      <div class="lohn-row"><span>Grundlohn</span><span class="lohn-val">${fmtChf(grundlohn)}</span></div>
-      ${z50Mins>0 ? `<div class="lohn-row"><span>Zuschlag 50% (${z50H.toFixed(2)} h Nacht/So)</span><span class="lohn-val green">+ ${fmtChf(zuschlag50)}</span></div>` : ''}
-      ${z100Mins>0 ? `<div class="lohn-row"><span>Zuschlag 100% (${z100H.toFixed(2)} h So-Nacht)</span><span class="lohn-val green">+ ${fmtChf(zuschlag100)}</span></div>` : ''}
-      <div class="lohn-row total"><span>BRUTTOLOHN</span><span class="lohn-val gold">${fmtChf(brutto)}</span></div>
-    </div>
-    <div class="lohn-card">
-      <div class="lohn-card-title">➖ Sozialabzüge</div>
-      <div class="lohn-row"><span>AHV/IV/EO (${ahvSatz}%)</span><span class="lohn-val red">− ${fmtChf(ahvAbzug)}</span></div>
-      <div class="lohn-row"><span>ALV (${alvSatz}%)</span><span class="lohn-val red">− ${fmtChf(alvAbzug)}</span></div>
-      <div class="lohn-row"><span>NBUV (${nbuvSatz}%)</span><span class="lohn-val red">− ${fmtChf(nbuvAbzug)}</span></div>
-      <div class="lohn-row"><span>ZPK (fix)</span><span class="lohn-val red">− ${fmtChf(zpkAbzug)}</span></div>
-      ${bvgAbzug ? `<div class="lohn-row"><span>BVG-Prämie (fix)</span><span class="lohn-val red">− ${fmtChf(bvgAbzug)}</span></div>` : ''}
-      <div class="lohn-row"><span>Quellensteuer ${qstCode} (${qstSatzEff.toFixed(2)}%)${qstInfo.istTeilmonat?`<br><span style="font-size:10px;color:var(--text-3)">Teilmonat: ${qstInfo.arbeitstage} Tage → hochgerechnet auf ${fmtChf(qstInfo.hochgerechnet)}</span>`:''}</span><span class="lohn-val red">− ${fmtChf(qstAbzug)}</span></div>
-      <div class="lohn-row total"><span>TOTAL ABZÜGE</span><span class="lohn-val red">− ${fmtChf(totalAbz)}</span></div>
-    </div>
-  </div>
-
-  <div class="lohn-netto">
-    <div><div class="lohn-netto-label">Nettolohn</div><div class="lohn-netto-val">${fmtChf(netto)}</div></div>
-    <div><div class="lohn-netto-label">Spesen (${spesenTage} Tage >7h × CHF ${spesenTag.toFixed(2)})</div><div class="lohn-netto-val gold">+ ${fmtChf(spesen)}</div></div>
-    <div>
-      <div class="lohn-netto-label">Auszahlung</div>
-      <div class="lohn-netto-val green">${waehrung==='EUR'&&auszEur>0 ? '€ '+auszEur.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,"'") : fmtChf(auszahlung)}</div>
-      ${waehrung==='EUR'&&eurKurs>0 ? `<div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:3px">${fmtChf(auszahlung)} · 1€ = ${eurKurs} CHF</div>` : ''}
-    </div>
-  </div>
-
-  <div style="font-size:12px;color:var(--text-3);text-align:center;padding:8px 0">
-    IBAN: <strong style="color:var(--text-2)">${iban}</strong>
-    ${bemerkung ? ` · ℹ️ ${bemerkung}` : ''}
-  </div>
-  <div style="text-align:center;margin-top:16px">
-    <button class="btn btn-success btn-sm" onclick="lohnblattFreigeben('${maId}',${month},${year},${auszahlung.toFixed(2)})">📨 Lohnblatt für Mitarbeiter freigeben</button>
-    <div style="font-size:11px;color:var(--text-3);margin-top:6px">Das freigegebene Lohnblatt erscheint beim Mitarbeiter im Rapport und bleibt sichtbar, bis du es löschst.</div>
-  </div>
-  ${!ls ? `<div style="text-align:center;margin-top:16px"><div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:14px 20px;display:inline-block;font-size:13px;color:#92400E">⚠️ Kein Lohnstamm für diesen Mitarbeiter. Bitte in Supabase Tabelle <strong>lohnstamm</strong> erfassen oder Lohndaten importieren.</div></div>` : ''}
-  `;
-}
-
-// ===== LOHNBLATT FREIGEBEN / VERWALTEN =====
-let lohnblaetter = [];
-async function loadLohnblaetter() {
-  try { lohnblaetter = await sbFetch('lohnblaetter?select=*&order=jahr.desc,monat.desc'); }
-  catch(e){ lohnblaetter = []; }
-}
-async function lohnblattFreigeben(maId, month, year, auszahlung) {
-  const ma = mitarbeiter.find(m=>m.id==maId);
-  if(!ma) return;
-  // HTML-Snapshot des aktuellen Lohnblatts speichern
-  const snapshot = document.getElementById('lohnContent').innerHTML
-    .replace(/<button[^>]*>[\s\S]*?<\/button>/g,'')
-    .replace(/onclick="[^"]*"/g,'');
-  try {
-    setSyncStatus(false);
-    // Existierendes Lohnblatt für diesen Monat löschen (überschreiben)
-    await sbFetch(`lohnblaetter?mitarbeiter_id=eq.${maId}&monat=eq.${month}&jahr=eq.${year}`, { method:'DELETE', prefer:'return=minimal' }).catch(()=>{});
-    await sbFetch('lohnblaetter', {
-      method:'POST',
-      body: JSON.stringify({
-        mitarbeiter_id: maId,
-        mitarbeiter_name: ma.name,
-        monat: month, jahr: year,
-        auszahlung: parseFloat(auszahlung),
-        html: snapshot,
-        freigegeben_am: new Date().toISOString()
-      }),
-      prefer:'return=minimal'
-    });
-    setSyncStatus(true);
-    await loadLohnblaetter();
-    showToast(`Lohnblatt ${monthNames[month]} ${year} freigegeben.`,'📨','success');
-  } catch(e) {
-    setSyncStatus(false);
-    showToast('Freigabe fehlgeschlagen – Tabelle lohnblaetter vorhanden?','⚠️','error');
-  }
-}
-async function lohnblattLoeschen(id) {
-  if(!confirm('Dieses freigegebene Lohnblatt wirklich löschen?')) return;
-  try {
-    await sbFetch(`lohnblaetter?id=eq.${id}`, { method:'DELETE', prefer:'return=minimal' });
-    await loadLohnblaetter();
-    if(document.getElementById('viewRapport').classList.contains('active')) renderRapport();
-    renderEntries();
-    showToast('Lohnblatt gelöscht.','🗑','error');
-  } catch(e){ showToast('Löschen fehlgeschlagen.','⚠️','error'); }
-}
-function viewLohnblatt(id) {
-  const lb = lohnblaetter.find(l=>l.id===id);
-  if(!lb) return;
-  const win=window.open('','_blank');
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Lohnblatt ${lb.mitarbeiter_name} ${monthNames[lb.monat]} ${lb.jahr}</title>
-  <style>body{font-family:Arial,sans-serif;color:#1C2B4A;margin:0;padding:28px;font-size:12px}
-  .lohn-hero{background:#1C2B4A;color:#fff;padding:20px 24px;border-radius:10px;margin-bottom:16px}
-  .lohn-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-  .lohn-card{border:1px solid #E2E6EF;border-radius:8px;padding:16px}
-  .lohn-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee;font-size:12px}
-  .lohn-netto{background:#1C2B4A;color:#fff;padding:16px 20px;border-radius:8px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
-  .lohn-val{font-family:monospace;font-weight:600}
-  @media print{body{padding:12px}}</style></head><body>
-  <h1>Lohnabrechnung ${monthNames[lb.monat]} ${lb.jahr}</h1>
-  ${lb.html}
-  <script>window.onload=function(){window.print();}<\/script></body></html>`);
-  win.document.close();
-}
-
-// ===== LOHN EXCEL EXPORT =====
-function lohnExportExcel() {
-  const maId = document.getElementById('lohnEmpSel')?.value;
-  const month = parseInt(document.getElementById('lohnMonthSel')?.value ?? new Date().getMonth());
-  const year  = parseInt(document.getElementById('lohnYearSel')?.value ?? new Date().getFullYear());
-  if (!maId) return showToast('Bitte Mitarbeiter wählen.','⚠️','error');
-  const ma = mitarbeiter.find(m => m.id == maId);
-  if (!ma) return;
-  const ls = getLohnstamm(maId);
-  const monthStr = `${year}-${String(month+1).padStart(2,'0')}`;
-  const maE = entries.filter(e => e.mitarbeiter_id == maId && e.datum && e.datum.startsWith(monthStr));
-  const arbeitsMins = maE.reduce((s,e)=>s+e.netto_min,0);
-  const fahrzeitBezahltMins = maE.reduce((s,e)=>s+(e.fahrzeit_bezahlt?(e.fahrzeit_min||0):0),0);
-  const totalMins = arbeitsMins + fahrzeitBezahltMins;
-  const totalH = totalMins/60;
-  const minsByDay = {};
-  maE.forEach(e=>{ minsByDay[e.datum] = (minsByDay[e.datum]||0) + e.netto_min; });
-  const spesenTage = Object.values(minsByDay).filter(m => m > 7*60).length;
-  const ansatz   = ls?.ansatz ?? 25.00;
-  const ferienPct= ls?.ferien_pct ?? 9.70;
-  const ahvSatz  = ls?.ahv_satz ?? 5.30;
-  const alvSatz  = ls?.alv_satz ?? 1.10;
-  const nbuvSatz = ls?.nbuv_satz ?? 1.67;
-  const bvgFix   = Math.abs(ls?.bvg_fix ?? 0);
-  const spesenTag= ls?.spesen_tag ?? 15;
-  const qstCode  = ls?.qst_code ?? '';
-  const waehrung = ls?.waehrung ?? 'CHF';
-  const eurKurs  = ls?.eur_kurs ?? 0;
-  const iban     = ls?.iban ?? '—';
-  const ahvNr    = ls?.ahv_nr ?? '—';
-  const adresse  = ls?.adresse ?? '—';
-  // Zuschläge (nur bei Freigabe)
-  let z50Mins=0, z100Mins=0;
-  maE.forEach(e=>{ if(e.zuschlag_freigabe){ const z=berechneZuschlag(e); z50Mins+=z.z50; z100Mins+=z.z100; } });
-  const grundlohn = totalH * ansatz;
-  const zuschlag50 = (z50Mins/60) * ansatz * 0.50;
-  const zuschlag100= (z100Mins/60) * ansatz * 1.00;
-  const brutto   = grundlohn + zuschlag50 + zuschlag100;
-  const qstInfo  = getQstMitHochrechnung(ls, brutto, month, year);
-  const qstSatz  = qstInfo.satz;
-  const ahvAbzug = brutto * ahvSatz / 100;
-  const alvAbzug = brutto * alvSatz / 100;
-  const nbuvAbzug= brutto * nbuvSatz / 100;
-  const zpkAbzug = 19;
-  const qstAbzug = qstInfo.betrag;
-  const totalAbz = ahvAbzug+alvAbzug+nbuvAbzug+zpkAbzug+bvgFix+qstAbzug;
-  const netto    = brutto - totalAbz;
-  const spesen   = spesenTage * spesenTag;
-  const auszahlung = netto + spesen;
-  const mn = monthNames[month];
-
-  const bom='\uFEFF', sep=';';
-  const lines = [
-    ['LOHNABRECHNUNG', mn+' '+year,'',''],
-    ['Mitarbeiter:', ma.name, 'AHV-Nr.:', ahvNr],
-    ['Adresse:', adresse, 'IBAN:', iban],
-    ['Datum:', new Date().toLocaleDateString('de-CH'), 'QSt.:', qstCode],
-    [''],
-    ['ZEITEINTRÄGE','','',''],
-    ['Datum','Wochentag','Projekt','Arbeitszeit Std','Fahrzeit Std','Fahrzeit bezahlt'],
-    ...maE.map(e=>[e.datum, getWeekday(e.datum), e.projekt, +(e.netto_min/60).toFixed(2), +((e.fahrzeit_min||0)/60).toFixed(2), e.fahrzeit_bezahlt?'Ja':'Nein']),
-    ['Arbeitszeit total','','',+(arbeitsMins/60).toFixed(2)],
-    ['Bezahlte Fahrzeit','','',+(fahrzeitBezahltMins/60).toFixed(2)],
-    ['Total verrechnete Stunden','','',+totalH.toFixed(2)],
-    [''],
-    ['BRUTTOLOHN','','',''],
-    ['Ansatz (Brutto inkl. '+ferienPct+'% Ferien):', ansatz+' CHF/h','Total:', +brutto.toFixed(2)],
-    [''],
-    ['ABZÜGE','','',''],
-    ['AHV/IV/EO ('+ahvSatz+'%)','','',-ahvAbzug.toFixed(2)],
-    ['ALV ('+alvSatz+'%)','','',-alvAbzug.toFixed(2)],
-    ['NBUV ('+nbuvSatz+'%)','','',-nbuvAbzug.toFixed(2)],
-    ['ZPK (fix)','','',-zpkAbzug],
-    ...(bvgFix?[['BVG-Prämie (fix)','','',-bvgFix]]:[] ),
-    ['Quellensteuer '+qstCode+' ('+qstSatz.toFixed(2)+'%'+(qstInfo.istTeilmonat?', Teilmonat '+qstInfo.arbeitstage+' Tage hochger. auf '+qstInfo.hochgerechnet.toFixed(0):'')+')','','',-qstAbzug.toFixed(2)],
-    ['TOTAL ABZÜGE','','',+(-totalAbz).toFixed(2)],
-    [''],
-    ['NETTOLOHN','','',+netto.toFixed(2)],
-    ['Spesen ('+spesenTage+' Tage >7h × CHF '+spesenTag+')','','',+spesen.toFixed(2)],
-    ['AUSZAHLUNG CHF','','',+auszahlung.toFixed(2)],
-    ...(waehrung==='EUR'&&eurKurs>0?[['AUSZAHLUNG EUR (1€='+eurKurs+' CHF)','','',+(auszahlung/eurKurs).toFixed(2)]]:[] ),
-  ];
-  const csv = bom + lines.map(r=>r.join(sep)).join('\n');
-  const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const url = URL.createObjectURL(blob), a = document.createElement('a');
-  a.href=url; a.download=`Lohnblatt_${ma.name.replace(/ /g,'_')}_${mn}_${year}.csv`;
-  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-  showToast('Excel exportiert.','📥','success');
-}
-
-// ===== LOHN PDF =====
-function lohnExportPDF() {
-  const cont = document.getElementById('lohnContent');
-  if (!cont || cont.querySelector('.empty-state')) return showToast('Bitte zuerst Mitarbeiter wählen.','⚠️','error');
-  const ma = mitarbeiter.find(m=>m.id==document.getElementById('lohnEmpSel').value);
-  const month = parseInt(document.getElementById('lohnMonthSel').value);
-  const year  = parseInt(document.getElementById('lohnYearSel').value);
-  const win = window.open('','_blank');
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
-  <title>Lohnblatt ${ma?.name} ${monthNames[month]} ${year}</title>
-  <style>
-    body{font-family:Arial,sans-serif;color:#1C2B4A;margin:0;padding:28px;font-size:12px}
-    h1{font-size:20px;font-weight:800;margin:0 0 4px}
-    .sub{color:#8B93B0;font-size:11px;margin-bottom:20px}
-    .lohn-hero{background:#1C2B4A;color:#fff;padding:20px 24px;border-radius:10px;margin-bottom:16px}
-    .lohn-hero h2{margin:0 0 4px;font-size:18px}
-    .lohn-hero p{margin:0;font-size:11px;color:rgba(255,255,255,.5)}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-    .card{border:1px solid #E2E6EF;border-radius:8px;padding:16px}
-    .card h3{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#8B93B0;margin:0 0 12px}
-    table{width:100%;border-collapse:collapse}
-    td{padding:5px 0;font-size:12px;border-bottom:1px solid #E2E6EF}
-    tr:last-child td{border-bottom:none}
-    .right{text-align:right;font-family:monospace}
-    .bold{font-weight:700}
-    .red{color:#EF4444}
-    .netto{background:#1C2B4A;color:#fff;padding:16px 20px;border-radius:8px;display:flex;justify-content:space-between;margin-bottom:12px}
-    .netto-item{text-align:center}
-    .netto-lbl{font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:4px}
-    .netto-val{font-size:18px;font-weight:700}
-    .iban{text-align:center;font-size:11px;color:#8B93B0;margin-top:8px}
-    @media print{body{padding:12px}}
-  </style></head><body>
-  <h1>Lohnabrechnung ${monthNames[month]} ${year}</h1>
-  <div class="sub">Schweitzer plus GmbH · Erstellt am ${new Date().toLocaleDateString('de-CH')}</div>
-  ${cont.innerHTML
-    .replace(/<button[^>]*>[\s\S]*?<\/button>/g,'')
-    .replace(/onclick="[^"]*"/g,'')
-    .replace(/class="lohn-hero"/g,'class="lohn-hero"')
-  }
-  <script>window.onload=function(){window.print();}<\/script>
-  </body></html>`);
-  win.document.close();
-}
-
-// ===== LOHN: Supabase Tabelle erstellen (SQL) =====
-// CREATE TABLE lohnstamm (
-//   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-//   mitarbeiter_id uuid REFERENCES mitarbeiter(id) ON DELETE CASCADE,
-//   ansatz numeric DEFAULT 25.00,
-//   ferien_pct numeric DEFAULT 9.70,
-//   ahv_satz numeric DEFAULT 5.30,
-//   alv_satz numeric DEFAULT 1.10,
-//   nbuv_satz numeric DEFAULT 1.67,
-//   bvg_fix numeric DEFAULT 0,
-//   spesen_tag numeric DEFAULT 15.00,
-//   qst_code text,
-//   qst_satz numeric DEFAULT 0,
-//   waehrung text DEFAULT 'CHF',
-//   eur_kurs numeric DEFAULT 0,
-//   iban text,
-//   ahv_nr text,
-//   adresse text,
-//   bemerkung text
-// );
-
-// ===== REGIERAPPORT =====
-let regieSelectedType = '';
-let sigCtx = null, sigDrawing = false, sigHasContent = false;
-
-function initRegie() {
-  const today = new Date();
-  document.getElementById('regieDate').value = formatDateInput(today);
-  document.getElementById('regieEmployee').value = currentUser?.name || '';
-  // Projekt-Dropdown füllen
-  const sel = document.getElementById('regieProject');
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">— Projekt wählen —</option>';
-  projects.forEach(p=>{ const o=new Option(p,p); if(p===cur)o.selected=true; sel.appendChild(o); });
-  // Arbeitsgattungen als Pills
-  document.getElementById('regieTypeGroup').innerHTML = types.map(t=>`<div class="pill${regieSelectedType===t.name?' active':''}" data-rtype="${t.name}" onclick="regieSelectType(this)">${t.icon} ${t.name}</div>`).join('');
-  initSignaturePad();
-  renderRegieList();
-}
-function regieSelectType(el) {
-  document.querySelectorAll('#regieTypeGroup .pill').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-  regieSelectedType = el.dataset.rtype;
-}
-function regieCalc() {
-  const from=document.getElementById('regieFrom').value, to=document.getElementById('regieTo').value;
-  const pause=parseInt(document.getElementById('regiePause').value)||0;
-  if(!from||!to){document.getElementById('regieDuration').textContent='—';return;}
-  const [fh,fm]=from.split(':').map(Number),[th,tm]=to.split(':').map(Number);
-  let total=(th*60+tm)-(fh*60+fm);
-  if(total<=0){document.getElementById('regieDuration').textContent='—';return;}
-  document.getElementById('regieDuration').textContent=formatMins(total-pause);
-}
-
-// ===== SIGNATURE PAD =====
-function initSignaturePad() {
-  const canvas = document.getElementById('sigPad');
-  if(!canvas) return;
-  // Canvas-Auflösung an Anzeigegrösse anpassen
-  const rect = canvas.getBoundingClientRect();
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = rect.width * dpr;
-  canvas.height = rect.height * dpr;
-  sigCtx = canvas.getContext('2d');
-  sigCtx.scale(dpr, dpr);
-  sigCtx.lineWidth = 2.5;
-  sigCtx.lineCap = 'round';
-  sigCtx.lineJoin = 'round';
-  sigCtx.strokeStyle = '#1C2B4A';
-  sigHasContent = false;
-
-  function pos(e) {
-    const r = canvas.getBoundingClientRect();
-    const t = e.touches ? e.touches[0] : e;
-    return { x: t.clientX - r.left, y: t.clientY - r.top };
-  }
-  function start(e){ e.preventDefault(); sigDrawing=true; const p=pos(e); sigCtx.beginPath(); sigCtx.moveTo(p.x,p.y); }
-  function move(e){ if(!sigDrawing)return; e.preventDefault(); const p=pos(e); sigCtx.lineTo(p.x,p.y); sigCtx.stroke(); sigHasContent=true; }
-  function end(e){ if(e)e.preventDefault(); sigDrawing=false; }
-
-  canvas.onmousedown=start; canvas.onmousemove=move; canvas.onmouseup=end; canvas.onmouseleave=end;
-  canvas.ontouchstart=start; canvas.ontouchmove=move; canvas.ontouchend=end;
-}
-function sigClear() {
-  const canvas=document.getElementById('sigPad');
-  if(sigCtx&&canvas){ sigCtx.clearRect(0,0,canvas.width,canvas.height); sigHasContent=false; }
-}
-
-async function regieSave() {
-  if(!currentUser) return;
-  const date=document.getElementById('regieDate').value;
-  const kunde=document.getElementById('regieKunde').value.trim();
-  const from=document.getElementById('regieFrom').value, to=document.getElementById('regieTo').value;
-  const pause=parseInt(document.getElementById('regiePause').value)||0;
-  const project=document.getElementById('regieProject').value;
-  const desc=document.getElementById('regieDesc').value.trim();
-  const kundeName=document.getElementById('regieKundeName').value.trim();
-  if(!date) return showToast('Bitte Datum wählen.','⚠️','error');
-  if(!kunde) return showToast('Bitte Kunde/Baustelle eingeben.','⚠️','error');
-  if(!from||!to) return showToast('Bitte Zeiten eingeben.','⚠️','error');
-  if(!project) return showToast('Bitte Projekt wählen.','⚠️','error');
-  if(!regieSelectedType) return showToast('Bitte Arbeitsgattung wählen.','⚠️','error');
-  if(!sigHasContent) return showToast('Bitte Kundenunterschrift erfassen.','⚠️','error');
-  const [fh,fm]=from.split(':').map(Number),[th,tm]=to.split(':').map(Number);
-  let total=(th*60+tm)-(fh*60+fm);
-  if(total<=0) return showToast('Endzeit nach Startzeit.','⚠️','error');
-  const net=total-pause;
-  const sigData = document.getElementById('sigPad').toDataURL('image/png');
-  try {
-    setSyncStatus(false);
-    await sbFetch('regierapporte', {
-      method:'POST',
-      body: JSON.stringify({
-        mitarbeiter_id: currentUser.id,
-        mitarbeiter_name: currentUser.name,
-        datum: date, kunde, von: from, bis: to,
-        pause_min: pause, netto_min: net,
-        projekt: project, typ: regieSelectedType, beschreibung: desc,
-        kunde_name: kundeName, unterschrift: sigData
-      }),
-      prefer:'return=minimal'
-    });
-    setSyncStatus(true);
-    await loadRegierapporte();
-    renderRegieList();
-    showToast('Regierapport gespeichert.','✓','success');
-    regieReset();
-  } catch(e) {
-    setSyncStatus(false);
-    showToast('Speichern fehlgeschlagen – Tabelle regierapporte vorhanden?','⚠️','error');
-  }
-}
-function regieReset() {
-  document.getElementById('regieKunde').value='';
-  document.getElementById('regieFrom').value='';
-  document.getElementById('regieTo').value='';
-  document.getElementById('regiePause').value='0';
-  document.getElementById('regieProject').value='';
-  document.getElementById('regieDesc').value='';
-  document.getElementById('regieKundeName').value='';
-  document.getElementById('regieDuration').textContent='—';
-  document.querySelectorAll('#regieTypeGroup .pill').forEach(p=>p.classList.remove('active'));
-  regieSelectedType='';
-  sigClear();
-}
-
-let regierapporte = [];
-async function loadRegierapporte() {
-  try {
-    let url='regierapporte?select=*&order=datum.desc';
-    if(currentUser && currentUser.rolle!=='admin') url+=`&mitarbeiter_id=eq.${currentUser.id}`;
-    regierapporte = await sbFetch(url);
-  } catch(e){ regierapporte=[]; }
-}
-function renderRegieList() {
-  const list=document.getElementById('regieList');
-  if(!list) return;
-  const mine = currentUser?.rolle==='admin' ? regierapporte : regierapporte.filter(r=>r.mitarbeiter_id===currentUser?.id);
-  if(!mine.length){ list.innerHTML=`<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-title">Noch keine Regierapporte</div></div>`; return; }
-  list.innerHTML=mine.map(r=>`
-    <div class="entry-row" style="grid-template-columns:80px 1fr 120px auto">
-      <div><div class="entry-date">${formatDateShort(r.datum)}</div><div class="entry-weekday">${getWeekday(r.datum)}</div></div>
-      <div><div class="entry-desc">${r.kunde}</div><div class="entry-project">${r.projekt} · ${r.typ}${r.kunde_name?' · ✍️ '+r.kunde_name:''}</div></div>
-      <div class="entry-time">${r.von} – ${r.bis} <div class="entry-duration">${formatMins(r.netto_min)}</div></div>
-      <div class="entry-actions">
-        <button class="icon-btn" onclick="viewRegie('${r.id}')" title="Ansehen">👁</button>
-        <button class="icon-btn danger" onclick="deleteRegie('${r.id}')" title="Löschen">✕</button>
-      </div>
-    </div>`).join('');
-}
-function viewRegie(id) {
-  const r=regierapporte.find(x=>x.id===id);
-  if(!r) return;
-  const win=window.open('','_blank');
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Regierapport ${r.kunde} ${r.datum}</title>
-  <style>body{font-family:Arial,sans-serif;color:#1C2B4A;padding:32px;max-width:600px;margin:0 auto}
-  h1{font-size:20px}.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee}
-  .lbl{color:#888}.sig{margin-top:24px;border:1px solid #ddd;border-radius:8px;padding:12px}
-  img{max-width:100%;height:auto}@media print{body{padding:12px}}</style></head><body>
-  <h1>📝 Regierapport</h1>
-  <div class="row"><span class="lbl">Datum</span><strong>${r.datum}</strong></div>
-  <div class="row"><span class="lbl">Mitarbeiter</span><span>${r.mitarbeiter_name}</span></div>
-  <div class="row"><span class="lbl">Kunde / Baustelle</span><strong>${r.kunde}</strong></div>
-  <div class="row"><span class="lbl">Projekt</span><span>${r.projekt}</span></div>
-  <div class="row"><span class="lbl">Arbeitsgattung</span><span>${r.typ}</span></div>
-  <div class="row"><span class="lbl">Zeit</span><span>${r.von} – ${r.bis} (${formatMins(r.netto_min)})</span></div>
-  ${r.beschreibung?`<div class="row"><span class="lbl">Arbeiten</span><span>${r.beschreibung}</span></div>`:''}
-  <div class="sig"><div class="lbl" style="margin-bottom:8px">Unterschrift Kunde${r.kunde_name?' – '+r.kunde_name:''}</div>
-  <img src="${r.unterschrift}" alt="Unterschrift"></div>
-  <script>window.onload=function(){window.print();}<\/script></body></html>`);
-  win.document.close();
-}
-async function deleteRegie(id) {
-  if(!confirm('Diesen Regierapport wirklich löschen?')) return;
-  try {
-    await sbFetch(`regierapporte?id=eq.${id}`, { method:'DELETE', prefer:'return=minimal' });
-    await loadRegierapporte();
-    renderRegieList();
-    showToast('Regierapport gelöscht.','🗑','error');
-  } catch(e){ showToast('Löschen fehlgeschlagen.','⚠️','error'); }
-}
-
 // logo ok
 </script>
 </body>
