@@ -442,6 +442,17 @@
     <div class="stat-card"><div class="stat-label">Einträge</div><div class="stat-value" id="statCount">0</div><div class="stat-sub">Gesamt</div></div>
     <div class="stat-card"><div class="stat-label">Projekte</div><div class="stat-value" id="statProjects">0</div><div class="stat-sub">Aktiv</div></div>
   </div>
+
+  <!-- MEINE EINTRÄGE -->
+  <div class="card">
+    <div class="card-title" style="justify-content:space-between">
+      <span style="display:flex;align-items:center;gap:8px"><div class="card-title-icon">📋</div>Meine Einträge</span>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select id="myFilterMonth" onchange="renderMyEntries()" style="font-family:'Inter',sans-serif;font-size:12px;color:var(--text-2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:6px 10px;background:var(--surface);outline:none;cursor:pointer"></select>
+      </div>
+    </div>
+    <div id="myEntriesList"></div>
+  </div>
 </main>
 
 <!-- ===== MONATSRAPPORT ===== -->
@@ -607,6 +618,17 @@
   <button class="bottom-nav-btn" id="bnLogout" onclick="logout()"><span class="nav-icon">🚪</span><span>Abmelden</span></button>
 </nav>
 
+<!-- DAY ENTRIES MODAL -->
+<div id="dayModal" style="display:none;position:fixed;inset:0;background:rgba(15,21,37,.6);z-index:300;place-items:center;backdrop-filter:blur(4px)" onclick="if(event.target===this)closeDayModal()">
+  <div style="background:var(--surface);border-radius:var(--radius);padding:24px;width:100%;max-width:480px;margin:20px;box-shadow:var(--shadow-lg);max-height:85vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-size:16px;font-weight:700" id="dayModalTitle">Einträge</div>
+      <button onclick="closeDayModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-3)">✕</button>
+    </div>
+    <div id="dayModalEntries"></div>
+  </div>
+</div>
+
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
@@ -747,7 +769,7 @@ async function loginSuccess() {
     applyUserName();
     setSyncStatus(false);
     // Load each separately so one failure doesn't block others
-    try { await loadEntries(); } catch(e) { console.error('loadEntries error:', e); }
+    try { await loadEntries(); renderMyEntries(); } catch(e) { console.error('loadEntries error:', e); }
     try { await loadProjects(); } catch(e) { console.error('loadProjects error:', e); }
     try { await loadTypes(); } catch(e) { console.error('loadTypes error:', e); }
     updateStats();
@@ -906,7 +928,7 @@ function applyUserName() {
   const bnName = document.getElementById('bnLogout');
   const today = new Date();
   const minDate = new Date(today);
-  minDate.setDate(today.getDate() - 5);
+  minDate.setDate(today.getDate() - 8);
   const dateInput = document.getElementById('entryDate');
   dateInput.value = formatDateInput(today);
   dateInput.max = formatDateInput(today);
@@ -1144,6 +1166,7 @@ async function saveEntry(andNew) {
       if(saveBtn) saveBtn.textContent = '✓ Eintrag speichern';
       setSyncStatus(true);
       await loadEntries();
+      renderMyEntries();
       showToast('Eintrag aktualisiert!','✓','success');
       resetForm();
       return;
@@ -1192,7 +1215,7 @@ function editEntry(id) {
   const today = new Date(); today.setHours(0,0,0,0);
   const diffDays = Math.floor((today - entryDate) / (1000*60*60*24));
   if(diffDays > 5) {
-    showToast('Einträge können nur innerhalb von 5 Tagen bearbeitet werden.','⚠️','error');
+    showToast('Einträge können nur innerhalb von 8 Tagen bearbeitet werden.','⚠️','error');
     return;
   }
   // Populate form with entry data
@@ -1313,8 +1336,12 @@ function renderRapport() {
     const dayProjects={};
     dayEntries.forEach(e=>{dayProjects[e.projekt]=(dayProjects[e.projekt]||0)+e.netto_min;});
     const projHtml=Object.entries(dayProjects).map(([p,m])=>`<div class="day-project-item"><div class="day-project-dot"></div><span>${p}</span><span style="font-family:'JetBrains Mono',monospace;color:var(--text-2);font-size:11px;margin-left:auto">${formatH(m)}</span></div>`).join('');
-    rows+=`<tr class="${weekend?'day-weekend':'day-row'}">
-      <td><span style="font-weight:600;color:${weekend?'var(--text-3)':'var(--text)'}">${weekdays[dayDate.getDay()]}</span></td>
+    const dayEntryIds = dayEntries.map(e=>e.id).join(',');
+    const today2 = new Date(); today2.setHours(0,0,0,0);
+    const diffD = Math.floor((today2 - dayDate)/(1000*60*60*24));
+    const canEditDay = diffD <= 8;
+    rows+=`<tr class="${weekend?'day-weekend':'day-row'}" style="${dayMins>0&&canEditDay?'cursor:pointer;':''}" onclick="${dayMins>0&&canEditDay?`showDayEntries('${date}')`:''}" title="${dayMins>0&&canEditDay?'Klicken zum Bearbeiten':''}">
+      <td><span style="font-weight:600;color:${weekend?'var(--text-3)':'var(--text)'}">${weekdays[dayDate.getDay()]}</span>${dayMins>0&&canEditDay?'<span style="font-size:10px;color:var(--accent);margin-left:4px">✏️</span>':''}</td>
       <td style="color:var(--text-2);font-size:13px">${d}. ${months[rapportMonth]}</td>
       <td>${dayMins>0?`<div class="day-project-list">${projHtml}</div>`:'<span style="color:var(--text-3);font-size:12px">—</span>'}</td>
       <td style="text-align:right">${dayMins>0?`<span class="day-total">${formatH(dayMins)}</span>`:'<span style="color:var(--text-3)">—</span>'}</td>
@@ -1536,6 +1563,98 @@ function setLang(lang) {
 }
 
 
+
+// ===== MY ENTRIES =====
+function renderMyEntries() {
+  if(!currentUser) return;
+  const sel = document.getElementById('myFilterMonth');
+  const selectedMonth = sel ? sel.value : '';
+  const myE = entries.filter(e => e.mitarbeiter_id === currentUser.id);
+
+  // Build month filter options
+  if(sel) {
+    const months_set = [...new Set(myE.map(e=>e.datum.substring(0,7)))].sort().reverse();
+    const curVal = sel.value;
+    sel.innerHTML = months_set.map(m=>{
+      const [y,mo] = m.split('-');
+      return `<option value="${m}" ${m===curVal?'selected':''}>${monthNames[parseInt(mo)-1]} ${y}</option>`;
+    }).join('');
+    if(!sel.value && months_set.length) sel.value = months_set[0];
+  }
+
+  const filterM = sel ? sel.value : '';
+  const filtered = filterM ? myE.filter(e=>e.datum.startsWith(filterM)) : myE;
+  const sorted = [...filtered].sort((a,b)=>b.datum.localeCompare(a.datum));
+
+  const list = document.getElementById('myEntriesList');
+  if(!sorted.length) {
+    list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-3)"><div style="font-size:28px;margin-bottom:8px">📭</div><div style="font-weight:600;font-size:13px">Keine Einträge in diesem Monat</div></div>';
+    return;
+  }
+
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  list.innerHTML = sorted.map(e => {
+    const t = types.find(t=>t.name===e.typ)||{color:'#6b7280',bg:'#f3f4f6',icon:'📌'};
+    const entryDate = new Date(e.datum+'T00:00:00');
+    const diffDays = Math.floor((today - entryDate)/(1000*60*60*24));
+    const canEdit = diffDays <= 8;
+    return `<div style="display:grid;grid-template-columns:80px 1fr auto auto auto;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid var(--border)">
+      <div>
+        <div style="font-size:13px;font-weight:600">${formatDateShort(e.datum)}</div>
+        <div style="font-size:11px;color:var(--text-3)">${getWeekday(e.datum)}</div>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:500">${e.projekt}</div>
+        <div style="font-size:11px;color:var(--text-3)">${e.typ}${e.beschreibung?' · '+e.beschreibung:''}</div>
+      </div>
+      <div style="font-size:11px;color:var(--text-3);text-align:center">${e.von}–${e.bis}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--accent)">${formatMins(e.netto_min)}</div>
+      <div style="display:flex;gap:6px">
+        ${canEdit ? `<button class="icon-btn" onclick="editEntry('${e.id}')" title="Bearbeiten" style="width:32px;height:32px;border:1.5px solid var(--border);border-radius:7px;background:var(--surface-2);cursor:pointer;display:grid;place-items:center;font-size:14px">✏️</button>` : `<div style="width:32px;height:32px;display:grid;place-items:center;font-size:11px;color:var(--text-3)" title="${diffDays} Tage alt">🔒</div>`}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===== DAY ENTRIES MODAL =====
+function showDayEntries(date) {
+  const myE = entries.filter(e => e.mitarbeiter_id === currentUser.id && e.datum === date);
+  if(!myE.length) return;
+
+  const d = new Date(date+'T00:00:00');
+  document.getElementById('dayModalTitle').textContent =
+    `${weekdays[d.getDay()]}, ${d.getDate()}. ${months[d.getMonth()]} ${d.getFullYear()}`;
+
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  document.getElementById('dayModalEntries').innerHTML = myE.map(e => {
+    const t = types.find(t=>t.name===e.typ)||{color:'#6b7280',bg:'#f3f4f6',icon:'📌'};
+    return `<div style="border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div>
+          <div style="font-size:13px;font-weight:700">${e.projekt}</div>
+          <div style="font-size:11px;color:var(--text-3);margin-top:2px">${e.von} – ${e.bis}</div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--accent)">${formatMins(e.netto_min)}</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <span style="background:${t.bg};color:${t.color};padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600">${t.icon} ${e.typ}</span>
+        ${e.beschreibung?`<span style="font-size:11px;color:var(--text-3)">${e.beschreibung}</span>`:''}
+        <div style="display:flex;gap:6px;margin-left:auto">
+          <button onclick="closeDayModal();editEntry('${e.id}')" style="padding:6px 14px;border-radius:8px;border:1.5px solid var(--accent);color:var(--accent);background:var(--accent-light);font-family:Inter,sans-serif;font-size:12px;font-weight:600;cursor:pointer">✏️ Bearbeiten</button>
+          <button onclick="if(confirm('Eintrag löschen?')){closeDayModal();deleteEntry('${e.id}')}" style="padding:6px 14px;border-radius:8px;border:1.5px solid var(--danger);color:var(--danger);background:#FEF2F2;font-family:Inter,sans-serif;font-size:12px;font-weight:600;cursor:pointer">✕ Löschen</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('dayModal').style.display = 'grid';
+}
+
+function closeDayModal() {
+  document.getElementById('dayModal').style.display = 'none';
+}
 
 // ===== INIT =====
 function init() {
