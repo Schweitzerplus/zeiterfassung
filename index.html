@@ -245,16 +245,6 @@
   .color-opt:hover, .color-opt.selected { border-color: var(--text); transform: scale(1.15); }
 
 
-  /* SIGNATURE PAD */
-  .sig-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); padding: 20px; margin-bottom: 20px; }
-  .sig-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-  .sig-canvas-wrap { border: 2px dashed var(--border); border-radius: var(--radius-sm); background: #fff; position: relative; }
-  .sig-canvas-wrap canvas { display: block; width: 100%; touch-action: none; cursor: crosshair; }
-  .sig-actions { display: flex; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
-  .sig-name-field { flex: 1; min-width: 180px; font-family: 'Inter',sans-serif; font-size: 13px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; outline: none; color: var(--text); background: var(--surface-2); }
-  .sig-name-field:focus { border-color: var(--accent); }
-  .sig-hint { font-size: 11px; color: var(--text-3); margin-top: 6px; }
-  .sig-saved { font-size: 12px; color: var(--success); font-weight: 600; margin-top: 4px; }
 
   /* BOTTOM NAV */
   .bottom-nav { display: none; }
@@ -481,20 +471,7 @@
       </table>
     </div>
   </div>
-  <!-- SIGNATURE -->
-  <div class="sig-card" id="signatureCard">
-    <div class="sig-title">✍️ Kundenunterschrift <span style="font-size:11px;color:var(--text-3);font-weight:400">(optional)</span></div>
-    <div class="sig-canvas-wrap">
-      <canvas id="sigCanvas" height="160"></canvas>
-    </div>
-    <div class="sig-hint">Kunde unterschreibt mit Finger oder Maus</div>
-    <div class="sig-actions">
-      <input class="sig-name-field" id="sigName" type="text" placeholder="Name des Kunden (optional)">
-      <button class="btn btn-sm btn-outline" onclick="clearSignature()">✕ Löschen</button>
-      <button class="btn btn-sm btn-primary" onclick="saveSignature()">✓ Unterschrift speichern</button>
-    </div>
-    <div class="sig-saved" id="sigSaved" style="display:none">✓ Unterschrift gespeichert</div>
-  </div>
+
 </main>
 
 <!-- ===== ADMIN ===== -->
@@ -868,7 +845,7 @@ function switchView(v) {
     const el = document.getElementById('bn'+id);
     if(el) el.classList.toggle('active', v===id.toLowerCase());
   });
-  if (v==='rapport') { renderRapport(); setTimeout(initSignature,100); }
+  if (v==='rapport') renderRapport();
   if (v==='admin') { switchAdminTab('overview'); renderAdminProjects(); renderAdminTypes(); renderEmojiPicker(); renderColorPicker(); }
 }
 function switchAdminTab(tab) {
@@ -929,7 +906,7 @@ function applyUserName() {
   const bnName = document.getElementById('bnLogout');
   const today = new Date();
   const minDate = new Date(today);
-  minDate.setDate(today.getDate() - 7);
+  minDate.setDate(today.getDate() - 5);
   const dateInput = document.getElementById('entryDate');
   dateInput.value = formatDateInput(today);
   dateInput.max = formatDateInput(today);
@@ -1210,6 +1187,14 @@ function resetForm() {
 function editEntry(id) {
   const e = entries.find(e=>e.id===id);
   if(!e) return;
+  // Check 5-day limit
+  const entryDate = new Date(e.datum+'T00:00:00');
+  const today = new Date(); today.setHours(0,0,0,0);
+  const diffDays = Math.floor((today - entryDate) / (1000*60*60*24));
+  if(diffDays > 5) {
+    showToast('Einträge können nur innerhalb von 5 Tagen bearbeitet werden.','⚠️','error');
+    return;
+  }
   // Populate form with entry data
   document.getElementById('entryDate').value = e.datum;
   document.getElementById('timeFrom').value = e.von;
@@ -1551,60 +1536,6 @@ function setLang(lang) {
 }
 
 
-// ===== SIGNATURE PAD =====
-let sigCanvas, sigCtx, sigDrawing = false, sigHasData = false;
-
-function initSignature() {
-  sigCanvas = document.getElementById('sigCanvas');
-  if(!sigCanvas) return;
-  sigCtx = sigCanvas.getContext('2d');
-  // Set canvas size
-  const wrap = sigCanvas.parentElement;
-  sigCanvas.width = wrap.clientWidth || 340;
-  sigCanvas.height = 160;
-  sigCtx.strokeStyle = '#0F1525';
-  sigCtx.lineWidth = 2.5;
-  sigCtx.lineCap = 'round';
-  sigCtx.lineJoin = 'round';
-
-  function getPos(e) {
-    const r = sigCanvas.getBoundingClientRect();
-    const scaleX = sigCanvas.width / r.width;
-    const scaleY = sigCanvas.height / r.height;
-    if(e.touches) {
-      return { x: (e.touches[0].clientX - r.left)*scaleX, y: (e.touches[0].clientY - r.top)*scaleY };
-    }
-    return { x: (e.clientX - r.left)*scaleX, y: (e.clientY - r.top)*scaleY };
-  }
-  function start(e) { e.preventDefault(); sigDrawing=true; sigHasData=true; const p=getPos(e); sigCtx.beginPath(); sigCtx.moveTo(p.x,p.y); document.getElementById('sigSaved').style.display='none'; }
-  function draw(e) { if(!sigDrawing) return; e.preventDefault(); const p=getPos(e); sigCtx.lineTo(p.x,p.y); sigCtx.stroke(); }
-  function end(e) { sigDrawing=false; }
-
-  sigCanvas.addEventListener('mousedown', start);
-  sigCanvas.addEventListener('mousemove', draw);
-  sigCanvas.addEventListener('mouseup', end);
-  sigCanvas.addEventListener('touchstart', start, {passive:false});
-  sigCanvas.addEventListener('touchmove', draw, {passive:false});
-  sigCanvas.addEventListener('touchend', end);
-}
-
-function clearSignature() {
-  if(!sigCtx) return;
-  sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height);
-  sigHasData = false;
-  document.getElementById('sigSaved').style.display='none';
-  document.getElementById('sigName').value='';
-}
-
-async function saveSignature() {
-  if(!sigHasData) { showToast('Bitte zuerst unterschreiben.','⚠️','error'); return; }
-  const name = document.getElementById('sigName').value.trim();
-  const dataUrl = sigCanvas.toDataURL('image/png');
-  // Save to Supabase if we have a column, otherwise just show saved
-  showToast('Unterschrift gespeichert' + (name?' von '+name:'') + '.','✓','success');
-  document.getElementById('sigSaved').style.display='block';
-  document.getElementById('sigSaved').textContent = '✓ Unterschrift gespeichert' + (name ? ' — ' + name : '');
-}
 
 // ===== INIT =====
 function init() {
