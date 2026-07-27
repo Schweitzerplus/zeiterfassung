@@ -1238,7 +1238,16 @@ function editEntry(id) {
   if(saveBtn) saveBtn.textContent = '✓ Eintrag aktualisieren';
   // Scroll to form
   document.getElementById('viewZeit').scrollIntoView({behavior:'smooth'});
-  switchView('zeit');
+  // Switch to Zeit view to edit
+  ['zeit','rapport','admin'].forEach(id => {
+    document.getElementById('view'+id.charAt(0).toUpperCase()+id.slice(1)).classList.remove('active');
+    const nb = document.getElementById('nav'+id.charAt(0).toUpperCase()+id.slice(1));
+    if(nb) nb.classList.remove('active');
+  });
+  document.getElementById('viewZeit').classList.add('active');
+  document.getElementById('navZeit').classList.add('active');
+  const bnZ = document.getElementById('bnZeit'); if(bnZ) bnZ.classList.add('active');
+  document.getElementById('entryEmployee').value = e.mitarbeiter_name || currentUser.name;
   showToast('Eintrag wird bearbeitet — speichern zum Aktualisieren.','✏️','success');
 }
 
@@ -1386,7 +1395,8 @@ function renderOverview() {
       const dayDate=new Date(date+'T00:00:00');
       const dayMins=empE.filter(e=>e.datum===date).reduce((s,e)=>s+e.netto_min,0);
       const we=isWeekend(dayDate);
-      dayRow+=`<td class="day-cell"><span class="day-cell-val${dayMins>0?' has-hours':we?' weekend':''}">${dayMins>0?formatH(dayMins):we?'—':'·'}</span></td>`;
+      const cellClick = dayMins>0 ? `onclick="showDayEntries('${date}')" style="cursor:pointer" title="Klicken zum Anzeigen"` : '';
+      dayRow+=`<td class="day-cell" ${cellClick}><span class="day-cell-val${dayMins>0?' has-hours':we?' weekend':''}">${dayMins>0?formatH(dayMins):we?'—':'·'}</span></td>`;
     }
     dayRow+=`<td class="emp-total-cell">${formatH(totalMins)}</td></tr>`;
     const projChips=Object.entries(projMap).sort((a,b)=>b[1]-a[1]).map(([p,m])=>`<div class="project-chip">📁 ${p} <span class="project-chip-hours">${formatH(m)}</span></div>`).join('');
@@ -1618,23 +1628,38 @@ function renderMyEntries() {
 }
 
 // ===== DAY ENTRIES MODAL =====
-function showDayEntries(date) {
-  const myE = entries.filter(e => e.mitarbeiter_id === currentUser.id && e.datum === date);
-  if(!myE.length) return;
+function showDayEntries(date, empId=null) {
+  const isAdmin = currentUser && currentUser.rolle === 'admin';
+  // Admin sees all entries for that day, employee only own
+  let dayEntries;
+  if(isAdmin) {
+    dayEntries = entries.filter(e => e.datum === date);
+  } else {
+    dayEntries = entries.filter(e => e.mitarbeiter_id === currentUser.id && e.datum === date);
+  }
+  // If empId specified (from admin overview), filter by employee
+  if(empId) dayEntries = dayEntries.filter(e => e.mitarbeiter_id === empId);
+
+  if(!dayEntries.length) return;
 
   const d = new Date(date+'T00:00:00');
   document.getElementById('dayModalTitle').textContent =
     `${weekdays[d.getDay()]}, ${d.getDate()}. ${months[d.getMonth()]} ${d.getFullYear()}`;
 
   const today = new Date(); today.setHours(0,0,0,0);
+  const diffDays = Math.floor((today - d)/(1000*60*60*24));
 
-  document.getElementById('dayModalEntries').innerHTML = myE.map(e => {
+  document.getElementById('dayModalEntries').innerHTML = dayEntries.map(e => {
     const t = types.find(t=>t.name===e.typ)||{color:'#6b7280',bg:'#f3f4f6',icon:'📌'};
+    const canEdit = isAdmin || diffDays <= 8;
+    const empLabel = isAdmin && e.mitarbeiter_name ?
+      `<div style="font-size:11px;font-weight:600;color:var(--accent);margin-bottom:4px">👤 ${e.mitarbeiter_name}</div>` : '';
     return `<div style="border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px">
+      ${empLabel}
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
         <div>
           <div style="font-size:13px;font-weight:700">${e.projekt}</div>
-          <div style="font-size:11px;color:var(--text-3);margin-top:2px">${e.von} – ${e.bis}</div>
+          <div style="font-size:11px;color:var(--text-3);margin-top:2px">${e.von} – ${e.bis}${e.pause_min>0?' · Pause: '+e.pause_min+' min':''}${e.fahrzeit_min>0?' · Fahrzeit: '+e.fahrzeit_min+' min':''}</div>
         </div>
         <div style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;color:var(--accent)">${formatMins(e.netto_min)}</div>
       </div>
@@ -1642,8 +1667,10 @@ function showDayEntries(date) {
         <span style="background:${t.bg};color:${t.color};padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600">${t.icon} ${e.typ}</span>
         ${e.beschreibung?`<span style="font-size:11px;color:var(--text-3)">${e.beschreibung}</span>`:''}
         <div style="display:flex;gap:6px;margin-left:auto">
+          ${canEdit ? `
           <button onclick="closeDayModal();editEntry('${e.id}')" style="padding:6px 14px;border-radius:8px;border:1.5px solid var(--accent);color:var(--accent);background:var(--accent-light);font-family:Inter,sans-serif;font-size:12px;font-weight:600;cursor:pointer">✏️ Bearbeiten</button>
           <button onclick="if(confirm('Eintrag löschen?')){closeDayModal();deleteEntry('${e.id}')}" style="padding:6px 14px;border-radius:8px;border:1.5px solid var(--danger);color:var(--danger);background:#FEF2F2;font-family:Inter,sans-serif;font-size:12px;font-weight:600;cursor:pointer">✕ Löschen</button>
+          ` : `<span style="font-size:11px;color:var(--text-3)">🔒 Nicht mehr bearbeitbar</span>`}
         </div>
       </div>
     </div>`;
