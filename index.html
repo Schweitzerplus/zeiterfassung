@@ -283,6 +283,34 @@
     .toast-container { left: 16px; right: 16px; }
     .toast { max-width: 100%; }
   }
+  /* ===== LOHN / REGIE (gemerged) ===== */
+  .lohn-hero { background: linear-gradient(135deg,#1C2B4A 0%,#2C4A7C 100%); border-radius: var(--radius); padding: 28px 32px; margin-bottom: 20px; color:#fff; }
+  .lohn-hero-eyebrow { font-size:11px; font-weight:600; letter-spacing:1.2px; text-transform:uppercase; color:rgba(255,255,255,.45); margin-bottom:8px; }
+  .lohn-hero-name { font-size:26px; font-weight:800; margin-bottom:4px; }
+  .lohn-hero-sub { font-size:12px; color:rgba(255,255,255,.55); }
+  .lohn-kpi-row { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:20px; }
+  .lohn-kpi { background:rgba(255,255,255,.09); border-radius:10px; padding:14px 16px; }
+  .lohn-kpi-label { font-size:10px; font-weight:600; letter-spacing:.8px; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:5px; }
+  .lohn-kpi-val { font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:700; color:#fff; }
+  .lohn-kpi-val.gold { color:#C8A84B; }
+  .lohn-breakdown { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+  .lohn-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow-sm); }
+  .lohn-card-title { font-size:12px; font-weight:700; color:var(--text-2); text-transform:uppercase; letter-spacing:.6px; margin-bottom:14px; }
+  .lohn-row { display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid var(--border); font-size:13px; }
+  .lohn-row:last-child { border-bottom:none; }
+  .lohn-row.total { font-weight:700; font-size:14px; border-top:2px solid var(--border); border-bottom:none; margin-top:4px; padding-top:10px; }
+  .lohn-val { font-family:'JetBrains Mono',monospace; font-weight:600; font-size:13px; }
+  .lohn-val.red { color:var(--danger); }
+  .lohn-val.green { color:var(--success); }
+  .lohn-val.blue { color:var(--accent); }
+  .lohn-val.gold { color:#C8A84B; }
+  .lohn-netto { background:var(--text); border-radius:var(--radius); padding:22px 28px; display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:16px; }
+  .lohn-netto-label { color:rgba(255,255,255,.5); font-size:11px; font-weight:600; letter-spacing:.8px; text-transform:uppercase; margin-bottom:5px; }
+  .lohn-netto-val { font-family:'JetBrains Mono',monospace; font-size:32px; font-weight:700; color:#fff; }
+  .lohn-netto-val.gold { color:#C8A84B; font-size:24px; }
+  .lohn-netto-val.green { color:#22C55E; }
+  .entries-title { font-size:13px; font-weight:700; color:var(--text-2); text-transform:uppercase; letter-spacing:.5px; margin:20px 0 12px; }
+  @media(max-width:700px) { .lohn-kpi-row{grid-template-columns:1fr 1fr} .lohn-breakdown{grid-template-columns:1fr} .lohn-netto{flex-direction:column;text-align:center} }
 </style>
 </head>
 <body>
@@ -336,6 +364,8 @@
     <div class="sync-badge syncing" id="syncBadge"><div class="sync-badge-dot"></div><span id="syncText">Verbinde…</span></div>
     <button class="header-nav-btn active" id="navZeit" onclick="switchView('zeit')">Zeiterfassung</button>
     <button class="header-nav-btn" id="navRapport" onclick="switchView('rapport')">📋 Rapport</button>
+    <button class="header-nav-btn" id="navRegie" onclick="switchView('regie')" style="display:none">📝 Regierapport</button>
+    <button class="header-nav-btn" id="navLohn" onclick="switchView('lohn')" style="display:none">💰 Lohn</button>
     <button class="header-nav-btn" id="navAdmin" onclick="switchView('admin')" style="display:none">⚙ Admin</button>
     <div class="header-user">
       <span id="headerName">—</span>
@@ -519,7 +549,7 @@
     <div class="card">
       <div class="card-title"><div class="card-title-icon">👥</div>Mitarbeitende & PINs</div>
       <div class="pin-table-wrap"><table class="pin-table" id="pinTable">
-        <thead><tr><th>Name</th><th>PIN</th><th>Rolle</th><th></th></tr></thead>
+        <thead><tr><th>Name</th><th>PIN</th><th>Rolle</th><th>Regie</th><th></th></tr></thead>
         <tbody id="pinTableBody"></tbody>
       </table>
       </div><div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border)">
@@ -594,6 +624,87 @@
     </div>
   </div>
 </main>
+<main class="view" id="viewLohn">
+  <div style="max-width:960px;margin:0 auto;padding:28px 20px 80px">
+
+    <!-- Period selector -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+      <select id="lohnEmpSel" onchange="renderLohn()" style="font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;outline:none;cursor:pointer;min-width:180px">
+        <option value="">— Mitarbeiter —</option>
+      </select>
+      <select id="lohnMonthSel" onchange="renderLohn()" style="font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;outline:none;cursor:pointer">
+        <option value="0">Januar</option><option value="1">Februar</option><option value="2">März</option>
+        <option value="3">April</option><option value="4">Mai</option><option value="5">Juni</option>
+        <option value="6">Juli</option><option value="7">August</option><option value="8">September</option>
+        <option value="9">Oktober</option><option value="10">November</option><option value="11">Dezember</option>
+      </select>
+      <select id="lohnYearSel" onchange="renderLohn()" style="font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;outline:none;cursor:pointer"></select>
+      <button class="btn btn-excel btn-sm" onclick="lohnExportExcel()">📥 Excel</button>
+      <button class="btn btn-outline btn-sm" onclick="lohnExportPDF()">🖨 PDF</button>
+    </div>
+
+    <div id="lohnContent">
+      <div class="empty-state"><div class="empty-icon" style="font-size:40px;margin-bottom:12px">💰</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text-2)">Mitarbeiter wählen</div>
+        <div style="font-size:13px;color:var(--text-3);margin-top:4px">Wähle oben einen Mitarbeiter und Monat aus.</div>
+      </div>
+    </div>
+
+    <div id="freigegebeneLohnblaetter" style="margin-top:24px"></div>
+  </div>
+</main>
+
+<!-- ===== REGIERAPPORT ===== -->
+<main class="view" id="viewRegie">
+  <div style="max-width:680px;margin:0 auto;padding:28px 20px 80px">
+    <div class="card">
+      <div class="card-title"><div class="card-title-icon">📝</div>Regierapport erfassen</div>
+      <div class="form-grid">
+        <div class="field"><label>Datum *</label><input type="date" id="regieDate"></div>
+        <div class="field"><label>Mitarbeiter</label><input type="text" id="regieEmployee" readonly style="cursor:default;background:var(--surface-2)"></div>
+        <div class="field full"><label>Kunde / Baustelle *</label><input type="text" id="regieKunde" placeholder="z.B. Coop Regensdorf"></div>
+        <div class="field full">
+          <label>Arbeitszeit *</label>
+          <div class="time-range">
+            <input type="time" id="regieFrom" step="300" oninput="regieCalc()">
+            <span class="time-sep">→</span>
+            <input type="time" id="regieTo" step="300" oninput="regieCalc()">
+            <span class="duration-badge" id="regieDuration">—</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Pause</label>
+          <select id="regiePause" onchange="regieCalc()">
+            <option value="0">Keine Pause</option>
+            <option value="15">15 min</option><option value="30">30 min</option>
+            <option value="45">45 min</option><option value="60">60 min</option>
+          </select>
+        </div>
+        <div class="field"><label>Projekt *</label><select id="regieProject"><option value="">— Projekt wählen —</option></select></div>
+        <div class="field full"><label>Arbeitsgattung *</label><div class="pill-group" id="regieTypeGroup"></div></div>
+        <div class="field full"><label>Ausgeführte Arbeiten / Beschreibung</label><textarea id="regieDesc" placeholder="Material, Leistung, Bemerkungen…"></textarea></div>
+      </div>
+
+      <div style="margin-top:20px">
+        <label style="font-size:12px;font-weight:600;color:var(--text-2)">Unterschrift Kunde *</label>
+        <div style="font-size:11px;color:var(--text-3);margin-bottom:8px">Mit dem Finger unterschreiben (Touchscreen) oder mit der Maus</div>
+        <canvas id="sigPad" style="width:100%;height:180px;border:2px dashed var(--border);border-radius:var(--radius);background:#fff;touch-action:none;cursor:crosshair"></canvas>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+          <input type="text" id="regieKundeName" placeholder="Name Unterzeichner" style="flex:1;max-width:240px;font-family:'Inter',sans-serif;font-size:13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;outline:none;background:var(--surface-2)">
+          <button class="btn btn-grey btn-sm" onclick="sigClear()">🗑 Löschen</button>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button class="btn btn-grey btn-sm" onclick="regieReset()">Zurücksetzen</button>
+        <button class="btn btn-primary btn-sm" onclick="regieSave()">✓ Regierapport speichern</button>
+      </div>
+    </div>
+
+    <div class="entries-title" style="margin-bottom:12px">Meine Regierapporte</div>
+    <div class="entries-list" id="regieList"></div>
+  </div>
+</main>
 
 <!-- PW MODAL -->
 <div class="pw-modal-overlay" id="pwModal">
@@ -614,6 +725,8 @@
 <nav class="bottom-nav">
   <button class="bottom-nav-btn active" id="bnZeit" onclick="switchView('zeit')"><span class="nav-icon">⏱</span><span>Erfassen</span></button>
   <button class="bottom-nav-btn" id="bnRapport" onclick="switchView('rapport')"><span class="nav-icon">📋</span><span>Rapport</span></button>
+  <button class="bottom-nav-btn" id="bnRegie" onclick="switchView('regie')" style="display:none"><span class="nav-icon">📝</span><span>Regie</span></button>
+  <button class="bottom-nav-btn" id="bnLohn" onclick="switchView('lohn')" style="display:none"><span class="nav-icon">💰</span><span>Lohn</span></button>
   <button class="bottom-nav-btn" id="bnAdmin" onclick="switchView('admin')" style="display:none"><span class="nav-icon">⚙️</span><span>Admin</span></button>
   <button class="bottom-nav-btn" id="bnLogout" onclick="logout()"><span class="nav-icon">🚪</span><span>Abmelden</span></button>
 </nav>
@@ -772,6 +885,10 @@ async function loginSuccess() {
     try { await loadEntries(); renderMyEntries(); } catch(e) { console.error('loadEntries error:', e); }
     try { await loadProjects(); } catch(e) { console.error('loadProjects error:', e); }
     try { await loadTypes(); } catch(e) { console.error('loadTypes error:', e); }
+    try { await loadLohnstamm(); } catch(e) { console.error('loadLohnstamm error:', e); }
+    try { await loadQstTarife(); } catch(e) { console.error('loadQstTarife error:', e); }
+    try { await loadLohnblaetter(); } catch(e) { console.error('loadLohnblaetter error:', e); }
+    try { await loadRegierapporte(); } catch(e) { console.error('loadRegierapporte error:', e); }
     updateStats();
     renderTypePills();
     rebuildProjectDropdown();
@@ -779,9 +896,26 @@ async function loginSuccess() {
     if (currentUser.rolle === 'admin') {
       document.getElementById('navAdmin').style.display = '';
       document.getElementById('bnAdmin').style.display = '';
+      document.getElementById('navLohn').style.display = '';
+      document.getElementById('bnLohn').style.display = '';
+      // Admin sieht Regie immer
+      document.getElementById('navRegie').style.display = '';
+      document.getElementById('bnRegie').style.display = '';
+      // Admin braucht kein Erfassen → Zeiterfassung-Tab ausblenden
+      document.getElementById('navZeit').style.display = 'none';
+      document.getElementById('bnZeit').style.display = 'none';
+      switchView('admin');
     } else {
       document.getElementById('navAdmin').style.display = 'none';
       document.getElementById('bnAdmin').style.display = 'none';
+      document.getElementById('navLohn').style.display = 'none';
+      document.getElementById('bnLohn').style.display = 'none';
+      document.getElementById('navZeit').style.display = '';
+      document.getElementById('bnZeit').style.display = '';
+      // Regierapport nur bei Freigabe
+      const regieOn = currentUser.regie_zugriff === true;
+      document.getElementById('navRegie').style.display = regieOn ? '' : 'none';
+      document.getElementById('bnRegie').style.display = regieOn ? '' : 'none';
     }
     setSyncStatus(true);
   } catch(e) {
@@ -809,20 +943,28 @@ function logout() {
   document.getElementById('statProjects').textContent = '0';
   document.getElementById('statTodaySub').textContent = '0 Einträge';
   // Reset nav to Zeiterfassung
-  ['zeit','rapport','admin'].forEach(id => {
-    document.getElementById('view'+id.charAt(0).toUpperCase()+id.slice(1)).classList.remove('active');
+  ['zeit','rapport','admin','lohn','regie'].forEach(id => {
+    const vEl=document.getElementById('view'+id.charAt(0).toUpperCase()+id.slice(1));
+    if(vEl) vEl.classList.remove('active');
     const nb = document.getElementById('nav'+id.charAt(0).toUpperCase()+id.slice(1));
     if(nb) nb.classList.remove('active');
   });
   document.getElementById('viewZeit').classList.add('active');
   document.getElementById('navZeit').classList.add('active');
   document.getElementById('bnZeit').classList.add('active');
-  ['Rapport','Admin'].forEach(id => {
+  ['Rapport','Admin','Lohn','Regie'].forEach(id => {
     const el = document.getElementById('bn'+id);
     if(el) el.classList.remove('active');
   });
   document.getElementById('navAdmin').style.display = 'none';
   document.getElementById('bnAdmin').style.display = 'none';
+  if(document.getElementById('navLohn')) document.getElementById('navLohn').style.display = 'none';
+  if(document.getElementById('bnLohn')) document.getElementById('bnLohn').style.display = 'none';
+  if(document.getElementById('navRegie')) document.getElementById('navRegie').style.display = 'none';
+  if(document.getElementById('bnRegie')) document.getElementById('bnRegie').style.display = 'none';
+  // Zeiterfassung-Tab wieder einblenden (Admin hatte ihn ausgeblendet)
+  document.getElementById('navZeit').style.display = '';
+  document.getElementById('bnZeit').style.display = '';
   resetForm();
 }
 
@@ -858,17 +1000,20 @@ async function loadMitarbeiter() {
 // ===== VIEW NAVIGATION =====
 function switchView(v) {
   if (v === 'admin' && !adminUnlocked) { openPwModal(); return; }
-  ['zeit','rapport','admin'].forEach(id => {
-    document.getElementById('view'+id.charAt(0).toUpperCase()+id.slice(1)).classList.toggle('active', v===id);
+  ['zeit','rapport','admin','lohn','regie'].forEach(id => {
+    const el = document.getElementById('view'+id.charAt(0).toUpperCase()+id.slice(1));
+    if(el) el.classList.toggle('active', v===id);
     const nb = document.getElementById('nav'+id.charAt(0).toUpperCase()+id.slice(1));
     if(nb) nb.classList.toggle('active', v===id);
   });
-  ['Zeit','Rapport','Admin'].forEach(id => {
+  ['Zeit','Rapport','Admin','Lohn','Regie'].forEach(id => {
     const el = document.getElementById('bn'+id);
     if(el) el.classList.toggle('active', v===id.toLowerCase());
   });
   if (v==='rapport') renderRapport();
   if (v==='admin') { switchAdminTab('overview'); renderAdminProjects(); renderAdminTypes(); renderEmojiPicker(); renderColorPicker(); }
+  if (v==='lohn') { rebuildLohnSelects(); renderLohn(); }
+  if (v==='regie') { initRegie(); }
 }
 function switchAdminTab(tab) {
   ['overview','mitarbeiter','settings','entries'].forEach(t => {
@@ -963,14 +1108,34 @@ async function deleteMitarbeiter(id, name) {
 }
 function renderPinTable() {
   const tbody = document.getElementById('pinTableBody');
-  if (!mitarbeiter.length) { tbody.innerHTML='<tr><td colspan="4" style="padding:20px;text-align:center;color:var(--text-3)">Keine Mitarbeitenden.</td></tr>'; return; }
+  if (!mitarbeiter.length) { tbody.innerHTML='<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--text-3)">Keine Mitarbeitenden.</td></tr>'; return; }
   tbody.innerHTML = mitarbeiter.map(m=>`
     <tr>
       <td style="font-weight:600">${m.name}</td>
       <td><span class="pin-code">${m.pin}</span></td>
       <td><span class="role-badge role-${m.rolle}">${m.rolle==='admin'?'Admin':'Mitarbeiter'}</span></td>
+      <td>${m.rolle==='admin'?'<span style="color:var(--text-3);font-size:12px">—</span>':`<button onclick="toggleRegieZugriff('${m.id}',${!m.regie_zugriff})" style="border:1.5px solid ${m.regie_zugriff?'#16A34A':'var(--border)'};background:${m.regie_zugriff?'rgba(22,163,74,.12)':'transparent'};color:${m.regie_zugriff?'#16A34A':'var(--text-3)'};border-radius:6px;padding:4px 12px;font-size:11px;font-weight:600;cursor:pointer">${m.regie_zugriff?'✓ Ja':'✕ Nein'}</button>`}</td>
       <td><button class="icon-btn danger" onclick="deleteMitarbeiter('${m.id}','${m.name}')" title="Löschen">✕</button></td>
     </tr>`).join('');
+}
+
+// ===== REGIE-ZUGRIFF UMSCHALTEN (Admin) =====
+async function toggleRegieZugriff(id, value) {
+  try {
+    setSyncStatus(false);
+    await sbFetch(`mitarbeiter?id=eq.${id}`, {
+      method:'PATCH',
+      body: JSON.stringify({ regie_zugriff: value }),
+      prefer:'return=minimal'
+    });
+    setSyncStatus(true);
+    await loadMitarbeiter();
+    renderPinTable();
+    showToast(value?'Regierapport-Zugriff aktiviert.':'Regierapport-Zugriff deaktiviert.','📝','success');
+  } catch(e) {
+    setSyncStatus(false);
+    showToast('Aktualisierung fehlgeschlagen – Spalte regie_zugriff vorhanden?','⚠️','error');
+  }
 }
 
 // ===== PROJECTS =====
@@ -1121,12 +1286,12 @@ function calcDuration() {
   const total=(th*60+tm)-(fh*60+fm);
   if(total<=0){document.getElementById('durationBadge').textContent='—';document.getElementById('netBadge').textContent='—';return;}
   document.getElementById('durationBadge').textContent=formatMins(total);
-  const net=total-pause-fahrzeit;
+  const net=total-pause;
   document.getElementById('netBadge').textContent=net>0?formatMins(net):'—';
   let hints=[];
   if(pause>0) hints.push(`${pause} min Pause`);
-  if(fahrzeit>0) hints.push(`${fahrzeit} min Fahrzeit`);
-  const nh=document.getElementById('netHint'); if(nh) nh.textContent=hints.length?'(− '+hints.join(' − ')+ ')':'';
+  if(fahrzeit>0) hints.push(`${fahrzeit} min Fahrzeit separat`);
+  const nh=document.getElementById('netHint'); if(nh) nh.textContent=hints.length?'(− '+hints.filter(h=>h.includes('Pause')).join(' − ')+(fahrzeit>0?' · '+fahrzeit+' min Fahrzeit separat':'')+ ')':'';
 }
 
 // ===== SAVE ENTRY =====
@@ -1146,8 +1311,8 @@ async function saveEntry(andNew) {
   const [fh,fm]=from.split(':').map(Number),[th,tm]=to.split(':').map(Number);
   const total=(th*60+tm)-(fh*60+fm);
   if(total<=0) return showToast('Endzeit muss nach Startzeit liegen.','⚠️','error');
-  const net=total-pause-fahrzeit;
-  if(net<=0) return showToast('Pause/Fahrzeit länger als Arbeitszeit!','⚠️','error');
+  const net=total-pause;
+  if(net<=0) return showToast('Pause länger als Arbeitszeit!','⚠️','error');
   try {
     setSyncStatus(false);
     if(editingEntryId) {
@@ -1296,11 +1461,22 @@ function renderEntries() {
   list.innerHTML=filtered.map(e=>{
     const t=types.find(t=>t.name===e.typ)||{color:'#6b7280',bg:'#f3f4f6',icon:'📌'};
     const empStr=currentUser?.rolle==='admin'&&e.mitarbeiter_name?`<span style="font-size:11px;color:var(--text-3)">👤 ${e.mitarbeiter_name}</span>`:'';
+    // Admin-Zusatzsteuerung: Fahrzeit bezahlt? / Zuschlag freigeben?
+    let adminCtrl='';
+    if(currentUser?.rolle==='admin'){
+      if(e.fahrzeit_min>0){
+        adminCtrl+=`<button onclick="setFahrzeitBezahlt('${e.id}',${!e.fahrzeit_bezahlt})" style="border:1.5px solid ${e.fahrzeit_bezahlt?'#16A34A':'var(--border)'};background:${e.fahrzeit_bezahlt?'rgba(22,163,74,.12)':'transparent'};color:${e.fahrzeit_bezahlt?'#16A34A':'var(--text-3)'};border-radius:6px;padding:3px 8px;font-size:10px;font-weight:600;cursor:pointer;margin-right:4px" title="Fahrzeit ${e.fahrzeit_min} min">🚗 ${e.fahrzeit_bezahlt?'bezahlt':'unbezahlt'}</button>`;
+      }
+      const z = typeof berechneZuschlag==='function' ? berechneZuschlag(e) : {z50:0,z100:0};
+      if((z.z50+z.z100)>0){
+        adminCtrl+=`<button onclick="setZuschlagFreigabe('${e.id}',${!e.zuschlag_freigabe})" style="border:1.5px solid ${e.zuschlag_freigabe?'#D97706':'var(--border)'};background:${e.zuschlag_freigabe?'rgba(217,119,6,.12)':'transparent'};color:${e.zuschlag_freigabe?'#D97706':'var(--text-3)'};border-radius:6px;padding:3px 8px;font-size:10px;font-weight:600;cursor:pointer" title="Zuschlag Nacht/Sonntag">⭐ ${e.zuschlag_freigabe?'freigegeben':'Zuschlag?'}</button>`;
+      }
+    }
     return `<div class="entry-row">
       <div><div class="entry-date">${formatDateShort(e.datum)}</div><div class="entry-weekday">${getWeekday(e.datum)}</div></div>
-      <div><div class="entry-desc">${e.beschreibung||e.projekt}</div><div class="entry-project">${e.projekt}</div>${empStr}</div>
+      <div><div class="entry-desc">${e.beschreibung||e.projekt}</div><div class="entry-project">${e.projekt}</div>${empStr}${adminCtrl?`<div style="margin-top:6px">${adminCtrl}</div>`:''}</div>
       <div class="entry-time">${e.von} – ${e.bis}</div>
-      <div><div class="entry-duration">${formatMins(e.netto_min)}</div>${e.pause_min>0?`<span style="color:var(--text-3);font-size:11px">−${e.pause_min} min</span>`:''}</div>
+      <div><div class="entry-duration">${formatMins(e.netto_min)}</div>${e.pause_min>0?`<span style="color:var(--text-3);font-size:11px">−${e.pause_min} min</span>`:''}${e.fahrzeit_min>0?`<span style="color:var(--text-3);font-size:11px;display:block">+${e.fahrzeit_min} min 🚗</span>`:''}</div>
       <div><span class="type-badge" style="background:${t.bg};color:${t.color}">${t.icon} ${e.typ}</span></div>
       <div class="entry-actions">
         <button class="icon-btn" onclick="editEntry('${e.id}')" title="Bearbeiten">✏️</button>
@@ -1693,6 +1869,819 @@ function init() {
 setInterval(()=>{ document.getElementById('dateNow').textContent=formatDateLong(new Date()); },60000);
 // Auto-refresh entries every 60s
 setInterval(()=>{ if(currentUser) loadEntries(); },60000);
+
+// ===== ZUSCHLAG-BERECHNUNG & ADMIN-FREIGABEN =====
+function berechneZuschlag(e) {
+  const result = { normal:0, z50:0, z100:0 };
+  if (!e.datum || !e.von || !e.bis) { result.normal = e.netto_min||0; return result; }
+  const [fh,fm] = e.von.split(':').map(Number);
+  const [th,tm] = e.bis.split(':').map(Number);
+  let startMin = fh*60+fm;
+  let endMin   = th*60+tm;
+  if (endMin <= startMin) endMin += 24*60; // über Mitternacht
+  const dayDate = new Date(e.datum+'T00:00:00');
+  const dow = dayDate.getDay(); // 0=So, 6=Sa
+  const totalArbeit = e.netto_min || (endMin - startMin);
+  const pause = e.pause_min || 0;
+  // Pause anteilig abziehen: wir verteilen Zuschlag auf Brutto-Spanne, ziehen Pause vom Normal-Anteil
+  // Minutenweise durchgehen
+  for (let m = startMin; m < endMin; m++) {
+    const absMin = m % (24*60);
+    const dayOffset = Math.floor(m / (24*60)); // 0 oder 1 (nach Mitternacht)
+    const curDow = (dow + dayOffset) % 7;
+    const hour = absMin / 60;
+    let cat = 'normal';
+    if (curDow === 0) { // Sonntag
+      // 00:00–05:00 und 22:00–24:00 → 100%, dazwischen 50%
+      cat = (hour < 5 || hour >= 22) ? 'z100' : 'z50';
+    } else if (hour >= 22 || hour < 5) { // Nacht Mo–Sa
+      cat = 'z50';
+    }
+    if (cat === 'z100') result.z100++;
+    else if (cat === 'z50') result.z50++;
+    else result.normal++;
+  }
+  // Pause vom Normal-Anteil abziehen (vereinfacht)
+  if (pause > 0) {
+    let p = pause;
+    const take = Math.min(p, result.normal); result.normal -= take; p -= take;
+    if (p>0){ const t2=Math.min(p,result.z50); result.z50-=t2; p-=t2; }
+    if (p>0){ result.z100=Math.max(0,result.z100-p); }
+  }
+  return result;
+}
+
+async function setZuschlagFreigabe(id, frei) {
+  try {
+    setSyncStatus(false);
+    await sbFetch(`zeiteintraege?id=eq.${id}`, {
+      method:'PATCH',
+      body: JSON.stringify({ zuschlag_freigabe: frei }),
+      prefer:'return=minimal'
+    });
+    setSyncStatus(true);
+    await loadEntries();
+    renderEntries();
+    showToast(frei?'Zuschlag freigegeben.':'Zuschlag nicht freigegeben.','⭐','success');
+  } catch(e) {
+    setSyncStatus(false);
+    showToast('Aktualisierung fehlgeschlagen.','⚠️','error');
+  }
+}
+
+// ===== FAHRZEIT BEZAHLT/NICHT BEZAHLT (Admin) =====
+async function setFahrzeitBezahlt(id, bezahlt) {
+  try {
+    setSyncStatus(false);
+    await sbFetch(`zeiteintraege?id=eq.${id}`, {
+      method:'PATCH',
+      body: JSON.stringify({ fahrzeit_bezahlt: bezahlt }),
+      prefer:'return=minimal'
+    });
+    setSyncStatus(true);
+    await loadEntries();
+    renderEntries();
+    showToast(bezahlt?'Fahrzeit als bezahlt markiert.':'Fahrzeit als nicht bezahlt markiert.','🚗','success');
+  } catch(e) {
+    setSyncStatus(false);
+    showToast('Aktualisierung fehlgeschlagen.','⚠️','error');
+  }
+}
+
+
+// ═══════════════════════════════════════════
+// LOHN / QUELLENSTEUER / REGIERAPPORT (gemerged)
+// ═══════════════════════════════════════════
+// ===== LOHNABRECHNUNG =====
+// Mitarbeiterdaten (Lohnstamm) in Supabase Tabelle "lohnstamm"
+// Felder: mitarbeiter_id, ansatz, ferien_pct, qst_code, qst_satz, ahv_satz, alv_satz, nbuv_satz, bvg_fix, spesen_tag, waehrung, eur_kurs, iban, ahv_nr, adresse, bemerkung
+
+let lohnstamm = []; // cache
+let qstTarife = []; // ESTV-Tariftabellen cache
+
+async function loadLohnstamm() {
+  try {
+    lohnstamm = await sbFetch('lohnstamm?select=*');
+  } catch(e) {
+    // Tabelle existiert noch nicht – leer lassen
+    lohnstamm = [];
+  }
+}
+
+async function loadQstTarife() {
+  try {
+    qstTarife = await sbFetch('qst_tarife?select=*');
+  } catch(e) {
+    qstTarife = [];
+  }
+}
+
+function rebuildLohnSelects() {
+  const sel = document.getElementById('lohnEmpSel');
+  if (!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— Mitarbeiter —</option>';
+  mitarbeiter.forEach(m => {
+    const o = new Option(m.name, m.id);
+    if (m.id == cur) o.selected = true;
+    sel.appendChild(o);
+  });
+  // Jahres-Dropdown
+  const ySel = document.getElementById('lohnYearSel');
+  if (!ySel) return;
+  const yv = ySel.value;
+  const years = new Set([new Date().getFullYear()]);
+  entries.forEach(e => { if(e.datum) years.add(new Date(e.datum+'T00:00:00').getFullYear()); });
+  ySel.innerHTML = '';
+  [...years].sort((a,b)=>b-a).forEach(y => {
+    const o = new Option(y, y);
+    if (y == yv) o.selected = true;
+    ySel.appendChild(o);
+  });
+  // Default: aktueller Monat
+  const mSel = document.getElementById('lohnMonthSel');
+  if (mSel && !mSel.dataset.set) { mSel.value = new Date().getMonth(); mSel.dataset.set='1'; }
+}
+
+function getLohnstamm(maId) {
+  return lohnstamm.find(l => l.mitarbeiter_id == maId) || null;
+}
+
+// ===== QUELLENSTEUER NACH ESTV-TARIFTABELLE =====
+// Tabelle qst_tarife: { kanton, tarifcode, lohn_bis, steuer_chf }
+// Stufung alle CHF 100. Interpolation zwischen den Stufen.
+// Rückgabe: CHF-Steuerbetrag für den Monat.
+function getQstBetrag(ls, brutto) {
+  if (!ls) return 0;
+  const kanton = (ls.qst_kanton || '').toUpperCase();
+  const code   = (ls.qst_code || '').toUpperCase();
+  if (kanton && code && qstTarife.length) {
+    // passende Stufen finden
+    const stufen = qstTarife
+      .filter(t => (t.kanton||'').toUpperCase()===kanton && (t.tarifcode||'').toUpperCase()===code)
+      .map(t => ({ lohn: parseFloat(t.lohn_bis), steuer: parseFloat(t.steuer_chf) }))
+      .filter(t => !isNaN(t.lohn) && !isNaN(t.steuer))
+      .sort((a,b) => a.lohn - b.lohn);
+    if (stufen.length) {
+      // unter erster Stufe
+      if (brutto <= stufen[0].lohn) return stufen[0].steuer;
+      // über letzter Stufe → höchsten Satz proportional anwenden
+      const last = stufen[stufen.length-1];
+      if (brutto >= last.lohn) {
+        const satz = last.lohn>0 ? last.steuer/last.lohn : 0;
+        return brutto * satz;
+      }
+      // zwischen zwei Stufen linear interpolieren
+      for (let i=0; i<stufen.length-1; i++) {
+        const a=stufen[i], b=stufen[i+1];
+        if (brutto >= a.lohn && brutto <= b.lohn) {
+          const f = (brutto - a.lohn) / (b.lohn - a.lohn);
+          return a.steuer + f * (b.steuer - a.steuer);
+        }
+      }
+      return last.steuer;
+    }
+  }
+  // Fallback: fixer Prozentsatz aus lohnstamm
+  const satz = getQstSatzFallback(ls, brutto);
+  return brutto * satz / 100;
+}
+
+// Fallback-Prozentsatz (alte Logik mit qst_tarif JSON oder qst_satz)
+function getQstSatzFallback(ls, brutto) {
+  if (!ls) return 0;
+  let tarif = ls.qst_tarif;
+  if (typeof tarif === 'string') { try { tarif = JSON.parse(tarif); } catch(e){ tarif = null; } }
+  if (Array.isArray(tarif) && tarif.length) {
+    const sorted = [...tarif].filter(t=>t&&typeof t.satz!=='undefined').sort((a,b)=>{
+      const ab=(a.bis==null?Infinity:a.bis), bb=(b.bis==null?Infinity:b.bis); return ab-bb;
+    });
+    for (const stufe of sorted) {
+      const grenze = (stufe.bis==null || stufe.bis==='') ? Infinity : parseFloat(stufe.bis);
+      if (brutto <= grenze) return parseFloat(stufe.satz)||0;
+    }
+    return parseFloat(sorted[sorted.length-1].satz)||0;
+  }
+  return parseFloat(ls.qst_satz)||0;
+}
+
+// Effektiver QSt-Prozentsatz (für Anzeige)
+function getQstSatz(ls, brutto) {
+  if (brutto <= 0) return 0;
+  const betrag = getQstBetrag(ls, brutto);
+  return betrag / brutto * 100;
+}
+
+// ===== QSt MIT HOCHRECHNUNG (Ein-/Austritt, Ziffer 4.17.1) =====
+// Bei unvollständiger Zahltagsperiode:
+//  1. effektive Arbeitstage im Monat zählen (anhand Ein-/Austrittsdatum)
+//  2. Teillohn auf 30 Tage hochrechnen → fiktiver Monatslohn
+//  3. Steuersatz aus fiktivem Lohn bestimmen
+//  4. Satz auf effektiven Teillohn anwenden
+// Rückgabe: { betrag, satz, hochgerechnet, arbeitstage, istTeilmonat }
+function getQstMitHochrechnung(ls, brutto, month, year) {
+  const normal = { betrag: getQstBetrag(ls, brutto), satz: getQstSatz(ls, brutto), hochgerechnet: brutto, arbeitstage: 30, istTeilmonat: false };
+  if (!ls) return normal;
+  const eintritt = ls.eintritt ? new Date(ls.eintritt+'T00:00:00') : null;
+  const austritt = ls.austritt ? new Date(ls.austritt+'T00:00:00') : null;
+  // Monatsgrenzen
+  const monatStart = new Date(year, month, 1);
+  const monatEnde  = new Date(year, month+1, 0); // letzter Tag
+  // Liegt Ein- oder Austritt in diesem Monat?
+  const eintrittImMonat = eintritt && eintritt > monatStart && eintritt <= monatEnde;
+  const austrittImMonat = austritt && austritt >= monatStart && austritt < monatEnde;
+  if (!eintrittImMonat && !austrittImMonat) return normal;
+  // Effektive Tage im Monat berechnen (Basis 30)
+  const von = eintrittImMonat ? eintritt.getDate() : 1;
+  const bis = austrittImMonat ? austritt.getDate() : 30;
+  let arbeitstage = bis - von + 1;
+  if (arbeitstage < 1) arbeitstage = 1;
+  if (arbeitstage > 30) arbeitstage = 30;
+  // Hochrechnen auf 30 Tage
+  const hochgerechnet = brutto * 30 / arbeitstage;
+  // Satz vom hochgerechneten Lohn
+  const satz = getQstSatz(ls, hochgerechnet);
+  // Satz auf effektiven Teillohn anwenden
+  const betrag = brutto * satz / 100;
+  return { betrag, satz, hochgerechnet, arbeitstage, istTeilmonat: true };
+}
+
+function fmtChf(v, waehr) {
+  const s = Math.abs(v).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,"'");
+  return (v < 0 ? '− ' : '') + (waehr||'CHF') + ' ' + s;
+}
+
+// ===== ADMIN: FREIGEGEBENE LOHNBLÄTTER VERWALTEN =====
+function renderFreigegebeneLohnblaetter() {
+  const cont = document.getElementById('freigegebeneLohnblaetter');
+  if(!cont) return;
+  if(!lohnblaetter.length){ cont.innerHTML=''; return; }
+  cont.innerHTML = `<div class="lohn-card">
+    <div class="lohn-card-title">📨 Freigegebene Lohnblätter (sichtbar beim Mitarbeiter)</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${lohnblaetter.map(lb=>`
+        <div style="display:flex;align-items:center;justify-content:space-between;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;flex-wrap:wrap;gap:8px">
+          <div>
+            <div style="font-size:13px;font-weight:700">${lb.mitarbeiter_name} – ${monthNames[lb.monat]} ${lb.jahr}</div>
+            <div style="font-size:11px;color:var(--text-3)">Freigegeben ${new Date(lb.freigegeben_am).toLocaleDateString('de-CH')} · ${fmtChf(lb.auszahlung)}</div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-outline btn-sm" onclick="viewLohnblatt('${lb.id}')">📄</button>
+            <button class="icon-btn danger" onclick="lohnblattLoeschen('${lb.id}')" title="Löschen">✕</button>
+          </div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderLohn() {
+  renderFreigegebeneLohnblaetter();
+  const maId = document.getElementById('lohnEmpSel')?.value;
+  const month = parseInt(document.getElementById('lohnMonthSel')?.value ?? new Date().getMonth());
+  const year  = parseInt(document.getElementById('lohnYearSel')?.value ?? new Date().getFullYear());
+  const cont  = document.getElementById('lohnContent');
+  if (!cont) return;
+
+  if (!maId) {
+    cont.innerHTML = `<div class="empty-state"><div class="empty-icon" style="font-size:40px;margin-bottom:12px">💰</div><div style="font-size:15px;font-weight:600;color:var(--text-2)">Mitarbeiter wählen</div><div style="font-size:13px;color:var(--text-3);margin-top:4px">Wähle oben einen Mitarbeiter und Monat aus.</div></div>`;
+    return;
+  }
+
+  const ma = mitarbeiter.find(m => m.id == maId);
+  if (!ma) return;
+  const ls = getLohnstamm(maId);
+
+  // Einträge für diesen MA + Monat
+  const monthStr = `${year}-${String(month+1).padStart(2,'0')}`;
+  const maE = entries.filter(e => e.mitarbeiter_id == maId && e.datum && e.datum.startsWith(monthStr));
+  const arbeitsMins = maE.reduce((s,e)=>s+e.netto_min,0);
+  // Bezahlte Fahrzeit wird zur Lohnzeit addiert (gleicher Ansatz)
+  const fahrzeitBezahltMins = maE.reduce((s,e)=>s+(e.fahrzeit_bezahlt?(e.fahrzeit_min||0):0),0);
+  const fahrzeitTotalMins = maE.reduce((s,e)=>s+(e.fahrzeit_min||0),0);
+  const totalMins = arbeitsMins + fahrzeitBezahltMins;
+  const totalH = totalMins / 60;
+  const arbeitsH = arbeitsMins / 60;
+  const fahrzeitBezahltH = fahrzeitBezahltMins / 60;
+
+  // Spesen: pro Tag mit >7.0 Std Arbeitszeit → CHF 15.–
+  const minsByDay = {};
+  maE.forEach(e=>{ minsByDay[e.datum] = (minsByDay[e.datum]||0) + e.netto_min; });
+  const spesenTage = Object.values(minsByDay).filter(m => m > 7*60).length;
+
+  // Zuschläge (nur bei Admin-Freigabe: e.zuschlag_freigabe === true)
+  let z50Mins = 0, z100Mins = 0;
+  maE.forEach(e=>{
+    if (e.zuschlag_freigabe) {
+      const z = berechneZuschlag(e);
+      z50Mins  += z.z50;
+      z100Mins += z.z100;
+    }
+  });
+  const z50H = z50Mins/60, z100H = z100Mins/60;
+
+  // Lohnparameter (aus lohnstamm oder Defaults)
+  const ansatz    = ls?.ansatz     ?? 25.00;
+  const ferienPct = ls?.ferien_pct ?? 9.70;
+  const ahvSatz   = ls?.ahv_satz   ?? 5.30;
+  const alvSatz   = ls?.alv_satz   ?? 1.10;
+  const nbuvSatz  = ls?.nbuv_satz  ?? 1.67;
+  const bvgFix    = ls?.bvg_fix    ?? 0;
+  const spesenTag = ls?.spesen_tag ?? 15.00;
+  const qstCode   = ls?.qst_code   ?? '—';
+  const waehrung  = ls?.waehrung   ?? 'CHF';
+  const eurKurs   = ls?.eur_kurs   ?? 0;
+  const iban      = ls?.iban       ?? ma.iban ?? '—';
+  const ahvNr     = ls?.ahv_nr     ?? '—';
+  const adresse   = ls?.adresse    ?? '—';
+  const bemerkung = ls?.bemerkung  ?? '';
+
+  // Berechnungen
+  const grundlohn  = totalH * ansatz;
+  const zuschlag50 = z50H * ansatz * 0.50;   // +50%
+  const zuschlag100= z100H * ansatz * 1.00;  // +100%
+  const brutto     = grundlohn + zuschlag50 + zuschlag100;
+  // Quellensteuer-Satz nach Tarifstufe (abhängig vom Bruttolohn)
+  const qstSatz   = getQstSatz(ls, brutto);
+  const ahvAbzug   = brutto * ahvSatz / 100;
+  const alvAbzug   = brutto * alvSatz / 100;
+  const nbuvAbzug  = brutto * nbuvSatz / 100;
+  const zpkAbzug   = 19;
+  const bvgAbzug   = Math.abs(bvgFix);
+  const qstInfo    = getQstMitHochrechnung(ls, brutto, month, year);
+  const qstAbzug   = qstInfo.betrag;
+  const qstSatzEff = qstInfo.satz;
+  const totalAbz   = ahvAbzug + alvAbzug + nbuvAbzug + zpkAbzug + bvgAbzug + qstAbzug;
+  const netto      = brutto - totalAbz;
+  const spesen     = spesenTage * spesenTag;
+  const auszahlung = netto + spesen;
+  const auszEur    = waehrung === 'EUR' && eurKurs > 0 ? auszahlung / eurKurs : 0;
+
+  const mn = monthNames[month];
+
+  // Lohnblatt zeigt nur Monats-Total, kein Tagesrapport
+  cont.innerHTML = `
+  <div class="lohn-hero">
+    <div class="lohn-hero-eyebrow">Lohnabrechnung ${mn} ${year}</div>
+    <div class="lohn-hero-name">${ma.name}</div>
+    <div class="lohn-hero-sub">${ahvNr} · ${adresse}</div>
+    <div class="lohn-kpi-row">
+      <div class="lohn-kpi"><div class="lohn-kpi-label">Arbeitsstunden</div><div class="lohn-kpi-val">${totalH.toFixed(2)} h</div></div>
+      <div class="lohn-kpi"><div class="lohn-kpi-label">Bruttolohn</div><div class="lohn-kpi-val gold">${fmtChf(brutto)}</div></div>
+      <div class="lohn-kpi"><div class="lohn-kpi-label">Nettolohn</div><div class="lohn-kpi-val">${fmtChf(netto)}</div></div>
+    </div>
+  </div>
+
+  <div class="lohn-breakdown">
+    <div class="lohn-card">
+      <div class="lohn-card-title">📋 Bruttolohn ${mn} ${year}</div>
+      <div class="lohn-row"><span>Arbeitszeit total</span><span class="lohn-val">${arbeitsH.toFixed(2)} h</span></div>
+      ${fahrzeitBezahltMins>0 ? `<div class="lohn-row"><span>+ Bezahlte Fahrzeit</span><span class="lohn-val green">${fahrzeitBezahltH.toFixed(2)} h</span></div>` : ''}
+      ${fahrzeitTotalMins>fahrzeitBezahltMins ? `<div class="lohn-row"><span style="color:var(--text-3)">Fahrzeit unbezahlt (Info)</span><span class="lohn-val" style="color:var(--text-3)">${((fahrzeitTotalMins-fahrzeitBezahltMins)/60).toFixed(2)} h</span></div>` : ''}
+      <div class="lohn-row"><span>Total verrechnet</span><span class="lohn-val">${totalH.toFixed(2)} h</span></div>
+      <div class="lohn-row"><span>Ansatz (Brutto inkl. ${ferienPct}% Ferien)</span><span class="lohn-val">${fmtChf(ansatz)}/h</span></div>
+      <div class="lohn-row"><span>Grundlohn</span><span class="lohn-val">${fmtChf(grundlohn)}</span></div>
+      ${z50Mins>0 ? `<div class="lohn-row"><span>Zuschlag 50% (${z50H.toFixed(2)} h Nacht/So)</span><span class="lohn-val green">+ ${fmtChf(zuschlag50)}</span></div>` : ''}
+      ${z100Mins>0 ? `<div class="lohn-row"><span>Zuschlag 100% (${z100H.toFixed(2)} h So-Nacht)</span><span class="lohn-val green">+ ${fmtChf(zuschlag100)}</span></div>` : ''}
+      <div class="lohn-row total"><span>BRUTTOLOHN</span><span class="lohn-val gold">${fmtChf(brutto)}</span></div>
+    </div>
+    <div class="lohn-card">
+      <div class="lohn-card-title">➖ Sozialabzüge</div>
+      <div class="lohn-row"><span>AHV/IV/EO (${ahvSatz}%)</span><span class="lohn-val red">− ${fmtChf(ahvAbzug)}</span></div>
+      <div class="lohn-row"><span>ALV (${alvSatz}%)</span><span class="lohn-val red">− ${fmtChf(alvAbzug)}</span></div>
+      <div class="lohn-row"><span>NBUV (${nbuvSatz}%)</span><span class="lohn-val red">− ${fmtChf(nbuvAbzug)}</span></div>
+      <div class="lohn-row"><span>ZPK (fix)</span><span class="lohn-val red">− ${fmtChf(zpkAbzug)}</span></div>
+      ${bvgAbzug ? `<div class="lohn-row"><span>BVG-Prämie (fix)</span><span class="lohn-val red">− ${fmtChf(bvgAbzug)}</span></div>` : ''}
+      <div class="lohn-row"><span>Quellensteuer ${qstCode} (${qstSatzEff.toFixed(2)}%)${qstInfo.istTeilmonat?`<br><span style="font-size:10px;color:var(--text-3)">Teilmonat: ${qstInfo.arbeitstage} Tage → hochgerechnet auf ${fmtChf(qstInfo.hochgerechnet)}</span>`:''}</span><span class="lohn-val red">− ${fmtChf(qstAbzug)}</span></div>
+      <div class="lohn-row total"><span>TOTAL ABZÜGE</span><span class="lohn-val red">− ${fmtChf(totalAbz)}</span></div>
+    </div>
+  </div>
+
+  <div class="lohn-netto">
+    <div><div class="lohn-netto-label">Nettolohn</div><div class="lohn-netto-val">${fmtChf(netto)}</div></div>
+    <div><div class="lohn-netto-label">Spesen (${spesenTage} Tage >7h × CHF ${spesenTag.toFixed(2)})</div><div class="lohn-netto-val gold">+ ${fmtChf(spesen)}</div></div>
+    <div>
+      <div class="lohn-netto-label">Auszahlung</div>
+      <div class="lohn-netto-val green">${waehrung==='EUR'&&auszEur>0 ? '€ '+auszEur.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,"'") : fmtChf(auszahlung)}</div>
+      ${waehrung==='EUR'&&eurKurs>0 ? `<div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:3px">${fmtChf(auszahlung)} · 1€ = ${eurKurs} CHF</div>` : ''}
+    </div>
+  </div>
+
+  <div style="font-size:12px;color:var(--text-3);text-align:center;padding:8px 0">
+    IBAN: <strong style="color:var(--text-2)">${iban}</strong>
+    ${bemerkung ? ` · ℹ️ ${bemerkung}` : ''}
+  </div>
+  <div style="text-align:center;margin-top:16px">
+    <button class="btn btn-success btn-sm" onclick="lohnblattFreigeben('${maId}',${month},${year},${auszahlung.toFixed(2)})">📨 Lohnblatt für Mitarbeiter freigeben</button>
+    <div style="font-size:11px;color:var(--text-3);margin-top:6px">Das freigegebene Lohnblatt erscheint beim Mitarbeiter im Rapport und bleibt sichtbar, bis du es löschst.</div>
+  </div>
+  ${!ls ? `<div style="text-align:center;margin-top:16px"><div style="background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:14px 20px;display:inline-block;font-size:13px;color:#92400E">⚠️ Kein Lohnstamm für diesen Mitarbeiter. Bitte in Supabase Tabelle <strong>lohnstamm</strong> erfassen oder Lohndaten importieren.</div></div>` : ''}
+  `;
+}
+
+// ===== LOHNBLATT FREIGEBEN / VERWALTEN =====
+let lohnblaetter = [];
+async function loadLohnblaetter() {
+  try { lohnblaetter = await sbFetch('lohnblaetter?select=*&order=jahr.desc,monat.desc'); }
+  catch(e){ lohnblaetter = []; }
+}
+async function lohnblattFreigeben(maId, month, year, auszahlung) {
+  const ma = mitarbeiter.find(m=>m.id==maId);
+  if(!ma) return;
+  // HTML-Snapshot des aktuellen Lohnblatts speichern
+  const snapshot = document.getElementById('lohnContent').innerHTML
+    .replace(/<button[^>]*>[\s\S]*?<\/button>/g,'')
+    .replace(/onclick="[^"]*"/g,'');
+  try {
+    setSyncStatus(false);
+    // Existierendes Lohnblatt für diesen Monat löschen (überschreiben)
+    await sbFetch(`lohnblaetter?mitarbeiter_id=eq.${maId}&monat=eq.${month}&jahr=eq.${year}`, { method:'DELETE', prefer:'return=minimal' }).catch(()=>{});
+    await sbFetch('lohnblaetter', {
+      method:'POST',
+      body: JSON.stringify({
+        mitarbeiter_id: maId,
+        mitarbeiter_name: ma.name,
+        monat: month, jahr: year,
+        auszahlung: parseFloat(auszahlung),
+        html: snapshot,
+        freigegeben_am: new Date().toISOString()
+      }),
+      prefer:'return=minimal'
+    });
+    setSyncStatus(true);
+    await loadLohnblaetter();
+    showToast(`Lohnblatt ${monthNames[month]} ${year} freigegeben.`,'📨','success');
+  } catch(e) {
+    setSyncStatus(false);
+    showToast('Freigabe fehlgeschlagen – Tabelle lohnblaetter vorhanden?','⚠️','error');
+  }
+}
+async function lohnblattLoeschen(id) {
+  if(!confirm('Dieses freigegebene Lohnblatt wirklich löschen?')) return;
+  try {
+    await sbFetch(`lohnblaetter?id=eq.${id}`, { method:'DELETE', prefer:'return=minimal' });
+    await loadLohnblaetter();
+    if(document.getElementById('viewRapport').classList.contains('active')) renderRapport();
+    renderEntries();
+    showToast('Lohnblatt gelöscht.','🗑','error');
+  } catch(e){ showToast('Löschen fehlgeschlagen.','⚠️','error'); }
+}
+function viewLohnblatt(id) {
+  const lb = lohnblaetter.find(l=>l.id===id);
+  if(!lb) return;
+  const win=window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Lohnblatt ${lb.mitarbeiter_name} ${monthNames[lb.monat]} ${lb.jahr}</title>
+  <style>body{font-family:Arial,sans-serif;color:#1C2B4A;margin:0;padding:28px;font-size:12px}
+  .lohn-hero{background:#1C2B4A;color:#fff;padding:20px 24px;border-radius:10px;margin-bottom:16px}
+  .lohn-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+  .lohn-card{border:1px solid #E2E6EF;border-radius:8px;padding:16px}
+  .lohn-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee;font-size:12px}
+  .lohn-netto{background:#1C2B4A;color:#fff;padding:16px 20px;border-radius:8px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  .lohn-val{font-family:monospace;font-weight:600}
+  @media print{body{padding:12px}}</style></head><body>
+  <h1>Lohnabrechnung ${monthNames[lb.monat]} ${lb.jahr}</h1>
+  ${lb.html}
+  <script>window.onload=function(){window.print();}<\/script></body></html>`);
+  win.document.close();
+}
+
+// ===== LOHN EXCEL EXPORT =====
+function lohnExportExcel() {
+  const maId = document.getElementById('lohnEmpSel')?.value;
+  const month = parseInt(document.getElementById('lohnMonthSel')?.value ?? new Date().getMonth());
+  const year  = parseInt(document.getElementById('lohnYearSel')?.value ?? new Date().getFullYear());
+  if (!maId) return showToast('Bitte Mitarbeiter wählen.','⚠️','error');
+  const ma = mitarbeiter.find(m => m.id == maId);
+  if (!ma) return;
+  const ls = getLohnstamm(maId);
+  const monthStr = `${year}-${String(month+1).padStart(2,'0')}`;
+  const maE = entries.filter(e => e.mitarbeiter_id == maId && e.datum && e.datum.startsWith(monthStr));
+  const arbeitsMins = maE.reduce((s,e)=>s+e.netto_min,0);
+  const fahrzeitBezahltMins = maE.reduce((s,e)=>s+(e.fahrzeit_bezahlt?(e.fahrzeit_min||0):0),0);
+  const totalMins = arbeitsMins + fahrzeitBezahltMins;
+  const totalH = totalMins/60;
+  const minsByDay = {};
+  maE.forEach(e=>{ minsByDay[e.datum] = (minsByDay[e.datum]||0) + e.netto_min; });
+  const spesenTage = Object.values(minsByDay).filter(m => m > 7*60).length;
+  const ansatz   = ls?.ansatz ?? 25.00;
+  const ferienPct= ls?.ferien_pct ?? 9.70;
+  const ahvSatz  = ls?.ahv_satz ?? 5.30;
+  const alvSatz  = ls?.alv_satz ?? 1.10;
+  const nbuvSatz = ls?.nbuv_satz ?? 1.67;
+  const bvgFix   = Math.abs(ls?.bvg_fix ?? 0);
+  const spesenTag= ls?.spesen_tag ?? 15;
+  const qstCode  = ls?.qst_code ?? '';
+  const waehrung = ls?.waehrung ?? 'CHF';
+  const eurKurs  = ls?.eur_kurs ?? 0;
+  const iban     = ls?.iban ?? '—';
+  const ahvNr    = ls?.ahv_nr ?? '—';
+  const adresse  = ls?.adresse ?? '—';
+  // Zuschläge (nur bei Freigabe)
+  let z50Mins=0, z100Mins=0;
+  maE.forEach(e=>{ if(e.zuschlag_freigabe){ const z=berechneZuschlag(e); z50Mins+=z.z50; z100Mins+=z.z100; } });
+  const grundlohn = totalH * ansatz;
+  const zuschlag50 = (z50Mins/60) * ansatz * 0.50;
+  const zuschlag100= (z100Mins/60) * ansatz * 1.00;
+  const brutto   = grundlohn + zuschlag50 + zuschlag100;
+  const qstInfo  = getQstMitHochrechnung(ls, brutto, month, year);
+  const qstSatz  = qstInfo.satz;
+  const ahvAbzug = brutto * ahvSatz / 100;
+  const alvAbzug = brutto * alvSatz / 100;
+  const nbuvAbzug= brutto * nbuvSatz / 100;
+  const zpkAbzug = 19;
+  const qstAbzug = qstInfo.betrag;
+  const totalAbz = ahvAbzug+alvAbzug+nbuvAbzug+zpkAbzug+bvgFix+qstAbzug;
+  const netto    = brutto - totalAbz;
+  const spesen   = spesenTage * spesenTag;
+  const auszahlung = netto + spesen;
+  const mn = monthNames[month];
+
+  const bom='\uFEFF', sep=';';
+  const lines = [
+    ['LOHNABRECHNUNG', mn+' '+year,'',''],
+    ['Mitarbeiter:', ma.name, 'AHV-Nr.:', ahvNr],
+    ['Adresse:', adresse, 'IBAN:', iban],
+    ['Datum:', new Date().toLocaleDateString('de-CH'), 'QSt.:', qstCode],
+    [''],
+    ['ZEITEINTRÄGE','','',''],
+    ['Datum','Wochentag','Projekt','Arbeitszeit Std','Fahrzeit Std','Fahrzeit bezahlt'],
+    ...maE.map(e=>[e.datum, getWeekday(e.datum), e.projekt, +(e.netto_min/60).toFixed(2), +((e.fahrzeit_min||0)/60).toFixed(2), e.fahrzeit_bezahlt?'Ja':'Nein']),
+    ['Arbeitszeit total','','',+(arbeitsMins/60).toFixed(2)],
+    ['Bezahlte Fahrzeit','','',+(fahrzeitBezahltMins/60).toFixed(2)],
+    ['Total verrechnete Stunden','','',+totalH.toFixed(2)],
+    [''],
+    ['BRUTTOLOHN','','',''],
+    ['Ansatz (Brutto inkl. '+ferienPct+'% Ferien):', ansatz+' CHF/h','Total:', +brutto.toFixed(2)],
+    [''],
+    ['ABZÜGE','','',''],
+    ['AHV/IV/EO ('+ahvSatz+'%)','','',-ahvAbzug.toFixed(2)],
+    ['ALV ('+alvSatz+'%)','','',-alvAbzug.toFixed(2)],
+    ['NBUV ('+nbuvSatz+'%)','','',-nbuvAbzug.toFixed(2)],
+    ['ZPK (fix)','','',-zpkAbzug],
+    ...(bvgFix?[['BVG-Prämie (fix)','','',-bvgFix]]:[] ),
+    ['Quellensteuer '+qstCode+' ('+qstSatz.toFixed(2)+'%'+(qstInfo.istTeilmonat?', Teilmonat '+qstInfo.arbeitstage+' Tage hochger. auf '+qstInfo.hochgerechnet.toFixed(0):'')+')','','',-qstAbzug.toFixed(2)],
+    ['TOTAL ABZÜGE','','',+(-totalAbz).toFixed(2)],
+    [''],
+    ['NETTOLOHN','','',+netto.toFixed(2)],
+    ['Spesen ('+spesenTage+' Tage >7h × CHF '+spesenTag+')','','',+spesen.toFixed(2)],
+    ['AUSZAHLUNG CHF','','',+auszahlung.toFixed(2)],
+    ...(waehrung==='EUR'&&eurKurs>0?[['AUSZAHLUNG EUR (1€='+eurKurs+' CHF)','','',+(auszahlung/eurKurs).toFixed(2)]]:[] ),
+  ];
+  const csv = bom + lines.map(r=>r.join(sep)).join('\n');
+  const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href=url; a.download=`Lohnblatt_${ma.name.replace(/ /g,'_')}_${mn}_${year}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  showToast('Excel exportiert.','📥','success');
+}
+
+// ===== LOHN PDF =====
+function lohnExportPDF() {
+  const cont = document.getElementById('lohnContent');
+  if (!cont || cont.querySelector('.empty-state')) return showToast('Bitte zuerst Mitarbeiter wählen.','⚠️','error');
+  const ma = mitarbeiter.find(m=>m.id==document.getElementById('lohnEmpSel').value);
+  const month = parseInt(document.getElementById('lohnMonthSel').value);
+  const year  = parseInt(document.getElementById('lohnYearSel').value);
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>Lohnblatt ${ma?.name} ${monthNames[month]} ${year}</title>
+  <style>
+    body{font-family:Arial,sans-serif;color:#1C2B4A;margin:0;padding:28px;font-size:12px}
+    h1{font-size:20px;font-weight:800;margin:0 0 4px}
+    .sub{color:#8B93B0;font-size:11px;margin-bottom:20px}
+    .lohn-hero{background:#1C2B4A;color:#fff;padding:20px 24px;border-radius:10px;margin-bottom:16px}
+    .lohn-hero h2{margin:0 0 4px;font-size:18px}
+    .lohn-hero p{margin:0;font-size:11px;color:rgba(255,255,255,.5)}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+    .card{border:1px solid #E2E6EF;border-radius:8px;padding:16px}
+    .card h3{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#8B93B0;margin:0 0 12px}
+    table{width:100%;border-collapse:collapse}
+    td{padding:5px 0;font-size:12px;border-bottom:1px solid #E2E6EF}
+    tr:last-child td{border-bottom:none}
+    .right{text-align:right;font-family:monospace}
+    .bold{font-weight:700}
+    .red{color:#EF4444}
+    .netto{background:#1C2B4A;color:#fff;padding:16px 20px;border-radius:8px;display:flex;justify-content:space-between;margin-bottom:12px}
+    .netto-item{text-align:center}
+    .netto-lbl{font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:4px}
+    .netto-val{font-size:18px;font-weight:700}
+    .iban{text-align:center;font-size:11px;color:#8B93B0;margin-top:8px}
+    @media print{body{padding:12px}}
+  </style></head><body>
+  <h1>Lohnabrechnung ${monthNames[month]} ${year}</h1>
+  <div class="sub">Schweitzer plus GmbH · Erstellt am ${new Date().toLocaleDateString('de-CH')}</div>
+  ${cont.innerHTML
+    .replace(/<button[^>]*>[\s\S]*?<\/button>/g,'')
+    .replace(/onclick="[^"]*"/g,'')
+    .replace(/class="lohn-hero"/g,'class="lohn-hero"')
+  }
+  <script>window.onload=function(){window.print();}<\/script>
+  </body></html>`);
+  win.document.close();
+}
+
+// ===== LOHN: Supabase Tabelle erstellen (SQL) =====
+// CREATE TABLE lohnstamm (
+//   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+//   mitarbeiter_id uuid REFERENCES mitarbeiter(id) ON DELETE CASCADE,
+//   ansatz numeric DEFAULT 25.00,
+//   ferien_pct numeric DEFAULT 9.70,
+//   ahv_satz numeric DEFAULT 5.30,
+//   alv_satz numeric DEFAULT 1.10,
+//   nbuv_satz numeric DEFAULT 1.67,
+//   bvg_fix numeric DEFAULT 0,
+//   spesen_tag numeric DEFAULT 15.00,
+//   qst_code text,
+//   qst_satz numeric DEFAULT 0,
+//   waehrung text DEFAULT 'CHF',
+//   eur_kurs numeric DEFAULT 0,
+//   iban text,
+//   ahv_nr text,
+//   adresse text,
+//   bemerkung text
+// );
+
+// ===== REGIERAPPORT =====
+let regieSelectedType = '';
+let sigCtx = null, sigDrawing = false, sigHasContent = false;
+
+function initRegie() {
+  const today = new Date();
+  document.getElementById('regieDate').value = formatDateInput(today);
+  document.getElementById('regieEmployee').value = currentUser?.name || '';
+  // Projekt-Dropdown füllen
+  const sel = document.getElementById('regieProject');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— Projekt wählen —</option>';
+  projects.forEach(p=>{ const o=new Option(p,p); if(p===cur)o.selected=true; sel.appendChild(o); });
+  // Arbeitsgattungen als Pills
+  document.getElementById('regieTypeGroup').innerHTML = types.map(t=>`<div class="pill${regieSelectedType===t.name?' active':''}" data-rtype="${t.name}" onclick="regieSelectType(this)">${t.icon} ${t.name}</div>`).join('');
+  initSignaturePad();
+  renderRegieList();
+}
+function regieSelectType(el) {
+  document.querySelectorAll('#regieTypeGroup .pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  regieSelectedType = el.dataset.rtype;
+}
+function regieCalc() {
+  const from=document.getElementById('regieFrom').value, to=document.getElementById('regieTo').value;
+  const pause=parseInt(document.getElementById('regiePause').value)||0;
+  if(!from||!to){document.getElementById('regieDuration').textContent='—';return;}
+  const [fh,fm]=from.split(':').map(Number),[th,tm]=to.split(':').map(Number);
+  let total=(th*60+tm)-(fh*60+fm);
+  if(total<=0){document.getElementById('regieDuration').textContent='—';return;}
+  document.getElementById('regieDuration').textContent=formatMins(total-pause);
+}
+
+// ===== SIGNATURE PAD =====
+function initSignaturePad() {
+  const canvas = document.getElementById('sigPad');
+  if(!canvas) return;
+  // Canvas-Auflösung an Anzeigegrösse anpassen
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  sigCtx = canvas.getContext('2d');
+  sigCtx.scale(dpr, dpr);
+  sigCtx.lineWidth = 2.5;
+  sigCtx.lineCap = 'round';
+  sigCtx.lineJoin = 'round';
+  sigCtx.strokeStyle = '#1C2B4A';
+  sigHasContent = false;
+
+  function pos(e) {
+    const r = canvas.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x: t.clientX - r.left, y: t.clientY - r.top };
+  }
+  function start(e){ e.preventDefault(); sigDrawing=true; const p=pos(e); sigCtx.beginPath(); sigCtx.moveTo(p.x,p.y); }
+  function move(e){ if(!sigDrawing)return; e.preventDefault(); const p=pos(e); sigCtx.lineTo(p.x,p.y); sigCtx.stroke(); sigHasContent=true; }
+  function end(e){ if(e)e.preventDefault(); sigDrawing=false; }
+
+  canvas.onmousedown=start; canvas.onmousemove=move; canvas.onmouseup=end; canvas.onmouseleave=end;
+  canvas.ontouchstart=start; canvas.ontouchmove=move; canvas.ontouchend=end;
+}
+function sigClear() {
+  const canvas=document.getElementById('sigPad');
+  if(sigCtx&&canvas){ sigCtx.clearRect(0,0,canvas.width,canvas.height); sigHasContent=false; }
+}
+
+async function regieSave() {
+  if(!currentUser) return;
+  const date=document.getElementById('regieDate').value;
+  const kunde=document.getElementById('regieKunde').value.trim();
+  const from=document.getElementById('regieFrom').value, to=document.getElementById('regieTo').value;
+  const pause=parseInt(document.getElementById('regiePause').value)||0;
+  const project=document.getElementById('regieProject').value;
+  const desc=document.getElementById('regieDesc').value.trim();
+  const kundeName=document.getElementById('regieKundeName').value.trim();
+  if(!date) return showToast('Bitte Datum wählen.','⚠️','error');
+  if(!kunde) return showToast('Bitte Kunde/Baustelle eingeben.','⚠️','error');
+  if(!from||!to) return showToast('Bitte Zeiten eingeben.','⚠️','error');
+  if(!project) return showToast('Bitte Projekt wählen.','⚠️','error');
+  if(!regieSelectedType) return showToast('Bitte Arbeitsgattung wählen.','⚠️','error');
+  if(!sigHasContent) return showToast('Bitte Kundenunterschrift erfassen.','⚠️','error');
+  const [fh,fm]=from.split(':').map(Number),[th,tm]=to.split(':').map(Number);
+  let total=(th*60+tm)-(fh*60+fm);
+  if(total<=0) return showToast('Endzeit nach Startzeit.','⚠️','error');
+  const net=total-pause;
+  const sigData = document.getElementById('sigPad').toDataURL('image/png');
+  try {
+    setSyncStatus(false);
+    await sbFetch('regierapporte', {
+      method:'POST',
+      body: JSON.stringify({
+        mitarbeiter_id: currentUser.id,
+        mitarbeiter_name: currentUser.name,
+        datum: date, kunde, von: from, bis: to,
+        pause_min: pause, netto_min: net,
+        projekt: project, typ: regieSelectedType, beschreibung: desc,
+        kunde_name: kundeName, unterschrift: sigData
+      }),
+      prefer:'return=minimal'
+    });
+    setSyncStatus(true);
+    await loadRegierapporte();
+    renderRegieList();
+    showToast('Regierapport gespeichert.','✓','success');
+    regieReset();
+  } catch(e) {
+    setSyncStatus(false);
+    showToast('Speichern fehlgeschlagen – Tabelle regierapporte vorhanden?','⚠️','error');
+  }
+}
+function regieReset() {
+  document.getElementById('regieKunde').value='';
+  document.getElementById('regieFrom').value='';
+  document.getElementById('regieTo').value='';
+  document.getElementById('regiePause').value='0';
+  document.getElementById('regieProject').value='';
+  document.getElementById('regieDesc').value='';
+  document.getElementById('regieKundeName').value='';
+  document.getElementById('regieDuration').textContent='—';
+  document.querySelectorAll('#regieTypeGroup .pill').forEach(p=>p.classList.remove('active'));
+  regieSelectedType='';
+  sigClear();
+}
+
+let regierapporte = [];
+async function loadRegierapporte() {
+  try {
+    let url='regierapporte?select=*&order=datum.desc';
+    if(currentUser && currentUser.rolle!=='admin') url+=`&mitarbeiter_id=eq.${currentUser.id}`;
+    regierapporte = await sbFetch(url);
+  } catch(e){ regierapporte=[]; }
+}
+function renderRegieList() {
+  const list=document.getElementById('regieList');
+  if(!list) return;
+  const mine = currentUser?.rolle==='admin' ? regierapporte : regierapporte.filter(r=>r.mitarbeiter_id===currentUser?.id);
+  if(!mine.length){ list.innerHTML=`<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-title">Noch keine Regierapporte</div></div>`; return; }
+  list.innerHTML=mine.map(r=>`
+    <div class="entry-row" style="grid-template-columns:80px 1fr 120px auto">
+      <div><div class="entry-date">${formatDateShort(r.datum)}</div><div class="entry-weekday">${getWeekday(r.datum)}</div></div>
+      <div><div class="entry-desc">${r.kunde}</div><div class="entry-project">${r.projekt} · ${r.typ}${r.kunde_name?' · ✍️ '+r.kunde_name:''}</div></div>
+      <div class="entry-time">${r.von} – ${r.bis} <div class="entry-duration">${formatMins(r.netto_min)}</div></div>
+      <div class="entry-actions">
+        <button class="icon-btn" onclick="viewRegie('${r.id}')" title="Ansehen">👁</button>
+        <button class="icon-btn danger" onclick="deleteRegie('${r.id}')" title="Löschen">✕</button>
+      </div>
+    </div>`).join('');
+}
+function viewRegie(id) {
+  const r=regierapporte.find(x=>x.id===id);
+  if(!r) return;
+  const win=window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Regierapport ${r.kunde} ${r.datum}</title>
+  <style>body{font-family:Arial,sans-serif;color:#1C2B4A;padding:32px;max-width:600px;margin:0 auto}
+  h1{font-size:20px}.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee}
+  .lbl{color:#888}.sig{margin-top:24px;border:1px solid #ddd;border-radius:8px;padding:12px}
+  img{max-width:100%;height:auto}@media print{body{padding:12px}}</style></head><body>
+  <h1>📝 Regierapport</h1>
+  <div class="row"><span class="lbl">Datum</span><strong>${r.datum}</strong></div>
+  <div class="row"><span class="lbl">Mitarbeiter</span><span>${r.mitarbeiter_name}</span></div>
+  <div class="row"><span class="lbl">Kunde / Baustelle</span><strong>${r.kunde}</strong></div>
+  <div class="row"><span class="lbl">Projekt</span><span>${r.projekt}</span></div>
+  <div class="row"><span class="lbl">Arbeitsgattung</span><span>${r.typ}</span></div>
+  <div class="row"><span class="lbl">Zeit</span><span>${r.von} – ${r.bis} (${formatMins(r.netto_min)})</span></div>
+  ${r.beschreibung?`<div class="row"><span class="lbl">Arbeiten</span><span>${r.beschreibung}</span></div>`:''}
+  <div class="sig"><div class="lbl" style="margin-bottom:8px">Unterschrift Kunde${r.kunde_name?' – '+r.kunde_name:''}</div>
+  <img src="${r.unterschrift}" alt="Unterschrift"></div>
+  <script>window.onload=function(){window.print();}<\/script></body></html>`);
+  win.document.close();
+}
+async function deleteRegie(id) {
+  if(!confirm('Diesen Regierapport wirklich löschen?')) return;
+  try {
+    await sbFetch(`regierapporte?id=eq.${id}`, { method:'DELETE', prefer:'return=minimal' });
+    await loadRegierapporte();
+    renderRegieList();
+    showToast('Regierapport gelöscht.','🗑','error');
+  } catch(e){ showToast('Löschen fehlgeschlagen.','⚠️','error'); }
+}
+
+
 init();
 </script>
 
