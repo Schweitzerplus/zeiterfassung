@@ -1933,12 +1933,9 @@ async function openLohnDetail(empName,monat){
   currentLohnblatt={empName,monat,mn,l,empEntries,d};
   document.getElementById('lohnModalTitle').textContent=`Lohnblatt ${empName} — ${mn}`;
   // Simple hours summary - no project breakdown
-  const entHtml=`<div style="background:var(--accent-light);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
-    <div>
-      <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px">Geleistete Stunden ${mn}</div>
-      <div style="font-size:11px;color:var(--text-3)">${empEntries.length} Einträge · ${spesenTage} Spesen-Tage</div>
-    </div>
-    <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:800;color:var(--accent)">${Math.round(std*100)/100} h</div>
+  const entHtml=`<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:2px solid var(--border);margin-bottom:14px">
+    <div style="font-size:13px;font-weight:700;color:var(--text)">Geleistete Stunden ${mn}</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:800;color:var(--accent)">${Math.round(std*100)/100} h</div>
   </div>`;
   const lr=(label,val,cls='pos',bold=false)=>`<div class="lohn-row" style="${bold?'font-weight:700':''}"><span class="lohn-label" style="${bold?'font-weight:700':'color:var(--text-2)'}">${label}</span><span class="lohn-val ${cls}">${val}</span></div>`;
   const age=y-(d?.geb||1985);
@@ -1972,7 +1969,7 @@ async function openLohnDetail(empName,monat){
     ${lr('NETTOLOHN',`CHF ${fmtChf(l.netto)}`,'green',true)}
     ${spesenTage>0?`
     <div class="lohn-sec">SPESEN</div>
-    ${lr(`${spesenTage} Tage (Mo–Fr, ≥7.5h) × CHF ${d?.spesen||15}`,`CHF ${fmtChf(l.spesen)}`)}
+    ${lr(`${spesenTage} Tage × CHF ${d?.spesen||15}`,`CHF ${fmtChf(l.spesen)}`)}
     <div style="height:1px;background:var(--border);margin:4px 0"></div>`:''}
     <div style="background:linear-gradient(135deg,#0F1525,#3B6FFF);border-radius:var(--radius-sm);padding:14px;margin-top:8px;display:flex;justify-content:space-between;align-items:center">
       <span style="font-size:14px;font-weight:800;color:#fff">AUSZAHLUNG</span>
