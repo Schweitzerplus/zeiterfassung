@@ -768,35 +768,44 @@ const MASTER_CODE='ZT-2024-RESET';
 const WD=['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MN=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 const MS=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
-const AHV_P=5.30,ALV_P=1.10,NBUV_P=1.67,ZPK=19,FER_P=9.70;
+const AHV_P=5.30,ALV_P=1.10,NBUV_P=1.67,ZPK=19;
+
+// GAV Metallgewerbe Ferienzuschlag nach Alter
+function getFerienPct(geb, year) {
+  const y = year || new Date().getFullYear();
+  const age = y - (geb||1985);
+  if(age >= 60) return 13.04; // 6 Wochen
+  if(age >= 50) return 10.64; // 5 Wochen
+  return 9.70;                // 4 Wochen
+}
 const EMOJIS=['💻','🎨','💬','📅','📊','📄','🧪','🛠️','🚀','📞','✍️','🔍','📦','🏗️','🤝','📋','⚡','🔧'];
 const COLORS=[{c:'#3B6FFF',b:'#EEF3FF'},{c:'#A21CAF',b:'#FDF4FF'},{c:'#059669',b:'#ECFDF5'},{c:'#D97706',b:'#FFF7ED'},{c:'#0284C7',b:'#F0F9FF'},{c:'#374151',b:'#F9FAFB'},{c:'#CA8A04',b:'#FEFCE8'},{c:'#E11D48',b:'#FFF1F2'},{c:'#7C3AED',b:'#F5F3FF'}];
 
 // Employee lohn data
 const LOHN_DATA={
-  // Both name formats supported (Nachname Vorname AND Vorname Nachname)
-  'Arman Andrei':     {ahv:'756.6146.6944.33',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:137.40,spesen:15,ml13:false},
-  'Andrei Arman':     {ahv:'756.6146.6944.33',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:137.40,spesen:15,ml13:false},
-  'Arman Ion':        {ahv:'756.1613.3994.60',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
-  'Ion Arman':        {ahv:'756.1613.3994.60',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
-  'Axenti Alexandru': {ahv:'756.7965.4494.26',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
-  'Alexandru Axenti': {ahv:'756.7965.4494.26',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
-  'Bulmaga Petru':    {ahv:'756.2220.0952.64',ansatz:22.79,kanton:'TG',tarif:'C0N',bvg:0,spesen:15,ml13:false},
-  'Petru Bulmaga':    {ahv:'756.2220.0952.64',ansatz:22.79,kanton:'TG',tarif:'C0N',bvg:0,spesen:15,ml13:false},
-  'Covali Sergiu':    {ahv:'756.3304.4626.51',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:0,spesen:15,ml13:false},
-  'Sergiu Covali':    {ahv:'756.3304.4626.51',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:0,spesen:15,ml13:false},
-  'Harlamov Ivan':    {ahv:'756.8045.2861.91',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
-  'Ivan Harlamov':    {ahv:'756.8045.2861.91',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
-  'Mitu Andrei':      {ahv:'756.8976.3092.66',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
-  'Andrei Mitu':      {ahv:'756.8976.3092.66',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
-  'Popa Ion':         {ahv:'756.0397.7496.21',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
-  'Ion Popa':         {ahv:'756.0397.7496.21',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
-  'Puiu Tudor':       {ahv:'756.2634.5896.49',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
-  'Tudor Puiu':       {ahv:'756.2634.5896.49',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
-  'Rauta Radu':       {ahv:'756.6759.8769.43',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
-  'Radu Rauta':       {ahv:'756.6759.8769.43',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
-  'Andrei Ungureanu': {ahv:'',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
-  'Gheorghe Parfeni': {ahv:'',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
+  // age: Jahrgang (z.B. 1975). Ferienzuschlag: <50J=9.7%, 50-59J=10.64%, >=60J=13.04%
+  'Arman Andrei':     {ahv:'756.6146.6944.33',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:137.40,spesen:15,geb:1985},
+  'Andrei Arman':     {ahv:'756.6146.6944.33',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:137.40,spesen:15,geb:1985},
+  'Arman Ion':        {ahv:'756.1613.3994.60',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,geb:1985},
+  'Ion Arman':        {ahv:'756.1613.3994.60',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,geb:1985},
+  'Axenti Alexandru': {ahv:'756.7965.4494.26',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,geb:1985},
+  'Alexandru Axenti': {ahv:'756.7965.4494.26',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,geb:1985},
+  'Bulmaga Petru':    {ahv:'756.2220.0952.64',ansatz:22.79,kanton:'TG',tarif:'C0N',bvg:0,spesen:15,geb:1985},
+  'Petru Bulmaga':    {ahv:'756.2220.0952.64',ansatz:22.79,kanton:'TG',tarif:'C0N',bvg:0,spesen:15,geb:1985},
+  'Covali Sergiu':    {ahv:'756.3304.4626.51',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:0,spesen:15,geb:1985},
+  'Sergiu Covali':    {ahv:'756.3304.4626.51',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:0,spesen:15,geb:1985},
+  'Harlamov Ivan':    {ahv:'756.8045.2861.91',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,geb:1985},
+  'Ivan Harlamov':    {ahv:'756.8045.2861.91',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,geb:1985},
+  'Mitu Andrei':      {ahv:'756.8976.3092.66',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,geb:1985},
+  'Andrei Mitu':      {ahv:'756.8976.3092.66',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,geb:1985},
+  'Popa Ion':         {ahv:'756.0397.7496.21',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,geb:1985},
+  'Ion Popa':         {ahv:'756.0397.7496.21',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,geb:1985},
+  'Puiu Tudor':       {ahv:'756.2634.5896.49',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,geb:1985},
+  'Tudor Puiu':       {ahv:'756.2634.5896.49',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,geb:1985},
+  'Rauta Radu':       {ahv:'756.6759.8769.43',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,geb:1985},
+  'Radu Rauta':       {ahv:'756.6759.8769.43',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,geb:1985},
+  'Andrei Ungureanu': {ahv:'',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,geb:1985},
+  'Gheorghe Parfeni': {ahv:'',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,geb:1985},
 };
 
 // ===== STATE =====
@@ -1794,14 +1803,22 @@ function getQST(brutto,kanton,tarif){
   if(kanton==='LU'&&tarif==='C0N')t=luC0N;else if(kanton==='TG'&&tarif==='C0N')t=tgC0N;else if(kanton==='TG'&&tarif==='A0N')t=tgA0N;else if(kanton==='NW'&&tarif==='A0N')t=nwA0N;
   for(const[l,r]of t)if(brutto<=l)return r;return t[t.length-1][1];
 }
-function calcLohn(empName,stunden,spesenTage){
+function calcLohn(empName,stunden,spesenTage,year){
   const d=LOHN_DATA[empName];if(!d)return null;
-  const br=stunden*d.ansatz,fz=stunden*d.ansatz*(FER_P/100),brutto=br+fz;
-  const ahv=Math.round(brutto*AHV_P)/100,alv=Math.round(brutto*ALV_P)/100,nbuv=Math.round(brutto*NBUV_P)/100;
-  const bvg=d.bvg||0,qstPct=getQST(brutto,d.kanton,d.tarif),qst=Math.round(brutto*qstPct)/100;
-  const totAbz=ahv+alv+nbuv+ZPK+bvg+qst,netto=brutto-totAbz;
-  const spesen=spesenTage*(d.spesen||15),auszahlung=netto+spesen;
-  return{stunden,ansatz:d.ansatz,br,fz,brutto,ahv,alv,nbuv,zpk:ZPK,bvg,qstPct,qst,totAbz,netto,spesen,spesenTage,auszahlung,kanton:d.kanton,tarif:d.tarif,ahvNr:d.ahv,ml13:d.ml13};
+  const ferPct=getFerienPct(d.geb,year);
+  // Bruttolohn = Stunden × Ansatz (Ansatz enthält bereits alles OHNE Ferien)
+  const br=stunden*d.ansatz;
+  const fz=Math.round(br*(ferPct/100)*20)/20; // Ferienzuschlag separat
+  const brutto=br+fz;
+  const ahv=Math.round(brutto*AHV_P*100)/10000;
+  const alv=Math.round(brutto*ALV_P*100)/10000;
+  const nbuv=Math.round(brutto*NBUV_P*100)/10000;
+  const bvg=d.bvg||0,qstPct=getQST(brutto,d.kanton,d.tarif),qst=Math.round(brutto*qstPct*100)/10000;
+  const totAbz=Math.round((ahv+alv+nbuv+ZPK+bvg+qst)*20)/20;
+  const netto=Math.round((brutto-totAbz)*20)/20;
+  const spesen=spesenTage*(d.spesen||15),auszahlung=Math.round((netto+spesen)*20)/20;
+  const age=year?(year-(d.geb||1985)):(new Date().getFullYear()-(d.geb||1985));
+  return{stunden,ansatz:d.ansatz,ferPct,br:Math.round(br*20)/20,fz,brutto:Math.round(brutto*20)/20,ahv:Math.round(ahv*20)/20,alv:Math.round(alv*20)/20,nbuv:Math.round(nbuv*20)/20,zpk:ZPK,bvg,qstPct,qst:Math.round(qst*20)/20,totAbz,netto,spesen,spesenTage,auszahlung,kanton:d.kanton,tarif:d.tarif,ahvNr:d.ahv,ml13:d.ml13};
 }
 function buildLohnMonthOptions(){
   const sel=document.getElementById('lohnMonat');if(!sel)return;
@@ -1834,7 +1851,7 @@ async function renderLohn(){
       const wd=new Date(date+'T00:00:00').getDay();
       return wd>=1&&wd<=5&&mins>=450; // Mon-Fri and >=7.5h
     }).length;
-    const l=calcLohn(name,std,spesenTage);
+    const l=calcLohn(name,std,spesenTage,y);
     if(l)totalAus+=l.auszahlung;
     const totalTage=Object.keys(g.dayMins).length;
     return`<div class="lohn-list-row" onclick="openLohnDetail('${name}','${monat}')">
@@ -1878,53 +1895,56 @@ async function openLohnDetail(empName,monat){
     const wd=new Date(date+'T00:00:00').getDay();
     return wd>=1&&wd<=5&&mins>=450;
   }).length;
-  const l=calcLohn(empName,Math.round(std*10)/10,spesenTage);
+  const l=calcLohn(empName,Math.round(std*10)/10,spesenTage,y);
   if(!l){toast('Keine Lohndaten für diesen Mitarbeiter.','⚠️','error');return;}
   const d=LOHN_DATA[empName];
   currentLohnblatt={empName,monat,mn,l,empEntries,d};
   document.getElementById('lohnModalTitle').textContent=`Lohnblatt ${empName} — ${mn}`;
-  // Group entries by project for summary
-  const projSum={};
-  empEntries.forEach(e=>{if(!projSum[e.projekt])projSum[e.projekt]=0;projSum[e.projekt]+=e.netto_min;});
-  const entHtml=empEntries.length?`<div style="margin-bottom:14px;background:var(--surface-2);border-radius:var(--radius-sm);padding:12px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase">Stunden ${mn}</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:800;color:var(--accent)">${std.toFixed(2)} h</div>
+  // Simple hours summary - no project breakdown
+  const entHtml=`<div style="background:var(--accent-light);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px">Geleistete Stunden ${mn}</div>
+      <div style="font-size:11px;color:var(--text-3)">${empEntries.length} Einträge · ${spesenTage} Spesen-Tage</div>
     </div>
-    <div style="font-size:11px;color:var(--text-3);margin-bottom:6px">${empEntries.length} Einträge · ${spesenTage} Spesen-Tage (Mo-Fr, ≥7.5h)</div>
-    ${Object.entries(projSum).sort((a,b)=>b[1]-a[1]).map(([p,m])=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:2px 0"><span style="color:var(--text-2)">📁 ${p}</span><span style="font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:600">${(m/60).toFixed(2)} h</span></div>`).join('')}
-  </div>`:'<div style="color:var(--text-3);font-size:13px;margin-bottom:12px">Keine Zeiteinträge.</div>';
-  const lr=(label,val,cls='pos')=>`<div class="lohn-row"><span class="lohn-label">${label}</span><span class="lohn-val ${cls}">${val}</span></div>`;
+    <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:800;color:var(--accent)">${Math.round(std*100)/100} h</div>
+  </div>`;
+  const lr=(label,val,cls='pos',bold=false)=>`<div class="lohn-row" style="${bold?'font-weight:700':''}"><span class="lohn-label" style="${bold?'font-weight:700':'color:var(--text-2)'}">${label}</span><span class="lohn-val ${cls}">${val}</span></div>`;
+  const age=y-(d?.geb||1985);
   document.getElementById('lohnModalContent').innerHTML=`
+    <!-- Employee info -->
     <div style="background:var(--surface-2);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div><div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase">AHV-Nr.</div><div style="font-size:12px;font-weight:600">${d?.ahvNr||d?.ahv||'—'}</div></div>
-        <div><div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase">Kanton / Tarif</div><div style="font-size:12px;font-weight:600">${l.kanton} / ${l.tarif}</div></div>
-        <div><div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase">Stundenansatz</div><div style="font-size:12px;font-weight:600">CHF ${fmtChf(l.ansatz)}</div></div>
-        <div><div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase">Stunden</div><div style="font-size:12px;font-weight:600">${l.stunden.toFixed(2)} h</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+        <div><div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;margin-bottom:2px">AHV-Nr.</div><div style="font-size:12px;font-weight:600">${d?.ahvNr||d?.ahv||'—'}</div></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;margin-bottom:2px">Kanton / QST-Tarif</div><div style="font-size:12px;font-weight:600">${l.kanton} / ${l.tarif}</div></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;margin-bottom:2px">Alter / Ferien</div><div style="font-size:12px;font-weight:600">${age} J. / ${l.ferPct}%</div></div>
       </div>
     </div>
+    <!-- Hours summary -->
     ${entHtml}
-    <div class="lohn-sec">BRUTTOLOHN</div>
-    ${lr(`Stundenlohn (${l.stunden.toFixed(2)} h × CHF ${fmtChf(l.ansatz)})${l.ml13?' inkl. 13. ML':''}`,`CHF ${fmtChf(l.br)}`)}
-    ${lr(`Ferienzuschlag ${FER_P}%`,`CHF ${fmtChf(l.fz)}`)}
-    ${lr('BRUTTOLOHN',`CHF ${fmtChf(l.brutto)}`,'blue')}
+    <!-- Calculation -->
+    <div class="lohn-sec">LOHNBERECHNUNG</div>
+    ${lr(`Stundenlohn (${l.stunden.toFixed(2)} h × CHF ${fmtChf(l.ansatz)})`,`CHF ${fmtChf(l.br)}`)}
+    ${lr(`Ferienzuschlag ${l.ferPct}% (${age>=60?'6 Wo.':age>=50?'5 Wo.':'4 Wo.'})`,`CHF ${fmtChf(l.fz)}`,'pos')}
+    <div style="height:1px;background:var(--border);margin:4px 0"></div>
+    ${lr('BRUTTOLOHN',`CHF ${fmtChf(l.brutto)}`,'blue',true)}
     <div class="lohn-sec">ABZÜGE</div>
-    ${lr(`AHV ${AHV_P}%`,`−CHF ${fmtChf(l.ahv)}`,'neg')}
-    ${lr(`ALV ${ALV_P}%`,`−CHF ${fmtChf(l.alv)}`,'neg')}
-    ${lr(`NBUV ${NBUV_P}%`,`−CHF ${fmtChf(l.nbuv)}`,'neg')}
-    ${lr('ZPK',`−CHF ${fmtChf(l.zpk)}`,'neg')}
-    ${l.bvg>0?lr('BVG',`−CHF ${fmtChf(l.bvg)}`,'neg'):''}
+    ${lr(`AHV-Abzug ${AHV_P}%`,`−CHF ${fmtChf(l.ahv)}`,'neg')}
+    ${lr(`ALV-Abzug ${ALV_P}%`,`−CHF ${fmtChf(l.alv)}`,'neg')}
+    ${lr(`NBUV-Abzug ${NBUV_P}%`,`−CHF ${fmtChf(l.nbuv)}`,'neg')}
+    ${lr(`ZPK`,`−CHF ${fmtChf(l.zpk)}`,'neg')}
+    ${l.bvg>0?lr(`BVG-Prämie`,`−CHF ${fmtChf(l.bvg)}`,'neg'):''}
     ${lr(`Quellensteuer ${l.qstPct}% (${l.tarif} ${l.kanton})`,`−CHF ${fmtChf(l.qst)}`,'neg')}
-    ${lr('Total Abzüge',`−CHF ${fmtChf(l.totAbz)}`,'neg')}
+    <div style="height:1px;background:var(--border);margin:4px 0"></div>
+    ${lr('Total Abzüge',`−CHF ${fmtChf(l.totAbz)}`,'neg',true)}
     <div style="height:1px;background:var(--border);margin:6px 0"></div>
-    ${lr('NETTOLOHN',`CHF ${fmtChf(l.netto)}`,'green')}
+    ${lr('NETTOLOHN',`CHF ${fmtChf(l.netto)}`,'green',true)}
+    ${spesenTage>0?`
     <div class="lohn-sec">SPESEN</div>
-    ${lr(`${l.spesenTage} Tage (Mo-Fr, ≥7.5h) × CHF ${d?.spesen||15}`,`CHF ${fmtChf(l.spesen)}`)}
-    <div style="height:1px;background:var(--border);margin:6px 0"></div>
-    <div style="background:var(--accent-light);border-radius:var(--radius-sm);padding:12px;margin-top:6px;display:flex;justify-content:space-between;align-items:center">
-      <span style="font-size:14px;font-weight:800">AUSZAHLUNG</span>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:800;color:var(--accent)">CHF ${fmtChf(l.auszahlung)}</span>
+    ${lr(`${spesenTage} Tage (Mo–Fr, ≥7.5h) × CHF ${d?.spesen||15}`,`CHF ${fmtChf(l.spesen)}`)}
+    <div style="height:1px;background:var(--border);margin:4px 0"></div>`:''}
+    <div style="background:linear-gradient(135deg,#0F1525,#3B6FFF);border-radius:var(--radius-sm);padding:14px;margin-top:8px;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:14px;font-weight:800;color:#fff">AUSZAHLUNG</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:800;color:#fff">CHF ${fmtChf(l.auszahlung)}</span>
     </div>`;
   document.getElementById('lohnModal').classList.add('open');
 }
@@ -1934,64 +1954,133 @@ document.getElementById('lohnModal').addEventListener('click',e=>{if(e.target===
 function generateLohnPDF(){
   if(!currentLohnblatt){toast('Kein Lohnblatt geöffnet.','⚠️','error');return;}
   if(!window.jspdf){toast('PDF-Bibliothek lädt noch, bitte kurz warten…','⚠️','error');return;}
-  const{empName,mn,l,empEntries,d}=currentLohnblatt;
+  const{empName,mn,monat,l,empEntries,d}=currentLohnblatt;
+  const[py,pm]=monat.split('-').map(Number);
   try{
-    const{jsPDF}=window.jspdf;const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-    const pw=210,ml=15,mr=15;let y=15;
-    doc.setFillColor(15,21,37);doc.rect(0,0,pw,28,'F');
-    doc.setTextColor(255,255,255);doc.setFontSize(14);doc.setFont('helvetica','bold');doc.text('Schweitzer plus GmbH',ml,11);
-    doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(59,111,255);doc.text('Montagen / Service / Support',ml,17);
-    doc.setTextColor(255,255,255);doc.setFontSize(16);doc.setFont('helvetica','bold');doc.text('LOHNBLATT',pw-mr,11,{align:'right'});
-    doc.setFontSize(10);doc.setFont('helvetica','normal');doc.text(mn,pw-mr,17,{align:'right'});y=36;
-    doc.setFillColor(247,248,250);doc.roundedRect(ml,y,pw-ml-mr,20,2,2,'F');
-    doc.setTextColor(139,147,176);doc.setFontSize(8);doc.setFont('helvetica','bold');
-    doc.text('MITARBEITER',ml+4,y+6);doc.text('AHV-NR.',ml+80,y+6);doc.text('KANTON / TARIF',ml+140,y+6);
-    doc.setTextColor(15,21,37);doc.setFontSize(12);doc.setFont('helvetica','bold');doc.text(empName,ml+4,y+14);
-    doc.setFontSize(9);doc.setFont('helvetica','normal');doc.text(d?.ahvNr||d?.ahv||'—',ml+80,y+14);doc.text(`${l.kanton} / ${l.tarif}`,ml+140,y+14);y+=28;
-    if(empEntries.length){
-      doc.setFillColor(15,21,37);doc.rect(ml,y,pw-ml-mr,6,'F');
-      doc.setTextColor(255,255,255);doc.setFontSize(8);doc.setFont('helvetica','bold');doc.text('STUNDEN DETAIL',ml+2,y+4.2);y+=7;
-      let alt=false;
-      empEntries.forEach(e=>{
-        if(y>250){doc.addPage();y=15;}
-        if(alt){doc.setFillColor(247,248,250);doc.rect(ml,y,pw-ml-mr,6,'F');}
-        const dt=new Date(e.datum+'T00:00:00');
-        doc.setTextColor(15,21,37);doc.setFontSize(9);doc.setFont('helvetica','normal');
-        doc.text(`${WD[dt.getDay()]} ${dt.getDate()}. ${MS[dt.getMonth()]}`,ml+2,y+4.2);
-        doc.text(e.projekt,ml+40,y+4.2);
-        doc.setFont('helvetica','bold');doc.setTextColor(59,111,255);
-        doc.text(`${(e.netto_min/60).toFixed(2)} h`,pw-mr-2,y+4.2,{align:'right'});
-        y+=6;alt=!alt;
-      });
-      doc.setFillColor(238,243,255);doc.rect(ml,y,pw-ml-mr,7,'F');
-      doc.setTextColor(15,21,37);doc.setFontSize(9);doc.setFont('helvetica','bold');doc.text('Total',ml+2,y+4.8);
-      doc.setTextColor(59,111,255);doc.text(`${l.stunden.toFixed(2)} h`,pw-mr-2,y+4.8,{align:'right'});y+=12;
+    const{jsPDF}=window.jspdf;
+    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const pw=210,ml=18,mr=18,cw=pw-ml-mr;
+    let y=0;
+
+    // ===== HEADER =====
+    doc.setFillColor(15,21,37);
+    doc.rect(0,0,pw,32,'F');
+    // Company name
+    doc.setTextColor(255,255,255);
+    doc.setFontSize(16);doc.setFont('helvetica','bold');
+    doc.text('Schweitzer plus GmbH',ml,13);
+    doc.setFontSize(8);doc.setFont('helvetica','normal');
+    doc.setTextColor(100,140,255);
+    doc.text('Montagen / Service / Support',ml,19);
+    // Document title
+    doc.setTextColor(255,255,255);
+    doc.setFontSize(18);doc.setFont('helvetica','bold');
+    doc.text('LOHNABRECHNUNG',pw-mr,13,{align:'right'});
+    doc.setFontSize(10);doc.setFont('helvetica','normal');
+    doc.setTextColor(180,200,255);
+    doc.text(mn,pw-mr,20,{align:'right'});
+    y=40;
+
+    // ===== EMPLOYEE BOX =====
+    doc.setFillColor(247,248,250);
+    doc.rect(ml,y,cw,24,'F');
+    doc.setDrawColor(226,230,239);
+    doc.rect(ml,y,cw,24);
+    // Labels
+    doc.setTextColor(139,147,176);doc.setFontSize(7);doc.setFont('helvetica','bold');
+    doc.text('MITARBEITER',ml+4,y+6);
+    doc.text('AHV-NUMMER',ml+70,y+6);
+    doc.text('KANTON',ml+130,y+6);
+    doc.text('QST-TARIF',ml+155,y+6);
+    // Values
+    doc.setTextColor(15,21,37);doc.setFontSize(12);doc.setFont('helvetica','bold');
+    doc.text(empName,ml+4,y+15);
+    doc.setFontSize(9);doc.setFont('helvetica','normal');
+    doc.text(d?.ahvNr||d?.ahv||'—',ml+70,y+15);
+    doc.text(l.kanton,ml+130,y+15);
+    doc.text(l.tarif,ml+155,y+15);
+    // Age/ferien info
+    const pAge=py-(d?.geb||1985);
+    doc.setTextColor(139,147,176);doc.setFontSize(7);
+    doc.text(`${pAge} Jahre · Ferienzuschlag ${l.ferPct}%`,ml+4,y+21);
+    y+=32;
+
+    // ===== HOURS BOX =====
+    doc.setFillColor(238,243,255);
+    doc.rect(ml,y,cw,16,'F');
+    doc.setDrawColor(59,111,255);
+    doc.setLineWidth(0.5);
+    doc.rect(ml,y,cw,16);
+    doc.setLineWidth(0.2);
+    doc.setTextColor(59,111,255);doc.setFontSize(9);doc.setFont('helvetica','bold');
+    doc.text(`Geleistete Stunden ${mn}: ${l.stunden.toFixed(2)} h`,ml+4,y+7);
+    doc.setTextColor(100,120,180);doc.setFontSize(8);doc.setFont('helvetica','normal');
+    doc.text(`${empEntries.length} Einträge · ${l.spesenTage} Spesen-Tage (Mo–Fr, ≥7.5h) · Stundenansatz CHF ${fmtChf(l.ansatz)}/h`,ml+4,y+13);
+    y+=24;
+
+    // ===== CALCULATION TABLE =====
+    const row=(lbl,chf,col,bold)=>{
+      if(y>265){doc.addPage();y=20;}
+      if(bold){doc.setFillColor(245,245,250);doc.rect(ml,y-4,cw,8,'F');}
+      doc.setTextColor(bold?15:80,bold?21:90,bold?37:100);
+      doc.setFont('helvetica',bold?'bold':'normal');
+      doc.setFontSize(9);
+      doc.text(lbl,ml+4,y);
+      doc.setTextColor(...(col||[15,21,37]));
+      doc.text(chf,pw-mr-2,y,{align:'right'});
+      y+=7;
+    };
+    const divLine=()=>{doc.setDrawColor(220,225,235);doc.line(ml,y-2,pw-mr,y-2);};
+    const secTitle=(t)=>{
+      doc.setFillColor(15,21,37);doc.rect(ml,y,cw,6,'F');
+      doc.setTextColor(200,210,255);doc.setFontSize(7);doc.setFont('helvetica','bold');
+      doc.text(t,ml+3,y+4.2);y+=9;
+    };
+
+    secTitle('BRUTTOLOHN');
+    row(`Stundenlohn  ${l.stunden.toFixed(2)} h × CHF ${fmtChf(l.ansatz)}`,`CHF ${fmtChf(l.br)}`);
+    row(`Ferienzuschlag ${l.ferPct}%  (${pAge>=60?'6 Wochen':pAge>=50?'5 Wochen':'4 Wochen'})`,`CHF ${fmtChf(l.fz)}`);
+    divLine();
+    row('BRUTTOLOHN',`CHF ${fmtChf(l.brutto)}`,[59,111,255],true);
+    y+=2;
+    secTitle('SOZIALABZÜGE');
+    row(`AHV-Beitrag ${AHV_P}%`,`−CHF ${fmtChf(l.ahv)}`,[200,50,50]);
+    row(`ALV-Beitrag ${ALV_P}%`,`−CHF ${fmtChf(l.alv)}`,[200,50,50]);
+    row(`NBUV-Beitrag ${NBUV_P}%`,`−CHF ${fmtChf(l.nbuv)}`,[200,50,50]);
+    row(`ZPK Arbeitnehmerbeitrag`,`−CHF ${fmtChf(l.zpk)}`,[200,50,50]);
+    if(l.bvg>0)row(`BVG-Prämie`,`−CHF ${fmtChf(l.bvg)}`,[200,50,50]);
+    row(`Quellensteuer ${l.qstPct}%  (Tarif ${l.tarif}, ${l.kanton})`,`−CHF ${fmtChf(l.qst)}`,[200,50,50]);
+    divLine();
+    row('Total Abzüge',`−CHF ${fmtChf(l.totAbz)}`,[200,50,50],true);
+    y+=2;
+    divLine();
+    row('NETTOLOHN',`CHF ${fmtChf(l.netto)}`,[34,150,80],true);
+    y+=2;
+    if(l.spesen>0){
+      secTitle('SPESEN');
+      row(`${l.spesenTage} Tage × CHF ${d?.spesen||15} (Mo–Fr, ≥7.5h Nettoarbeitszeit)`,`CHF ${fmtChf(l.spesen)}`);
+      divLine();
     }
-    const ar=(lbl,val,col=[15,21,37],b=false)=>{if(y>268){doc.addPage();y=15;}doc.setTextColor(...col);doc.setFont('helvetica',b?'bold':'normal');doc.setFontSize(9);doc.text(lbl,ml+2,y);doc.text(val,pw-mr-2,y,{align:'right'});y+=6;};
-    const aDiv=()=>{doc.setDrawColor(226,230,239);doc.line(ml,y,pw-mr,y);y+=4;};
-    const aSec=(t)=>{doc.setTextColor(139,147,176);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text(t,ml+2,y);y+=6;};
-    aSec('BRUTTOLOHN');
-    ar(`Stundenlohn (${l.stunden.toFixed(2)} h × CHF ${fmtChf(l.ansatz)})${l.ml13?' inkl. 13. ML':''}`,`CHF ${fmtChf(l.br)}`);
-    ar(`Ferienzuschlag ${FER_P}%`,`CHF ${fmtChf(l.fz)}`);
-    ar('BRUTTOLOHN',`CHF ${fmtChf(l.brutto)}`,[59,111,255],true);y+=2;aDiv();
-    aSec('ABZÜGE');
-    ar(`AHV ${AHV_P}%`,`−CHF ${fmtChf(l.ahv)}`,[239,68,68]);
-    ar(`ALV ${ALV_P}%`,`−CHF ${fmtChf(l.alv)}`,[239,68,68]);
-    ar(`NBUV ${NBUV_P}%`,`−CHF ${fmtChf(l.nbuv)}`,[239,68,68]);
-    ar('ZPK',`−CHF ${fmtChf(l.zpk)}`,[239,68,68]);
-    if(l.bvg>0)ar('BVG',`−CHF ${fmtChf(l.bvg)}`,[239,68,68]);
-    ar(`QST ${l.qstPct}% (${l.tarif} ${l.kanton})`,`−CHF ${fmtChf(l.qst)}`,[239,68,68]);
-    ar('Total Abzüge',`−CHF ${fmtChf(l.totAbz)}`,[239,68,68],true);y+=2;aDiv();
-    ar('NETTOLOHN',`CHF ${fmtChf(l.netto)}`,[34,197,94],true);y+=2;aDiv();
-    aSec('SPESEN');ar(`${l.spesenTage} Tage × CHF ${d?.spesen||15}`,`CHF ${fmtChf(l.spesen)}`);y+=2;aDiv();
-    doc.setFillColor(238,243,255);doc.roundedRect(ml,y,pw-ml-mr,12,2,2,'F');
-    doc.setTextColor(15,21,37);doc.setFontSize(12);doc.setFont('helvetica','bold');doc.text('AUSZAHLUNG',ml+4,y+8);
-    doc.setTextColor(59,111,255);doc.setFontSize(14);doc.text(`CHF ${fmtChf(l.auszahlung)}`,pw-mr-4,y+8,{align:'right'});y+=18;
-    doc.setDrawColor(226,230,239);doc.line(ml,y,ml+70,y);doc.line(ml+90,y,ml+160,y);
-    doc.setTextColor(139,147,176);doc.setFontSize(8);doc.text('Mitarbeiter',ml,y+5);doc.text('Schweitzer plus GmbH',ml+90,y+5);
-    doc.setFillColor(15,21,37);doc.rect(0,285,pw,12,'F');
-    doc.setTextColor(139,147,176);doc.setFontSize(7);doc.text(`Schweitzer plus GmbH | Lohnblatt ${mn} | ${new Date().toLocaleDateString('de-CH')}`,pw/2,291,{align:'center'});
-    doc.save(`Lohnblatt_${empName.replace(' ','_')}_${currentLohnblatt.monat}.pdf`);
+
+    // ===== AUSZAHLUNG BOX =====
+    y+=4;
+    doc.setFillColor(15,21,37);
+    doc.rect(ml,y,cw,14,'F');
+    doc.setTextColor(150,180,255);doc.setFontSize(9);doc.setFont('helvetica','bold');
+    doc.text('AUSZAHLUNG',ml+4,y+6);
+    doc.setTextColor(200,220,255);doc.setFontSize(7);doc.setFont('helvetica','normal');
+    doc.text(`Nettolohn CHF ${fmtChf(l.netto)} + Spesen CHF ${fmtChf(l.spesen)}`,ml+4,y+11);
+    doc.setTextColor(255,255,255);doc.setFontSize(15);doc.setFont('helvetica','bold');
+    doc.text(`CHF ${fmtChf(l.auszahlung)}`,pw-mr-2,y+9,{align:'right'});
+    y+=22;
+
+    // ===== FOOTER =====
+    doc.setFillColor(245,247,250);
+    doc.rect(0,287,pw,10,'F');
+    doc.setTextColor(150,160,170);doc.setFontSize(6.5);
+    doc.text(`Schweitzer plus GmbH · Montagen/Service/Support · Lohnabrechnung ${mn} · Erstellt ${new Date().toLocaleDateString('de-CH')}`,pw/2,293,{align:'center'});
+
+    doc.save(`Lohnblatt_${empName.replace(/\s+/g,'_')}_${monat}.pdf`);
     toast('PDF erstellt!','📄','success');
   }catch(e){toast('PDF-Fehler: '+e.message,'⚠️','error');}
 }
@@ -2028,16 +2117,19 @@ function renderLohnEmpTable(){
     seen.add(name.split(' ').sort().join(' '));
     return true;
   });
-  document.getElementById('lohnEmpBody').innerHTML=uniqueEntries.map(([name,d])=>`
-    <tr>
+  document.getElementById('lohnEmpBody').innerHTML=uniqueEntries.map(([name,d])=>{
+    const age=new Date().getFullYear()-(d.geb||1985);
+    const ferPct=getFerienPct(d.geb);
+    return`<tr>
       <td style="font-weight:600">${name}</td>
       <td><input type="number" value="${d.ansatz}" step="0.01" onchange="updateAllNameFormats('${name}','ansatz',parseFloat(this.value))" style="width:75px"></td>
       <td><select onchange="updateAllNameFormats('${name}','kanton',this.value)" style="width:55px"><option ${d.kanton==='LU'?'selected':''}>LU</option><option ${d.kanton==='NW'?'selected':''}>NW</option><option ${d.kanton==='TG'?'selected':''}>TG</option></select></td>
       <td><select onchange="updateAllNameFormats('${name}','tarif',this.value)" style="width:65px"><option ${d.tarif==='A0N'?'selected':''}>A0N</option><option ${d.tarif==='C0N'?'selected':''}>C0N</option><option ${d.tarif==='B0N'?'selected':''}>B0N</option></select></td>
       <td><input type="number" value="${d.bvg}" step="0.1" onchange="updateAllNameFormats('${name}','bvg',parseFloat(this.value)||0)" style="width:65px"></td>
-      <td><input type="number" value="${d.spesen}" step="0.5" onchange="updateAllNameFormats('${name}','spesen',parseFloat(this.value)||30)" style="width:65px"><span style="font-size:10px;color:var(--text-3)"> CHF/Tag</span></td>
-      <td><input type="checkbox" ${d.ml13?'checked':''} onchange="updateAllNameFormats('${name}','ml13',this.checked)"></td>
-    </tr>`).join('');
+      <td><input type="number" value="${d.spesen}" step="0.5" onchange="updateAllNameFormats('${name}','spesen',parseFloat(this.value)||15)" style="width:65px"><span style="font-size:10px;color:var(--text-3)"> CHF/Tag</span></td>
+      <td><input type="number" value="${d.geb||1985}" step="1" min="1940" max="2005" onchange="updateAllNameFormats('${name}','geb',parseInt(this.value))" style="width:65px"></td>
+      <td style="font-size:11px;color:var(--accent);font-weight:600">${ferPct}%<br><span style="color:var(--text-3)">${age} J.</span></td>
+    </tr>`;}).join('');
 }
 
 // Update both name formats (Vorname Nachname AND Nachname Vorname)
