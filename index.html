@@ -35,6 +35,8 @@ header{background:var(--text);padding:0 20px;display:flex;align-items:center;jus
 .sync-badge.syncing{color:rgba(255,255,255,.4)}
 .sync-badge.syncing .sync-badge-dot{background:rgba(255,255,255,.3);animation:pulse 1s infinite}
 .btn-logout{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.6);font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:5px 12px;border-radius:8px;cursor:pointer}
+.hdr-nav-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.7);font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:6px 12px;border-radius:8px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.hdr-nav-btn:hover,.hdr-nav-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
 
 /* BOTTOM NAV */
 .bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--text);border-top:1px solid rgba(255,255,255,.1);z-index:200;padding-bottom:env(safe-area-inset-bottom)}
@@ -280,6 +282,8 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 0}
 
 /* MOBILE */
 @media(max-width:700px){
+  #desktopNav{display:none!important}
+
   .stats-row{grid-template-columns:1fr 1fr}
   .fg{grid-template-columns:1fr}
   .fg .full{grid-column:1}
@@ -347,8 +351,16 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 0}
     <span>Schweitzer plus GmbH</span>
     <span>Montagen / Service / Support</span>
   </div>
-  <div style="display:flex;align-items:center;gap:10px">
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
     <div class="sync-badge syncing" id="syncBadge"><div class="sync-badge-dot"></div><span id="syncTxt">Verbinde…</span></div>
+    <!-- Desktop nav buttons (hidden on mobile) -->
+    <div id="desktopNav" style="display:flex;gap:4px">
+      <button class="hdr-nav-btn active" id="dnZeit" onclick="switchView('zeit')">⏱ Erfassen</button>
+      <button class="hdr-nav-btn" id="dnRapport" onclick="switchView('rapport')">📋 Rapport</button>
+      <button class="hdr-nav-btn admin-only" id="dnRegie" onclick="switchView('regie')" style="display:none">📄 Regie</button>
+      <button class="hdr-nav-btn admin-only" id="dnLohn" onclick="switchView('lohn')" style="display:none">💰 Lohn</button>
+      <button class="hdr-nav-btn admin-only" id="dnAdmin" onclick="switchView('admin')" style="display:none">⚙️ Admin</button>
+    </div>
     <div class="header-user" onclick="void(0)">
       <span class="header-name" id="hdrName">—</span>
       <div class="avatar" id="hdrAvatar">?</div>
@@ -811,7 +823,11 @@ async function afterLogin(){
   document.getElementById('rapportName').textContent=n;
   // Show admin tabs if admin
   if(currentUser.rolle==='admin'||adminUnlocked){
-    document.querySelectorAll('.admin-only').forEach(el=>el.style.display='');
+    document.querySelectorAll('.admin-only').forEach(el=>{
+      // Restore appropriate display type
+      if(el.classList.contains('bn-btn')) el.style.display='flex';
+      else el.style.display='inline-flex';
+    });
     adminUnlocked=true;
   }
   // Load data
@@ -833,6 +849,9 @@ function logout(){
   document.getElementById('adminPwInput').value='';
   document.getElementById('loginScreen').classList.remove('hidden');
   document.querySelectorAll('.admin-only').forEach(el=>el.style.display='none');
+  // Reset desktop nav active state
+  document.querySelectorAll('.hdr-nav-btn').forEach(b=>b.classList.remove('active'));
+  const dnZ=document.getElementById('dnZeit');if(dnZ)dnZ.classList.add('active');
   setLoginMode('emp');
 }
 
@@ -841,8 +860,12 @@ function switchView(v){
   const views=['zeit','rapport','regie','lohn','admin'];
   views.forEach(id=>{
     document.getElementById('view'+id.charAt(0).toUpperCase()+id.slice(1)).classList.toggle('active',v===id);
+    // Bottom nav
     const bn=document.getElementById('bn'+id.charAt(0).toUpperCase()+id.slice(1));
     if(bn)bn.classList.toggle('active',v===id);
+    // Desktop nav
+    const dn=document.getElementById('dn'+id.charAt(0).toUpperCase()+id.slice(1));
+    if(dn)dn.classList.toggle('active',v===id);
   });
   if(v==='rapport'){rYear=new Date().getFullYear();rMonth=new Date().getMonth();renderRapport();}
   if(v==='admin'){switchAdminTab(0);loadMitarbeiter();renderAdminProjects();renderAdminTypes();renderEmojiPicker();renderColorPicker();}
