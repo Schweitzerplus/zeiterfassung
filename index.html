@@ -435,6 +435,7 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 0}
     </div>
     <div class="form-footer">
       <button class="btn btn-sm" onclick="resetForm()" style="color:#666;background:#f3f4f6;border:1.5px solid var(--border)">Zurücksetzen</button>
+      <button class="btn btn-sm btn-outline admin-only" id="groupEntryBtn" onclick="openGroupEntry()" style="display:none;background:#ECFDF5;color:#059669;border-color:#059669">👥 Gruppen-Eintrag</button>
       <button class="btn btn-sm btn-outline" onclick="saveEntry(true)">+ Speichern & Neu</button>
       <button class="btn btn-sm btn-primary" id="saveBtn" onclick="saveEntry(false)">✓ Eintrag speichern</button>
     </div>
@@ -696,6 +697,27 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 0}
     <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
       <button class="btn btn-sm btn-outline" onclick="closeLohnModal()">Schliessen</button>
       <button class="btn btn-sm btn-pdf" onclick="generateLohnPDF()">📄 PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- GROUP ENTRY MODAL -->
+<div class="day-modal-overlay" id="groupModal">
+  <div class="day-modal" style="max-width:520px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div style="font-size:15px;font-weight:700">👥 Gruppen-Eintrag</div>
+      <button onclick="closeGroupModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-3)">✕</button>
+    </div>
+    <div id="groupEntryPreview" style="background:var(--accent-light);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;font-size:13px"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="font-size:12px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.6px">Mitarbeiter wählen</div>
+      <button onclick="selectAllGroupEmps()" style="font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-light);border:1px solid var(--accent);border-radius:6px;padding:3px 10px;cursor:pointer">Alle wählen</button>
+    </div>
+    <div id="groupEmpList" style="max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:5px;margin-bottom:14px"></div>
+    <div id="groupWarnings" style="margin-bottom:10px"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-sm btn-outline" onclick="closeGroupModal()">Abbrechen</button>
+      <button class="btn btn-sm btn-primary" onclick="executeGroupEntry()">✓ Alle speichern</button>
     </div>
   </div>
 </div>
@@ -2014,13 +2036,209 @@ function closeCopyModal() {
   copySelectedEmps = new Set();
 }
 
+// executeCopy moved above
+
+// ===== DUPLICATE CHECK =====
+async function checkDuplicate(empId, datum) {
+  // Check if employee already has entry on this date
+  const existing = entries.filter(e => e.mitarbeiter_id===empId && e.datum===datum);
+  return existing;
+}
+
+// ===== SAVE ENTRY WITH DUPLICATE CHECK =====
+// Patch into saveEntry - wrap the existing save with duplicate check
+const _origSaveEntry = saveEntry;
+async function saveEntry(andNew) {
+  if(!currentUser) return;
+  const date = document.getElementById('eDate').value;
+  const empId = editingId ? 
+    (entries.find(e=>e.id===editingId)?.mitarbeiter_id || currentUser.id) : 
+    currentUser.id;
+  
+  if(!editingId && date) {
+    const existing = entries.filter(e => e.mitarbeiter_id===empId && e.datum===date);
+    if(existing.length > 0) {
+      const total = existing.reduce((s,e)=>s+e.netto_min,0);
+      const confirmed = confirm(
+        `⚠️ ${currentUser.name} hat an diesem Tag bereits ${existing.length} Eintrag/Einträge (${fmtMins(total)}).
+
+Trotzdem speichern?`
+      );
+      if(!confirmed) return;
+    }
+  }
+  
+  // Call original save logic
+  await _origSaveEntry(andNew);
+}
+
+// ===== GROUP ENTRY =====
+let groupSelectedEmps = new Set();
+
+function openGroupEntry() {
+  if(!currentUser || currentUser.rolle !== 'admin') return;
+  
+  // Validate form first
+  const date = document.getElementById('eDate').value;
+  const fr = document.getElementById('eFrom').value;
+  const to = document.getElementById('eTo').value;
+  const proj = document.getElementById('ePrj').value;
+  
+  if(!date) return toast('Bitte zuerst Datum eingeben.','⚠️','error');
+  if(!fr||!to) return toast('Bitte zuerst Zeiten eingeben.','⚠️','error');
+  if(!proj) return toast('Bitte zuerst Projekt wählen.','⚠️','error');
+  if(!selectedType) return toast('Bitte zuerst Arbeitsgattung wählen.','⚠️','error');
+  
+  groupSelectedEmps = new Set();
+  
+  // Show preview
+  const pause = parseInt(document.getElementById('ePause').value)||0;
+  const fz = parseInt(document.getElementById('eFz').value)||0;
+  const [fh,fm] = fr.split(':').map(Number);
+  const [th,tm] = to.split(':').map(Number);
+  const net = (th*60+tm)-(fh*60+fm)-pause-fz;
+  const d = new Date(date+'T00:00:00');
+  
+  document.getElementById('groupEntryPreview').innerHTML = `
+    <div style="font-weight:700;margin-bottom:4px">${WD[d.getDay()]}, ${d.getDate()}. ${MS[d.getMonth()]} ${d.getFullYear()}</div>
+    <div style="color:var(--text-2)">${proj} · ${selectedType}</div>
+    <div style="color:var(--text-2)">${fr} – ${to} · ${fmtMins(net)} Netto${pause>0?' · Pause '+pause+'min':''}${fz>0?' · Fz '+fz+'min':''}</div>
+  `;
+  
+  renderGroupEmpList(date);
+  document.getElementById('groupModal').classList.add('open');
+}
+
+async function renderGroupEmpList(date) {
+  const workers = mitarbeiter.filter(m=>m.rolle==='mitarbeiter');
+  
+  // Check who already has entries this day
+  const dayEntries = entries.filter(e=>e.datum===date);
+  const hasEntry = new Set(dayEntries.map(e=>e.mitarbeiter_id));
+  
+  document.getElementById('groupEmpList').innerHTML = workers.map(m=>{
+    const already = hasEntry.has(m.id);
+    const empDayMins = dayEntries.filter(e=>e.mitarbeiter_id===m.id).reduce((s,e)=>s+e.netto_min,0);
+    return `<div class="emp-sel-item${groupSelectedEmps.has(m.id)?' sel':''}" 
+      id="ge_${m.id}" onclick="toggleGroupEmp('${m.id}')"
+      style="${already?'border-color:#F59E0B;background:#FFFBEB;':''}"
+    >
+      <div class="emp-check-box" id="gec_${m.id}">${groupSelectedEmps.has(m.id)?'✓':''}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${m.name}</div>
+        ${already?`<div style="font-size:10px;color:#D97706;font-weight:600">⚠️ Bereits ${fmtMins(empDayMins)} an diesem Tag</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleGroupEmp(id) {
+  if(groupSelectedEmps.has(id)) groupSelectedEmps.delete(id);
+  else groupSelectedEmps.add(id);
+  const el = document.getElementById('ge_'+id);
+  const cb = document.getElementById('gec_'+id);
+  if(el) el.classList.toggle('sel', groupSelectedEmps.has(id));
+  if(cb) cb.textContent = groupSelectedEmps.has(id)?'✓':'';
+}
+
+function selectAllGroupEmps() {
+  const workers = mitarbeiter.filter(m=>m.rolle==='mitarbeiter');
+  workers.forEach(m=>groupSelectedEmps.add(m.id));
+  const date = document.getElementById('eDate').value;
+  renderGroupEmpList(date);
+}
+
+function closeGroupModal() {
+  document.getElementById('groupModal').classList.remove('open');
+  groupSelectedEmps = new Set();
+}
+
+async function executeGroupEntry() {
+  if(groupSelectedEmps.size === 0) return toast('Bitte mind. einen Mitarbeiter wählen.','⚠️','error');
+  
+  const date = document.getElementById('eDate').value;
+  const fr = document.getElementById('eFrom').value;
+  const to = document.getElementById('eTo').value;
+  const pause = parseInt(document.getElementById('ePause').value)||0;
+  const fz = parseInt(document.getElementById('eFz').value)||0;
+  const proj = document.getElementById('ePrj').value;
+  const desc = document.getElementById('eDesc').value.trim();
+  const [fh,fm] = fr.split(':').map(Number);
+  const [th,tm] = to.split(':').map(Number);
+  const net = (th*60+tm)-(fh*60+fm)-pause-fz;
+  
+  if(net<=0) return toast('Ungültige Zeiten.','⚠️','error');
+  
+  // Check for duplicates
+  const workers = mitarbeiter.filter(m=>groupSelectedEmps.has(m.id));
+  const dayEntries = entries.filter(e=>e.datum===date);
+  const withDuplicate = workers.filter(m=>dayEntries.some(e=>e.mitarbeiter_id===m.id));
+  
+  if(withDuplicate.length > 0) {
+    const names = withDuplicate.map(m=>m.name).join(', ');
+    const ok = confirm(`⚠️ ${names} haben bereits Einträge am ${date}.
+
+Trotzdem für alle speichern?`);
+    if(!ok) return;
+  }
+  
+  setSyncStatus(false);
+  let saved = 0;
+  const errors = [];
+  
+  for(const m of workers) {
+    try {
+      await sbFetch('zeiteintraege', {
+        method: 'POST',
+        body: JSON.stringify({
+          mitarbeiter_id: m.id,
+          mitarbeiter_name: m.name,
+          datum: date, von: fr, bis: to,
+          pause_min: pause, fahrzeit_min: fz, netto_min: net,
+          projekt: proj, typ: selectedType, beschreibung: desc
+        }),
+        prefer: 'return=minimal'
+      });
+      saved++;
+    } catch(e) {
+      errors.push(m.name);
+    }
+  }
+  
+  await loadEntries();
+  setSyncStatus(true);
+  closeGroupModal();
+  resetForm();
+  updateStats();
+  renderMyEntries();
+  
+  if(errors.length > 0) {
+    toast(`${saved} gespeichert, ${errors.length} Fehler: ${errors.join(', ')}`, '⚠️', 'error');
+  } else {
+    toast(`✓ ${saved} Einträge gespeichert!`, '✓', 'success');
+  }
+}
+
+// ===== COPY WITH DUPLICATE WARNING =====
 async function executeCopy() {
   if(!copySourceEntry) return;
   if(copySelectedEmps.size === 0) return toast('Bitte mind. einen Mitarbeiter wählen.','⚠️','error');
 
   const e = copySourceEntry;
   const workers = mitarbeiter.filter(m=>copySelectedEmps.has(m.id));
+  
+  // Check duplicates
+  const dayEntries = entries.filter(ex=>ex.datum===e.datum);
+  const withDup = workers.filter(m=>dayEntries.some(ex=>ex.mitarbeiter_id===m.id));
+  
+  if(withDup.length > 0) {
+    const names = withDup.map(m=>m.name).join(', ');
+    const ok = confirm(`⚠️ ${names} haben bereits Einträge am ${e.datum}.
 
+Trotzdem kopieren?`);
+    if(!ok) return;
+  }
+  
   setSyncStatus(false);
   let success = 0;
   try {
@@ -2030,15 +2248,9 @@ async function executeCopy() {
         body: JSON.stringify({
           mitarbeiter_id: m.id,
           mitarbeiter_name: m.name,
-          datum: e.datum,
-          von: e.von,
-          bis: e.bis,
-          pause_min: e.pause_min||0,
-          fahrzeit_min: e.fahrzeit_min||0,
-          netto_min: e.netto_min,
-          projekt: e.projekt,
-          typ: e.typ,
-          beschreibung: e.beschreibung||''
+          datum: e.datum, von: e.von, bis: e.bis,
+          pause_min: e.pause_min||0, fahrzeit_min: e.fahrzeit_min||0, netto_min: e.netto_min,
+          projekt: e.projekt, typ: e.typ, beschreibung: e.beschreibung||''
         }),
         prefer: 'return=minimal'
       });
