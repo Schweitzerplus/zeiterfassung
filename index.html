@@ -643,13 +643,17 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 0}
   <!-- ENTRIES -->
   <div id="aTab3" style="display:none">
     <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
         <div class="card-title" style="margin:0"><div class="ci">📋</div>Alle Einträge</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+          <select id="fMonat" onchange="renderAdminEntries()" style="font-family:'Inter',sans-serif;font-size:12px;border:1.5px solid var(--border);border-radius:8px;padding:5px 9px;background:var(--surface);outline:none;cursor:pointer"></select>
           <select id="fEmp" onchange="renderAdminEntries()" style="font-family:'Inter',sans-serif;font-size:12px;border:1.5px solid var(--border);border-radius:8px;padding:5px 9px;background:var(--surface);outline:none"><option value="">Alle Mitarbeiter</option></select>
           <select id="fPrj" onchange="renderAdminEntries()" style="font-family:'Inter',sans-serif;font-size:12px;border:1.5px solid var(--border);border-radius:8px;padding:5px 9px;background:var(--surface);outline:none"><option value="">Alle Projekte</option></select>
+          <select id="fTyp" onchange="renderAdminEntries()" style="font-family:'Inter',sans-serif;font-size:12px;border:1.5px solid var(--border);border-radius:8px;padding:5px 9px;background:var(--surface);outline:none"><option value="">Alle Gattungen</option></select>
+          <button class="btn btn-sm btn-excel" onclick="exportFilteredEntries()">📥 Excel</button>
         </div>
       </div>
+      <div id="adminEntriesStats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px"></div>
       <div id="adminEntriesList"></div>
     </div>
   </div>
@@ -698,7 +702,7 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 0}
 
 <div class="toast-wrap" id="toastWrap"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
 <script>
 // ===== SUPABASE =====
 const SB_URL='https://aephgpjgubmudgftnbnq.supabase.co';
@@ -1247,7 +1251,28 @@ function switchAdminTab(n){
   for(let i=0;i<4;i++){document.getElementById('aTab'+i).style.display=i===n?'block':'none';document.getElementById('at'+i).classList.toggle('active',i===n);}
   if(n===0)renderOverview();
   if(n===1)loadMitarbeiter();
-  if(n===3){rebuildEmpFilter();renderAdminEntries();}
+  if(n===2){renderAdminProjects();renderAdminTypes();renderEmojiPicker();renderColorPicker();}
+  if(n===3){
+    buildMonthFilter();
+    rebuildEmpFilter();
+    rebuildTypeFilter();
+    rebuildProjFilter();
+    renderAdminEntries();
+  }
+}
+
+function rebuildTypeFilter(){
+  const ft=document.getElementById('fTyp');if(!ft)return;
+  const cur=ft.value;
+  ft.innerHTML='<option value="">Alle Gattungen</option>';
+  types.forEach(t=>{const o=new Option(t.name,t.name);if(t.name===cur)o.selected=true;ft.appendChild(o);});
+}
+
+function rebuildProjFilter(){
+  const fp=document.getElementById('fPrj');if(!fp)return;
+  const cur=fp.value;
+  fp.innerHTML='<option value="">Alle Projekte</option>';
+  projects.forEach(p=>{const o=new Option(p,p);if(p===cur)o.selected=true;fp.appendChild(o);});
 }
 function renderOverview(){
   document.getElementById('ovMonthTitle').textContent=`${MN[ovMonth]} ${ovYear}`;
@@ -1288,22 +1313,89 @@ function rebuildEmpFilter(){
   const cur=fe.value;fe.innerHTML='<option value="">Alle Mitarbeiter</option>';
   emps.forEach(n=>{const o=new Option(n,n);if(n===cur)o.selected=true;fe.appendChild(o);});
 }
+function buildMonthFilter(){
+  const sel=document.getElementById('fMonat');if(!sel)return;
+  const cur=sel.value;
+  const months=[];
+  for(let i=0;i<12;i++){const d=new Date();d.setMonth(d.getMonth()-i);const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0');months.push(`${y}-${m}`);}
+  sel.innerHTML=`<option value="">Alle Monate</option>`+months.map(m=>{
+    const[y,mo]=m.split('-');return`<option value="${m}" ${m===cur?'selected':''}>${MN[parseInt(mo)-1]} ${y}</option>`;
+  }).join('');
+  // Default to current month
+  if(!sel.value)sel.value=months[0];
+}
+
 function renderAdminEntries(){
-  const fe=document.getElementById('fEmp')?.value||'',fp=document.getElementById('fPrj')?.value||'';
-  const fl=entries.filter(e=>(!fe||e.mitarbeiter_name===fe)&&(!fp||e.projekt===fp));
+  const fm=document.getElementById('fMonat')?.value||'';
+  const fe=document.getElementById('fEmp')?.value||'';
+  const fp=document.getElementById('fPrj')?.value||'';
+  const ft=document.getElementById('fTyp')?.value||'';
+
+  let fl=[...entries];
+  if(fm) fl=fl.filter(e=>e.datum&&e.datum.startsWith(fm));
+  if(fe) fl=fl.filter(e=>e.mitarbeiter_name===fe);
+  if(fp) fl=fl.filter(e=>e.projekt===fp);
+  if(ft) fl=fl.filter(e=>e.typ===ft);
+
+  // Sort: date desc, then employee
+  fl.sort((a,b)=>b.datum.localeCompare(a.datum)||( a.mitarbeiter_name||'').localeCompare(b.mitarbeiter_name||''));
+
+  // Stats
+  const totalMins=fl.reduce((s,e)=>s+e.netto_min,0);
+  const uniqueEmps=new Set(fl.map(e=>e.mitarbeiter_name)).size;
+  const uniqueProjs=new Set(fl.map(e=>e.projekt)).size;
+  const statsEl=document.getElementById('adminEntriesStats');
+  if(statsEl){
+    statsEl.innerHTML=`
+      <div class="stat-card"><div class="stat-label">Einträge</div><div class="stat-val">${fl.length}</div></div>
+      <div class="stat-card"><div class="stat-label">Total Stunden</div><div class="stat-val accent">${fmtH(totalMins)}</div></div>
+      <div class="stat-card"><div class="stat-label">Mitarbeitende</div><div class="stat-val">${uniqueEmps}</div></div>
+      <div class="stat-card"><div class="stat-label">Projekte</div><div class="stat-val">${uniqueProjs}</div></div>`;
+  }
+
   const el=document.getElementById('adminEntriesList');
-  if(!fl.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--text-3)">Keine Einträge.</div>';return;}
+  if(!fl.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--text-3)"><div style="font-size:28px;margin-bottom:8px">📭</div><div style="font-weight:600">Keine Einträge</div></div>';return;}
+
+  // Group by date for better readability
+  let lastDate='';
   el.innerHTML=fl.map(e=>{
     const t=types.find(t=>t.name===e.typ)||{color:'#6b7280',bg:'#f3f4f6',icon:'📌'};
-    return`<div style="display:grid;grid-template-columns:75px 1fr auto auto auto auto;align-items:center;gap:8px;padding:10px 2px;border-bottom:1px solid var(--border)">
-      <div><div style="font-size:12px;font-weight:600">${fmtDateShort(e.datum)}</div><div style="font-size:10px;color:var(--text-3)">${getWD(e.datum)}</div></div>
-      <div><div style="font-size:12px;font-weight:500">${e.projekt}</div><div style="font-size:10px;color:var(--text-3)">👤 ${e.mitarbeiter_name||'—'}</div></div>
-      <div style="font-size:10px;color:var(--text-3)">${e.von}–${e.bis}</div>
-      <div><span style="background:${t.bg};color:${t.color};padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600">${t.icon} ${e.typ}</span></div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--accent)">${fmtMins(e.netto_min)}</div>
-      <div style="display:flex;gap:4px"><button class="icon-btn" onclick="editEntry('${e.id}')" title="Bearbeiten">✏️</button><button class="icon-btn d" onclick="deleteEntry('${e.id}')" title="Löschen">✕</button></div>
+    const d=new Date(e.datum+'T00:00:00');
+    let dateHeader='';
+    if(e.datum!==lastDate){
+      lastDate=e.datum;
+      dateHeader=`<div style="font-size:11px;font-weight:700;color:var(--text-2);background:var(--surface-2);padding:5px 8px;border-radius:6px;margin:6px 0 2px">${WD[d.getDay()]}, ${d.getDate()}. ${MS[d.getMonth()]} ${d.getFullYear()}</div>`;
+    }
+    return`${dateHeader}<div style="display:grid;grid-template-columns:1fr auto auto auto auto;align-items:center;gap:8px;padding:8px 4px;border-bottom:1px solid var(--border)">
+      <div>
+        <div style="font-size:13px;font-weight:600">${e.projekt} <span style="font-size:11px;color:var(--text-3);font-weight:400">· ${e.mitarbeiter_name||'—'}</span></div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:1px">${e.von}–${e.bis}${e.pause_min>0?' · Pause '+e.pause_min+'min':''}${e.fahrzeit_min>0?' · Fz '+e.fahrzeit_min+'min':''}</div>
+      </div>
+      <span style="background:${t.bg};color:${t.color};padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;white-space:nowrap">${t.icon} ${e.typ}</span>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--accent);white-space:nowrap">${fmtMins(e.netto_min)}</div>
+      <button class="icon-btn" onclick="editEntry('${e.id}')" title="Bearbeiten">✏️</button>
+      <button class="icon-btn d" onclick="deleteEntry('${e.id}')" title="Löschen">✕</button>
     </div>`;
   }).join('');
+}
+
+function exportFilteredEntries(){
+  const fm=document.getElementById('fMonat')?.value||'';
+  const fe=document.getElementById('fEmp')?.value||'';
+  const fp=document.getElementById('fPrj')?.value||'';
+  let fl=[...entries];
+  if(fm)fl=fl.filter(e=>e.datum&&e.datum.startsWith(fm));
+  if(fe)fl=fl.filter(e=>e.mitarbeiter_name===fe);
+  if(fp)fl=fl.filter(e=>e.projekt===fp);
+  fl.sort((a,b)=>b.datum.localeCompare(a.datum));
+  const sep=';',bom='﻿';
+  const rows=[bom+['Datum','Wochentag','Mitarbeiter','Projekt','Gattung','Von','Bis','Pause','Fahrzeit','Netto'].join(sep)];
+  fl.forEach(e=>{const d=new Date(e.datum+'T00:00:00');rows.push([e.datum,WD[d.getDay()],e.mitarbeiter_name||'',e.projekt,e.typ,e.von,e.bis,e.pause_min||0,e.fahrzeit_min||0,fmtMins(e.netto_min)].join(sep));});
+  const blob=new Blob([rows.join('
+')],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=`Eintraege_${fm||'alle'}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);
+  toast(`${fl.length} Einträge exportiert.`,'📥','success');
 }
 
 // ===== MITARBEITER =====
@@ -1515,6 +1607,7 @@ function renderRegieList(){
 function deleteRegie(id){if(!confirm('Rapport löschen?'))return;regieRapporte=regieRapporte.filter(r=>r.id!==id);localStorage.setItem('sp_rapporte',JSON.stringify(regieRapporte));renderRegieList();}
 
 function generateRegiePDF(r){
+  if(!window.jspdf){toast('PDF-Bibliothek lädt noch, bitte kurz warten…','⚠️','error');return;}
   try{
     const{jsPDF}=window.jspdf;const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
     const pw=210,ml=15,mr=15;let y=15;
@@ -1694,7 +1787,8 @@ function closeLohnModal(){document.getElementById('lohnModal').classList.remove(
 document.getElementById('lohnModal').addEventListener('click',e=>{if(e.target===document.getElementById('lohnModal'))closeLohnModal();});
 
 function generateLohnPDF(){
-  if(!currentLohnblatt)return;
+  if(!currentLohnblatt){toast('Kein Lohnblatt geöffnet.','⚠️','error');return;}
+  if(!window.jspdf){toast('PDF-Bibliothek lädt noch, bitte kurz warten…','⚠️','error');return;}
   const{empName,mn,l,empEntries,d}=currentLohnblatt;
   try{
     const{jsPDF}=window.jspdf;const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
