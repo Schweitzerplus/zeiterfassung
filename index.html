@@ -396,7 +396,13 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 0}
     <div class="card-title"><div class="ci">✏️</div>Eintrag erfassen</div>
     <div class="fg">
       <div class="field"><label>Datum *</label><input type="date" id="eDate"></div>
-      <div class="field"><label>Mitarbeiter</label><input type="text" id="eEmp" readonly style="background:var(--surface-2);cursor:default"></div>
+      <div class="field"><label>Mitarbeiter</label>
+        <!-- Employee: readonly. Admin: dropdown -->
+        <input type="text" id="eEmpText" readonly style="background:var(--surface-2);cursor:default;display:block">
+        <select id="eEmpSel" onchange="onEmpSelChange()" style="display:none;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;outline:none;width:100%">
+          <option value="">— Mitarbeiter wählen —</option>
+        </select>
+      </div>
       <div class="field full"><label>Arbeitszeit *</label>
         <div class="time-row">
           <input type="time" id="eFrom" step="300" oninput="calcDur()">
@@ -878,8 +884,22 @@ async function afterLogin(){
     const n=currentUser.name;
     document.getElementById('hdrName').textContent=n;
     document.getElementById('hdrAvatar').textContent=n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-    document.getElementById('eEmp').value=n;
+    document.getElementById('eEmpText').value=n;
     document.getElementById('rapportName').textContent=n;
+    // Show employee selector based on role
+    const empText=document.getElementById('eEmpText');
+    const empSel=document.getElementById('eEmpSel');
+    if(currentUser.rolle==='admin'){
+      if(empText) empText.style.display='none';
+      if(empSel){
+        empSel.style.display='block';
+        // Populate with all employees
+        rebuildEmpSelector();
+      }
+    } else {
+      if(empText){empText.style.display='block';empText.value=currentUser.name;}
+      if(empSel) empSel.style.display='none';
+    }
     // Set date limit based on role
     const di=document.getElementById('eDate');
     if(di){
@@ -904,9 +924,11 @@ async function afterLogin(){
     try{await loadEntries();}catch(e){console.error('loadEntries:',e);}
     try{await loadProjects();}catch(e){console.error('loadProjects:',e);}
     try{await loadTypes();}catch(e){console.error('loadTypes:',e);}
+    try{await loadMitarbeiter();}catch(e){console.error('loadMitarbeiter:',e);}
     setSyncStatus(true);
     try{renderMyEntries();}catch(e){console.error(e);}
     try{rebuildProjectDropdown();}catch(e){console.error(e);}
+    try{rebuildEmpDropdown();}catch(e){console.error(e);}
     try{renderTypePills();}catch(e){console.error(e);}
     try{updateStats();}catch(e){console.error(e);}
     try{buildLohnMonthOptions();}catch(e){console.error(e);}
@@ -989,6 +1011,8 @@ async function loadTypes(){
 async function loadMitarbeiter(){
   mitarbeiter=await sbFetch('mitarbeiter?select=*&order=name.asc');
   renderPinTable();rebuildEmpFilter();buildRegieEmpList();renderLohnEmpTable();
+  rebuildEmpDropdown();
+  if(currentUser&&currentUser.rolle==='admin') rebuildEmpSelector();
 }
 
 // ===== PROJECTS =====
@@ -1103,7 +1127,7 @@ async function saveEntry(andNew){
       editingId=null;document.getElementById('saveBtn').textContent='✓ Eintrag speichern';
       toast('Eintrag aktualisiert!','✓','success');
     }else{
-      await sbFetch('zeiteintraege',{method:'POST',body:JSON.stringify({mitarbeiter_id:currentUser.id,mitarbeiter_name:currentUser.name,datum:date,von:fr,bis:to,pause_min:pause,fahrzeit_min:fz,netto_min:net,projekt:proj,typ:selectedType,beschreibung:desc}),prefer:'return=minimal'});
+      await sbFetch('zeiteintraege',{method:'POST',body:JSON.stringify({mitarbeiter_id:saveEmpId,mitarbeiter_name:saveEmpName,datum:date,von:fr,bis:to,pause_min:pause,fahrzeit_min:fz,netto_min:net,projekt:proj,typ:selectedType,beschreibung:desc}),prefer:'return=minimal'});
       toast(`Gespeichert: ${fmtMins(net)} Netto`,'✓','success');
     }
     await loadEntries();setSyncStatus(true);updateStats();renderMyEntries();
@@ -1137,7 +1161,18 @@ function editEntry(id){
   document.getElementById('ePrj').value=e.projekt;document.getElementById('eDesc').value=e.beschreibung||'';
   selectedType=e.typ;document.querySelectorAll('.pill').forEach(p=>p.classList.toggle('active',p.dataset.type===e.typ));
   calcDur();editingId=id;document.getElementById('saveBtn').textContent='✓ Eintrag aktualisieren';
-  document.getElementById('eEmp').value=e.mitarbeiter_name||currentUser.name;
+  // Set employee in form
+  if(currentUser.rolle==='admin'){
+    const sel=document.getElementById('eEmpSel');
+    if(sel){
+      // Find matching option
+      for(let i=0;i<sel.options.length;i++){
+        if(sel.options[i].value===e.mitarbeiter_name){sel.selectedIndex=i;break;}
+      }
+    }
+  } else {
+    document.getElementById('eEmpText').value=e.mitarbeiter_name||currentUser.name;
+  }
   switchView('zeit');window.scrollTo(0,200);
   toast('Eintrag wird bearbeitet.','✏️','success');
 }
@@ -1369,6 +1404,18 @@ function renderOverview(){
 }
 
 // ===== ADMIN ENTRIES =====
+function rebuildEmpSelector(){
+  const sel=document.getElementById('eEmpSel');if(!sel)return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">— Mitarbeiter wählen —</option>';
+  const workers=mitarbeiter.filter(m=>m.rolle==='mitarbeiter');
+  workers.forEach(m=>{const o=new Option(m.name,m.name);if(m.name===cur)o.selected=true;sel.appendChild(o);});
+}
+
+function onEmpSelChange(){
+  // nothing extra needed - value is read in saveEntry
+}
+
 function rebuildEmpFilter(){
   const fe=document.getElementById('fEmp');if(!fe)return;
   const emps=[...new Set(entries.map(e=>e.mitarbeiter_name).filter(Boolean))].sort();
@@ -2068,11 +2115,12 @@ async function saveEntry(andNew) {
     currentUser.id;
   
   if(!editingId && date) {
-    const existing = entries.filter(e => e.mitarbeiter_id===empId && e.datum===date);
+    const existing = entries.filter(e => e.mitarbeiter_id===saveEmpId && e.datum===date);
     if(existing.length > 0) {
       const total = existing.reduce((s,e)=>s+e.netto_min,0);
+      const dupEmpName = (sel2&&sel2.value) ? (mitarbeiter.find(m=>m.id===sel2.value)?.name||currentUser.name) : currentUser.name;
       const confirmed = confirm(
-        `⚠️ ${currentUser.name} hat an diesem Tag bereits ${existing.length} Eintrag/Einträge (${fmtMins(total)}).
+        `⚠️ ${dupEmpName} hat an diesem Tag bereits ${existing.length} Eintrag/Einträge (${fmtMins(total)}).
 
 Trotzdem speichern?`
       );
@@ -2278,6 +2326,45 @@ Trotzdem kopieren?`);
     setSyncStatus(false);
     toast('Fehler: '+err.message,'⚠️','error');
   }
+}
+
+// ===== EMPLOYEE DROPDOWN FOR ADMIN =====
+function rebuildEmpDropdown(){
+  const sel=document.getElementById('eEmpSelect');
+  const inp=document.getElementById('eEmp');
+  if(!sel||!inp)return;
+
+  if(currentUser&&currentUser.rolle==='admin'){
+    // Show dropdown for admin
+    sel.style.display='';
+    inp.style.display='none';
+    // Build options
+    const cur=sel.value;
+    sel.innerHTML='<option value="">— Mitarbeiter wählen —</option>';
+    mitarbeiter.filter(m=>m.rolle==='mitarbeiter').forEach(m=>{
+      const o=new Option(m.name,m.id);
+      if(m.id===cur)o.selected=true;
+      sel.appendChild(o);
+    });
+    // Pre-select if only one or current user in list
+    if(!sel.value && mitarbeiter.length===1){
+      sel.value=mitarbeiter[0].id;
+      onEmpSelectChange();
+    }
+  } else {
+    // Show readonly input for employee
+    sel.style.display='none';
+    inp.style.display='';
+    if(currentUser) inp.value=currentUser.name;
+  }
+}
+
+function onEmpSelectChange(){
+  const sel=document.getElementById('eEmpSelect');
+  // Update hidden name field used in save
+  const m=mitarbeiter.find(m=>m.id===sel.value);
+  const inp=document.getElementById('eEmp');
+  if(inp) inp.value=m?m.name:'';
 }
 
 // ===== KEYBOARD PIN =====
