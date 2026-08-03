@@ -723,16 +723,29 @@ const COLORS=[{c:'#3B6FFF',b:'#EEF3FF'},{c:'#A21CAF',b:'#FDF4FF'},{c:'#059669',b
 
 // Employee lohn data
 const LOHN_DATA={
-  'Arman Andrei':     {ahv:'756.6146.6944.33',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:137.40,spesen:15,ml13:false},
-  'Arman Ion':        {ahv:'756.1613.3994.60',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
-  'Axenti Alexandru': {ahv:'756.7965.4494.26',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
-  'Bulmaga Petru':    {ahv:'756.2220.0952.64',ansatz:22.79,kanton:'TG',tarif:'C0N',bvg:0,spesen:15,ml13:false},
-  'Covali Sergiu':    {ahv:'756.3304.4626.51',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:0,spesen:15,ml13:false},
-  'Harlamov Ivan':    {ahv:'756.8045.2861.91',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
-  'Mitu Andrei':      {ahv:'756.8976.3092.66',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
-  'Popa Ion':         {ahv:'756.0397.7496.21',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
-  'Puiu Tudor':       {ahv:'756.2634.5896.49',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
-  'Rauta Radu':       {ahv:'756.6759.8769.43',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
+  // Both name formats supported (Nachname Vorname AND Vorname Nachname)
+  'Arman Andrei':     {ahv:'756.6146.6944.33',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:137.40,spesen:30,ml13:false},
+  'Andrei Arman':     {ahv:'756.6146.6944.33',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:137.40,spesen:30,ml13:false},
+  'Arman Ion':        {ahv:'756.1613.3994.60',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
+  'Ion Arman':        {ahv:'756.1613.3994.60',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
+  'Axenti Alexandru': {ahv:'756.7965.4494.26',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
+  'Alexandru Axenti': {ahv:'756.7965.4494.26',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
+  'Bulmaga Petru':    {ahv:'756.2220.0952.64',ansatz:22.79,kanton:'TG',tarif:'C0N',bvg:0,spesen:30,ml13:false},
+  'Petru Bulmaga':    {ahv:'756.2220.0952.64',ansatz:22.79,kanton:'TG',tarif:'C0N',bvg:0,spesen:30,ml13:false},
+  'Covali Sergiu':    {ahv:'756.3304.4626.51',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:0,spesen:30,ml13:false},
+  'Sergiu Covali':    {ahv:'756.3304.4626.51',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:0,spesen:30,ml13:false},
+  'Harlamov Ivan':    {ahv:'756.8045.2861.91',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:true},
+  'Ivan Harlamov':    {ahv:'756.8045.2861.91',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:true},
+  'Mitu Andrei':      {ahv:'756.8976.3092.66',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
+  'Andrei Mitu':      {ahv:'756.8976.3092.66',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
+  'Popa Ion':         {ahv:'756.0397.7496.21',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:true},
+  'Ion Popa':         {ahv:'756.0397.7496.21',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:true},
+  'Puiu Tudor':       {ahv:'756.2634.5896.49',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:true},
+  'Tudor Puiu':       {ahv:'756.2634.5896.49',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:true},
+  'Rauta Radu':       {ahv:'756.6759.8769.43',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
+  'Radu Rauta':       {ahv:'756.6759.8769.43',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
+  'Andrei Ungureanu': {ahv:'',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
+  'Gheorghe Parfeni': {ahv:'',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
 };
 
 // ===== STATE =====
@@ -1575,12 +1588,25 @@ async function renderLohn(){
   let allEntries=[];
   try{allEntries=await sbFetch(`zeiteintraege?datum=gte.${monat}-01&datum=lte.${monat}-31&select=*`);}catch(e){}
   const groups={};
-  allEntries.forEach(e=>{const n=e.mitarbeiter_name||'Unbekannt';if(!groups[n])groups[n]={mins:0,days:new Set()};groups[n].mins+=e.netto_min;groups[n].days.add(e.datum);});
+  allEntries.forEach(e=>{
+    const n=e.mitarbeiter_name||'Unbekannt';
+    if(!groups[n])groups[n]={mins:0,dayMins:{}};
+    groups[n].mins+=e.netto_min;
+    // Accumulate minutes per day for spesen calculation
+    if(!groups[n].dayMins[e.datum])groups[n].dayMins[e.datum]=0;
+    groups[n].dayMins[e.datum]+=e.netto_min;
+  });
   const el=document.getElementById('lohnListe');
   if(!Object.keys(groups).length){el.innerHTML=`<div style="text-align:center;padding:40px;color:var(--text-3)"><div style="font-size:32px;margin-bottom:10px">📭</div><div style="font-weight:600">Keine Einträge für ${mn}</div></div>`;return;}
   let totalAus=0;
   const rows=Object.entries(groups).sort((a,b)=>a[0].localeCompare(b[0])).map(([name,g])=>{
-    const std=Math.round(g.mins/60*10)/10,tage=g.days.size,l=calcLohn(name,std,tage);
+    const std=Math.round(g.mins/60*10)/10;
+    // Spesen: only Mon-Fri AND >= 7.5h (450 min) net work that day
+    const spesenTage=Object.entries(g.dayMins).filter(([date,mins])=>{
+      const wd=new Date(date+'T00:00:00').getDay();
+      return wd>=1&&wd<=5&&mins>=450; // Mon-Fri and >=7.5h
+    }).length;
+    const l=calcLohn(name,std,spesenTage);
     if(l)totalAus+=l.auszahlung;
     return`<div class="lohn-list-row" onclick="openLohnDetail('${name}','${monat}')">
       <div><div style="font-size:13px;font-weight:600">${name}</div><div style="font-size:11px;color:var(--text-3)">${std.toFixed(1)} h · ${tage} Tage</div></div>
@@ -1603,8 +1629,14 @@ async function openLohnDetail(empName,monat){
   let empEntries=[];
   try{empEntries=await sbFetch(`zeiteintraege?datum=gte.${monat}-01&datum=lte.${monat}-31&mitarbeiter_name=eq.${encodeURIComponent(empName)}&select=*&order=datum.asc`);}catch(e){}
   const std=empEntries.reduce((s,e)=>s+e.netto_min/60,0);
-  const tage=new Set(empEntries.map(e=>e.datum)).size;
-  const l=calcLohn(empName,Math.round(std*10)/10,tage);
+  // Calculate spesen days: Mon-Fri only, >= 7.5h net work
+  const dayMins={};
+  empEntries.forEach(e=>{if(!dayMins[e.datum])dayMins[e.datum]=0;dayMins[e.datum]+=e.netto_min;});
+  const spesenTage=Object.entries(dayMins).filter(([date,mins])=>{
+    const wd=new Date(date+'T00:00:00').getDay();
+    return wd>=1&&wd<=5&&mins>=450;
+  }).length;
+  const l=calcLohn(empName,Math.round(std*10)/10,spesenTage);
   if(!l){toast('Keine Lohndaten für diesen Mitarbeiter.','⚠️','error');return;}
   const d=LOHN_DATA[empName];
   currentLohnblatt={empName,monat,mn,l,empEntries,d};
@@ -1636,7 +1668,7 @@ async function openLohnDetail(empName,monat){
     <div style="height:1px;background:var(--border);margin:6px 0"></div>
     ${lr('NETTOLOHN',`CHF ${fmtChf(l.netto)}`,'green')}
     <div class="lohn-sec">SPESEN</div>
-    ${lr(`${l.spesenTage} Tage × CHF ${d?.spesen||15}`,`CHF ${fmtChf(l.spesen)}`)}
+    ${lr(`${l.spesenTage} Tage (Mo-Fr, ≥7.5h) × CHF ${d?.spesen||30}`,`CHF ${fmtChf(l.spesen)}`)}
     <div style="height:1px;background:var(--border);margin:6px 0"></div>
     <div style="background:var(--accent-light);border-radius:var(--radius-sm);padding:12px;margin-top:6px;display:flex;justify-content:space-between;align-items:center">
       <span style="font-size:14px;font-weight:800">AUSZAHLUNG</span>
@@ -1734,16 +1766,34 @@ function exportLohnExcel(){
 }
 
 function renderLohnEmpTable(){
-  document.getElementById('lohnEmpBody').innerHTML=Object.entries(LOHN_DATA).map(([name,d])=>`
+  // Show only unique entries (no duplicates from both name formats)
+  const seen=new Set();
+  const uniqueEntries=Object.entries(LOHN_DATA).filter(([name])=>{
+    // Show only the "Vorname Nachname" format (first word is usually first name)
+    const parts=name.split(' ');
+    if(seen.has(name.split(' ').sort().join(' '))){return false;}
+    seen.add(name.split(' ').sort().join(' '));
+    return true;
+  });
+  document.getElementById('lohnEmpBody').innerHTML=uniqueEntries.map(([name,d])=>`
     <tr>
       <td style="font-weight:600">${name}</td>
-      <td><input type="number" value="${d.ansatz}" step="0.01" onchange="LOHN_DATA['${name}'].ansatz=parseFloat(this.value)" style="width:70px"></td>
-      <td><select onchange="LOHN_DATA['${name}'].kanton=this.value" style="width:55px"><option ${d.kanton==='LU'?'selected':''}>LU</option><option ${d.kanton==='NW'?'selected':''}>NW</option><option ${d.kanton==='TG'?'selected':''}>TG</option></select></td>
-      <td><select onchange="LOHN_DATA['${name}'].tarif=this.value" style="width:65px"><option ${d.tarif==='A0N'?'selected':''}>A0N</option><option ${d.tarif==='C0N'?'selected':''}>C0N</option><option ${d.tarif==='B0N'?'selected':''}>B0N</option></select></td>
-      <td><input type="number" value="${d.bvg}" step="0.1" onchange="LOHN_DATA['${name}'].bvg=parseFloat(this.value)||0" style="width:65px"></td>
-      <td><input type="number" value="${d.spesen}" step="0.5" onchange="LOHN_DATA['${name}'].spesen=parseFloat(this.value)||15" style="width:55px"></td>
-      <td><input type="checkbox" ${d.ml13?'checked':''} onchange="LOHN_DATA['${name}'].ml13=this.checked"></td>
+      <td><input type="number" value="${d.ansatz}" step="0.01" onchange="updateAllNameFormats('${name}','ansatz',parseFloat(this.value))" style="width:75px"></td>
+      <td><select onchange="updateAllNameFormats('${name}','kanton',this.value)" style="width:55px"><option ${d.kanton==='LU'?'selected':''}>LU</option><option ${d.kanton==='NW'?'selected':''}>NW</option><option ${d.kanton==='TG'?'selected':''}>TG</option></select></td>
+      <td><select onchange="updateAllNameFormats('${name}','tarif',this.value)" style="width:65px"><option ${d.tarif==='A0N'?'selected':''}>A0N</option><option ${d.tarif==='C0N'?'selected':''}>C0N</option><option ${d.tarif==='B0N'?'selected':''}>B0N</option></select></td>
+      <td><input type="number" value="${d.bvg}" step="0.1" onchange="updateAllNameFormats('${name}','bvg',parseFloat(this.value)||0)" style="width:65px"></td>
+      <td><input type="number" value="${d.spesen}" step="0.5" onchange="updateAllNameFormats('${name}','spesen',parseFloat(this.value)||30)" style="width:65px"><span style="font-size:10px;color:var(--text-3)"> CHF/Tag</span></td>
+      <td><input type="checkbox" ${d.ml13?'checked':''} onchange="updateAllNameFormats('${name}','ml13',this.checked)"></td>
     </tr>`).join('');
+}
+
+// Update both name formats (Vorname Nachname AND Nachname Vorname)
+function updateAllNameFormats(name,field,val){
+  const parts=name.split(' ');
+  const reversed=parts.slice().reverse().join(' ');
+  if(LOHN_DATA[name])LOHN_DATA[name][field]=val;
+  if(LOHN_DATA[reversed])LOHN_DATA[reversed][field]=val;
+  toast(`Gespeichert: ${name} — ${field}`,'✓','success');
 }
 
 // ===== KEYBOARD PIN =====
