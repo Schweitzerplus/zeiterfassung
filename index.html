@@ -829,34 +829,42 @@ async function adminLogin(){
   }else{document.getElementById('pinError').textContent='Falsches Passwort.';document.getElementById('adminPwInput').value='';}
 }
 async function afterLogin(){
-  entries=[];
-  document.getElementById('loginScreen').classList.add('hidden');
-  setSyncStatus(false);
-  // Apply user info
-  const n=currentUser.name;
-  document.getElementById('hdrName').textContent=n;
-  document.getElementById('hdrAvatar').textContent=n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-  document.getElementById('eEmp').value=n;
-  document.getElementById('rapportName').textContent=n;
-  // Show admin tabs if admin
-  if(currentUser.rolle==='admin'||adminUnlocked){
-    document.querySelectorAll('.admin-only').forEach(el=>{
-      // Restore appropriate display type
-      if(el.classList.contains('bn-btn')) el.style.display='flex';
-      else el.style.display='inline-flex';
-    });
-    adminUnlocked=true;
+  try {
+    entries=[];
+    document.getElementById('loginScreen').classList.add('hidden');
+    setSyncStatus(false);
+    // Apply user info
+    const n=currentUser.name;
+    document.getElementById('hdrName').textContent=n;
+    document.getElementById('hdrAvatar').textContent=n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    document.getElementById('eEmp').value=n;
+    document.getElementById('rapportName').textContent=n;
+    // Show admin nav if admin
+    if(currentUser.rolle==='admin'||adminUnlocked){
+      document.querySelectorAll('.admin-only').forEach(el=>{
+        if(el.classList.contains('bn-btn')) el.style.display='flex';
+        else el.style.display='inline-flex';
+      });
+      adminUnlocked=true;
+    }
+    // Load data - each independently so one failure doesn't block others
+    try{await loadEntries();}catch(e){console.error('loadEntries:',e);}
+    try{await loadProjects();}catch(e){console.error('loadProjects:',e);}
+    try{await loadTypes();}catch(e){console.error('loadTypes:',e);}
+    setSyncStatus(true);
+    try{renderMyEntries();}catch(e){console.error(e);}
+    try{rebuildProjectDropdown();}catch(e){console.error(e);}
+    try{renderTypePills();}catch(e){console.error(e);}
+    try{updateStats();}catch(e){console.error(e);}
+    try{buildLohnMonthOptions();}catch(e){console.error(e);}
+  } catch(e) {
+    console.error('afterLogin crash:', e);
+    // If login crashes, go back to login screen
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('pinError').textContent = 'Verbindungsfehler – bitte neu laden.';
+    localStorage.removeItem('sp_session');
+    currentUser = null;
   }
-  // Load data
-  try{await loadEntries();}catch(e){console.error(e);}
-  try{await loadProjects();}catch(e){console.error(e);}
-  try{await loadTypes();}catch(e){console.error(e);}
-  setSyncStatus(true);
-  renderMyEntries();
-  rebuildProjectDropdown();
-  renderTypePills();
-  updateStats();
-  buildLohnMonthOptions();
 }
 function logout(){
   currentUser=null;adminUnlocked=false;entries=[];
@@ -912,7 +920,7 @@ document.getElementById('pwOverlay').addEventListener('click',e=>{if(e.target===
 // ===== DATA LOADING =====
 async function loadEntries(){
   setSyncStatus(false);
-  let url='zeiteintraege?select=*&order=datum.desc,erstellt_am.desc';
+  let url='zeiteintraege?select=*&order=datum.desc,erstellt_am.desc&limit=500';
   if(currentUser.rolle!=='admin')url+=`&mitarbeiter_id=eq.${currentUser.id}`;
   entries=await sbFetch(url);
   setSyncStatus(true);
@@ -1921,7 +1929,22 @@ function init(){
   buildLohnMonthOptions();
   // Check saved session
   const saved=localStorage.getItem('sp_session');
-  if(saved){try{currentUser=JSON.parse(saved);afterLogin();}catch(e){localStorage.removeItem('sp_session');}}
+  if(saved){
+    try{
+      const parsed=JSON.parse(saved);
+      if(parsed&&parsed.id&&parsed.pin){
+        currentUser=parsed;
+        afterLogin().catch(e=>{
+          console.error('Session restore failed:',e);
+          localStorage.removeItem('sp_session');
+          currentUser=null;
+          document.getElementById('loginScreen').classList.remove('hidden');
+        });
+      } else {
+        localStorage.removeItem('sp_session');
+      }
+    }catch(e){localStorage.removeItem('sp_session');}
+  }
 }
 setInterval(()=>{document.getElementById('dateNow').textContent=fmtLong(new Date());},60000);
 setInterval(()=>{if(currentUser)loadEntries().then(()=>{updateStats();renderMyEntries();});},60000);
