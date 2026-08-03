@@ -880,6 +880,18 @@ async function afterLogin(){
     document.getElementById('hdrAvatar').textContent=n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
     document.getElementById('eEmp').value=n;
     document.getElementById('rapportName').textContent=n;
+    // Set date limit based on role
+    const di=document.getElementById('eDate');
+    if(di){
+      const tod=new Date();
+      di.max=fmtDate(tod);
+      if(currentUser.rolle==='admin'){
+        di.min='2020-01-01'; // Admin: no practical limit
+      } else {
+        const minD=new Date(tod);minD.setDate(tod.getDate()-8);
+        di.min=fmtDate(minD); // Employee: 8 days
+      }
+    }
     // Show admin nav if admin
     if(currentUser.rolle==='admin'||adminUnlocked){
       document.querySelectorAll('.admin-only').forEach(el=>{
@@ -2279,9 +2291,10 @@ document.addEventListener('keydown',e=>{
 // ===== INIT =====
 function init(){
   document.getElementById('dateNow').textContent=fmtLong(new Date());
-  const today=new Date(),minD=new Date(today);minD.setDate(today.getDate()-20);
+  const today=new Date();
   const di=document.getElementById('eDate');
-  di.value=fmtDate(today);di.max=fmtDate(today);di.min=fmtDate(minD);
+  di.value=fmtDate(today);di.max=fmtDate(today);
+  // min will be set after login based on role
   buildLohnMonthOptions();
   // Check saved session
   const saved=localStorage.getItem('sp_session');
