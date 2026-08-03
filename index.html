@@ -700,6 +700,25 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 0}
   </div>
 </div>
 
+<!-- COPY ENTRY MODAL -->
+<div class="day-modal-overlay" id="copyModal">
+  <div class="day-modal" style="max-width:480px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-size:15px;font-weight:700">📋 Eintrag kopieren</div>
+      <button onclick="closeCopyModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-3)">✕</button>
+    </div>
+    <!-- Entry preview -->
+    <div id="copyEntryPreview" style="background:var(--accent-light);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;font-size:13px"></div>
+    <!-- Employee selection -->
+    <div style="font-size:12px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Mitarbeiter auswählen</div>
+    <div id="copyEmpList" style="max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-bottom:16px"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-sm btn-outline" onclick="closeCopyModal()">Abbrechen</button>
+      <button class="btn btn-sm btn-primary" onclick="executeCopy()">✓ Kopieren</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast-wrap" id="toastWrap"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
@@ -728,28 +747,28 @@ const COLORS=[{c:'#3B6FFF',b:'#EEF3FF'},{c:'#A21CAF',b:'#FDF4FF'},{c:'#059669',b
 // Employee lohn data
 const LOHN_DATA={
   // Both name formats supported (Nachname Vorname AND Vorname Nachname)
-  'Arman Andrei':     {ahv:'756.6146.6944.33',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:137.40,spesen:30,ml13:false},
-  'Andrei Arman':     {ahv:'756.6146.6944.33',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:137.40,spesen:30,ml13:false},
-  'Arman Ion':        {ahv:'756.1613.3994.60',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
-  'Ion Arman':        {ahv:'756.1613.3994.60',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
-  'Axenti Alexandru': {ahv:'756.7965.4494.26',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
-  'Alexandru Axenti': {ahv:'756.7965.4494.26',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
-  'Bulmaga Petru':    {ahv:'756.2220.0952.64',ansatz:22.79,kanton:'TG',tarif:'C0N',bvg:0,spesen:30,ml13:false},
-  'Petru Bulmaga':    {ahv:'756.2220.0952.64',ansatz:22.79,kanton:'TG',tarif:'C0N',bvg:0,spesen:30,ml13:false},
-  'Covali Sergiu':    {ahv:'756.3304.4626.51',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:0,spesen:30,ml13:false},
-  'Sergiu Covali':    {ahv:'756.3304.4626.51',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:0,spesen:30,ml13:false},
-  'Harlamov Ivan':    {ahv:'756.8045.2861.91',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:true},
-  'Ivan Harlamov':    {ahv:'756.8045.2861.91',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:true},
-  'Mitu Andrei':      {ahv:'756.8976.3092.66',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
-  'Andrei Mitu':      {ahv:'756.8976.3092.66',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
-  'Popa Ion':         {ahv:'756.0397.7496.21',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:true},
-  'Ion Popa':         {ahv:'756.0397.7496.21',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:true},
-  'Puiu Tudor':       {ahv:'756.2634.5896.49',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:true},
-  'Tudor Puiu':       {ahv:'756.2634.5896.49',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:true},
-  'Rauta Radu':       {ahv:'756.6759.8769.43',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
-  'Radu Rauta':       {ahv:'756.6759.8769.43',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
-  'Andrei Ungureanu': {ahv:'',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
-  'Gheorghe Parfeni': {ahv:'',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:30,ml13:false},
+  'Arman Andrei':     {ahv:'756.6146.6944.33',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:137.40,spesen:15,ml13:false},
+  'Andrei Arman':     {ahv:'756.6146.6944.33',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:137.40,spesen:15,ml13:false},
+  'Arman Ion':        {ahv:'756.1613.3994.60',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
+  'Ion Arman':        {ahv:'756.1613.3994.60',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
+  'Axenti Alexandru': {ahv:'756.7965.4494.26',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
+  'Alexandru Axenti': {ahv:'756.7965.4494.26',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
+  'Bulmaga Petru':    {ahv:'756.2220.0952.64',ansatz:22.79,kanton:'TG',tarif:'C0N',bvg:0,spesen:15,ml13:false},
+  'Petru Bulmaga':    {ahv:'756.2220.0952.64',ansatz:22.79,kanton:'TG',tarif:'C0N',bvg:0,spesen:15,ml13:false},
+  'Covali Sergiu':    {ahv:'756.3304.4626.51',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:0,spesen:15,ml13:false},
+  'Sergiu Covali':    {ahv:'756.3304.4626.51',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:0,spesen:15,ml13:false},
+  'Harlamov Ivan':    {ahv:'756.8045.2861.91',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
+  'Ivan Harlamov':    {ahv:'756.8045.2861.91',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
+  'Mitu Andrei':      {ahv:'756.8976.3092.66',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
+  'Andrei Mitu':      {ahv:'756.8976.3092.66',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
+  'Popa Ion':         {ahv:'756.0397.7496.21',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
+  'Ion Popa':         {ahv:'756.0397.7496.21',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
+  'Puiu Tudor':       {ahv:'756.2634.5896.49',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
+  'Tudor Puiu':       {ahv:'756.2634.5896.49',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
+  'Rauta Radu':       {ahv:'756.6759.8769.43',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
+  'Radu Rauta':       {ahv:'756.6759.8769.43',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
+  'Andrei Ungureanu': {ahv:'',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
+  'Gheorghe Parfeni': {ahv:'',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
 };
 
 // ===== STATE =====
@@ -1241,6 +1260,7 @@ function showDayModal(date){
         <span style="background:${t.bg};color:${t.color};padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600">${t.icon} ${e.typ}</span>
         <div style="display:flex;gap:5px;margin-left:auto">
           ${canEdit?`<button onclick="closeDayModal();editEntry('${e.id}')" style="padding:5px 12px;border-radius:7px;border:1.5px solid var(--accent);color:var(--accent);background:var(--accent-light);font-family:Inter,sans-serif;font-size:12px;font-weight:600;cursor:pointer">✏️ Bearbeiten</button>
+          ${isAdmin?`<button onclick="closeDayModal();openCopyModal('${e.id}')" style="padding:5px 12px;border-radius:7px;border:1.5px solid #059669;color:#059669;background:#ECFDF5;font-family:Inter,sans-serif;font-size:12px;font-weight:600;cursor:pointer">📋 Kopieren</button>`:''}
           <button onclick="if(confirm('Löschen?')){closeDayModal();deleteEntry('${e.id}')}" style="padding:5px 12px;border-radius:7px;border:1.5px solid var(--danger);color:var(--danger);background:#FEF2F2;font-family:Inter,sans-serif;font-size:12px;font-weight:600;cursor:pointer">✕</button>`
           :`<span style="font-size:11px;color:var(--text-3)">🔒 Nicht bearbeitbar</span>`}
         </div>
@@ -1382,6 +1402,7 @@ function renderAdminEntries(){
       <span style="background:${t.bg};color:${t.color};padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;white-space:nowrap">${t.icon} ${e.typ}</span>
       <div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--accent);white-space:nowrap">${fmtMins(e.netto_min)}</div>
       <button class="icon-btn" onclick="editEntry('${e.id}')" title="Bearbeiten">✏️</button>
+      <button class="icon-btn" onclick="openCopyModal('${e.id}')" title="Kopieren für andere Mitarbeiter" style="font-size:13px">📋</button>
       <button class="icon-btn d" onclick="deleteEntry('${e.id}')" title="Löschen">✕</button>
     </div>`;
   }).join('');
@@ -1429,11 +1450,19 @@ function renderPinTable(){
 // ===== EXCEL EXPORT (ZEITERFASSUNG) =====
 function exportZeitExcel(){
   if(!entries.length)return toast('Keine Einträge.','⚠️','error');
+  // Filter to current overview month
+  const monat=`${ovYear}-${String(ovMonth+1).padStart(2,'0')}`;
+  const monthEntries=entries.filter(e=>e.datum&&e.datum.startsWith(monat));
+  if(!monthEntries.length)return toast(`Keine Einträge für ${MN[ovMonth]} ${ovYear}.`,'⚠️','error');
   const sep=';',bom='\uFEFF';
-  const sorted=[...entries].sort((a,b)=>{const na=(a.mitarbeiter_name||'').toLowerCase(),nb=(b.mitarbeiter_name||'').toLowerCase();if(na<nb)return-1;if(na>nb)return 1;return a.datum.localeCompare(b.datum);});
-  const grouped={};sorted.forEach(e=>{const n=e.mitarbeiter_name||'Unbekannt';if(!grouped[n])grouped[n]=[];grouped[n].push(e);});
+  const sorted=[...monthEntries].sort((a,b)=>{
+    const na=(a.mitarbeiter_name||'').toLowerCase(),nb=(b.mitarbeiter_name||'').toLowerCase();
+    if(na<nb)return-1;if(na>nb)return 1;return a.datum.localeCompare(b.datum);
+  });
+  const grouped={};
+  sorted.forEach(e=>{const n=e.mitarbeiter_name||'Unbekannt';if(!grouped[n])grouped[n]=[];grouped[n].push(e);});
   const header=['Mitarbeiter','Datum','Wochentag','Von','Bis','Pause (min)','Fahrzeit (min)','Netto','Projekt','Arbeitsgattung','Beschreibung'];
-  const rows=[bom+header.join(sep)];
+  const rows=[bom+`Zeiterfassung ${MN[ovMonth]} ${ovYear}`,'' ,header.join(sep)];
   Object.entries(grouped).forEach(([emp,ee])=>{
     ee.forEach(e=>{const d=new Date(e.datum+'T00:00:00');rows.push([emp,e.datum,WD[d.getDay()],e.von,e.bis,e.pause_min||0,e.fahrzeit_min||0,fmtMins(e.netto_min),e.projekt,e.typ,(e.beschreibung||'').replace(/;/g,',')].join(sep));});
     rows.push([emp+' — TOTAL','','','','','','',fmtMins(ee.reduce((s,e)=>s+e.netto_min,0)),'','',''].join(sep));
@@ -1441,9 +1470,9 @@ function exportZeitExcel(){
   });
   const blob=new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download=`Zeiterfassung_${fmtDate(new Date())}.csv`;
+  a.href=url;a.download=`Zeiterfassung_${monat}.csv`;
   document.body.appendChild(a);a.click();document.body.removeChild(a);
-  toast(`${entries.length} Einträge exportiert.`,'📥','success');
+  toast(`${monthEntries.length} Einträge für ${MN[ovMonth]} ${ovYear} exportiert.`,'📥','success');
 }
 
 // ===== REGIE =====
@@ -1657,11 +1686,29 @@ function generateRegiePDF(r){
 
 // ===== LOHN =====
 function getQST(brutto,kanton,tarif){
-  const luA0N=[[1400,0.95],[2000,3.5],[2500,4.5],[3000,5.5],[3500,6.0],[3800,6.5],[4000,6.85],[4200,7.12],[4400,7.2],[4600,7.61],[4800,7.8],[5000,8.18],[5200,8.48],[5400,8.74],[5600,9.0],[6000,9.5],[9999999,11.0]];
-  const luC0N=[[2000,2.0],[3000,4.0],[3400,5.04],[3800,5.5],[4200,6.5],[4500,6.93],[5000,7.5],[9999999,8.5]];
-  const tgC0N=[[2000,2.0],[3000,4.0],[3800,5.46],[4500,6.0],[9999999,7.0]];
-  const tgA0N=[[2000,1.5],[3000,4.0],[4000,6.0],[5000,7.5],[9999999,9.0]];
-  const nwA0N=[[2000,1.0],[3000,3.5],[4000,6.0],[5000,7.5],[9999999,9.0]];
+  // QST tables based on verified payslips (2026)
+  // LU A0N: verified from actual Lohnblätter
+  const luA0N=[
+    [1500,0.95],[2000,2.5],[2500,4.0],[3000,5.0],[3500,5.5],[3800,6.0],
+    [4200,6.85],[4350,7.12],[4430,7.20],[4850,7.61],[5100,8.18],[5350,8.48],
+    [5500,8.74],[6000,9.50],[7000,10.0],[9999999,11.0]
+  ];
+  // LU C0N: verified from payslips (Arman Andrei, Covali)
+  const luC0N=[
+    [1500,0.5],[2000,1.5],[3000,3.5],[3500,5.04],[4300,6.93],[5000,7.5],[9999999,8.5]
+  ];
+  // TG C0N: verified from Bulmaga payslip
+  const tgC0N=[
+    [1500,0.5],[2000,1.5],[3000,3.5],[4000,5.46],[5000,6.5],[9999999,7.5]
+  ];
+  // TG A0N: estimated
+  const tgA0N=[
+    [1500,0.5],[2000,2.0],[3000,4.0],[4000,6.0],[5000,7.5],[9999999,9.0]
+  ];
+  // NW A0N: estimated
+  const nwA0N=[
+    [1500,0.5],[2000,1.5],[3000,3.5],[4000,6.0],[5000,7.5],[9999999,9.0]
+  ];
   let t=luA0N;
   if(kanton==='LU'&&tarif==='C0N')t=luC0N;else if(kanton==='TG'&&tarif==='C0N')t=tgC0N;else if(kanton==='TG'&&tarif==='A0N')t=tgA0N;else if(kanton==='NW'&&tarif==='A0N')t=nwA0N;
   for(const[l,r]of t)if(brutto<=l)return r;return t[t.length-1][1];
@@ -1755,7 +1802,17 @@ async function openLohnDetail(empName,monat){
   const d=LOHN_DATA[empName];
   currentLohnblatt={empName,monat,mn,l,empEntries,d};
   document.getElementById('lohnModalTitle').textContent=`Lohnblatt ${empName} — ${mn}`;
-  const entHtml=empEntries.length?`<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;margin-bottom:6px">STUNDEN DETAIL</div><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:var(--surface-2)"><th style="padding:5px 7px;text-align:left;font-size:10px;font-weight:700;color:var(--text-3)">Datum</th><th style="padding:5px 7px;text-align:left;font-size:10px;font-weight:700;color:var(--text-3)">Projekt</th><th style="padding:5px 7px;text-align:right;font-size:10px;font-weight:700;color:var(--text-3)">Stunden</th></tr></thead><tbody>${empEntries.map(e=>{const dt=new Date(e.datum+'T00:00:00');return`<tr style="border-bottom:1px solid var(--border)"><td style="padding:5px 7px">${WD[dt.getDay()]} ${dt.getDate()}. ${MS[dt.getMonth()]}</td><td style="padding:5px 7px;color:var(--text-2)">${e.projekt}</td><td style="padding:5px 7px;text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--accent)">${(e.netto_min/60).toFixed(2)} h</td></tr>`;}).join('')}<tr style="background:var(--surface-2)"><td colspan="2" style="padding:6px 7px;font-weight:700">Total</td><td style="padding:6px 7px;text-align:right;font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent)">${std.toFixed(2)} h</td></tr></tbody></table></div>`:'';
+  // Group entries by project for summary
+  const projSum={};
+  empEntries.forEach(e=>{if(!projSum[e.projekt])projSum[e.projekt]=0;projSum[e.projekt]+=e.netto_min;});
+  const entHtml=empEntries.length?`<div style="margin-bottom:14px;background:var(--surface-2);border-radius:var(--radius-sm);padding:12px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase">Stunden ${mn}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:800;color:var(--accent)">${std.toFixed(2)} h</div>
+    </div>
+    <div style="font-size:11px;color:var(--text-3);margin-bottom:6px">${empEntries.length} Einträge · ${spesenTage} Spesen-Tage (Mo-Fr, ≥7.5h)</div>
+    ${Object.entries(projSum).sort((a,b)=>b[1]-a[1]).map(([p,m])=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:2px 0"><span style="color:var(--text-2)">📁 ${p}</span><span style="font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:600">${(m/60).toFixed(2)} h</span></div>`).join('')}
+  </div>`:'<div style="color:var(--text-3);font-size:13px;margin-bottom:12px">Keine Zeiteinträge.</div>';
   const lr=(label,val,cls='pos')=>`<div class="lohn-row"><span class="lohn-label">${label}</span><span class="lohn-val ${cls}">${val}</span></div>`;
   document.getElementById('lohnModalContent').innerHTML=`
     <div style="background:var(--surface-2);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px">
@@ -1782,7 +1839,7 @@ async function openLohnDetail(empName,monat){
     <div style="height:1px;background:var(--border);margin:6px 0"></div>
     ${lr('NETTOLOHN',`CHF ${fmtChf(l.netto)}`,'green')}
     <div class="lohn-sec">SPESEN</div>
-    ${lr(`${l.spesenTage} Tage (Mo-Fr, ≥7.5h) × CHF ${d?.spesen||30}`,`CHF ${fmtChf(l.spesen)}`)}
+    ${lr(`${l.spesenTage} Tage (Mo-Fr, ≥7.5h) × CHF ${d?.spesen||15}`,`CHF ${fmtChf(l.spesen)}`)}
     <div style="height:1px;background:var(--border);margin:6px 0"></div>
     <div style="background:var(--accent-light);border-radius:var(--radius-sm);padding:12px;margin-top:6px;display:flex;justify-content:space-between;align-items:center">
       <span style="font-size:14px;font-weight:800">AUSZAHLUNG</span>
@@ -1909,6 +1966,94 @@ function updateAllNameFormats(name,field,val){
   if(LOHN_DATA[name])LOHN_DATA[name][field]=val;
   if(LOHN_DATA[reversed])LOHN_DATA[reversed][field]=val;
   toast(`Gespeichert: ${name} — ${field}`,'✓','success');
+}
+
+// ===== COPY ENTRY =====
+let copySourceEntry = null;
+let copySelectedEmps = new Set();
+
+function openCopyModal(entryId) {
+  const e = entries.find(e=>e.id===entryId);
+  if(!e) return;
+  copySourceEntry = e;
+  copySelectedEmps = new Set();
+
+  // Show entry preview
+  const d = new Date(e.datum+'T00:00:00');
+  document.getElementById('copyEntryPreview').innerHTML = `
+    <div style="font-weight:700;margin-bottom:4px">${WD[d.getDay()]}, ${d.getDate()}. ${MS[d.getMonth()]} ${d.getFullYear()}</div>
+    <div style="color:var(--text-2)">${e.projekt} · ${e.typ}</div>
+    <div style="color:var(--text-2)">${e.von} – ${e.bis} · ${fmtMins(e.netto_min)} Netto${e.pause_min>0?' · Pause '+e.pause_min+'min':''}${e.fahrzeit_min>0?' · Fz '+e.fahrzeit_min+'min':''}</div>
+    <div style="color:var(--text-3);font-size:11px;margin-top:3px">Original: ${e.mitarbeiter_name||'—'}</div>
+  `;
+
+  // Show employee list (exclude original employee)
+  const workers = mitarbeiter.filter(m=>m.rolle==='mitarbeiter' && m.name!==e.mitarbeiter_name);
+  document.getElementById('copyEmpList').innerHTML = workers.map(m=>`
+    <div class="emp-sel-item${copySelectedEmps.has(m.id)?' sel':''}" id="ce_${m.id}" onclick="toggleCopyEmp('${m.id}')">
+      <div class="emp-check-box" id="cec_${m.id}">${copySelectedEmps.has(m.id)?'✓':''}</div>
+      <div style="font-size:13px;font-weight:600">${m.name}</div>
+    </div>`).join('');
+
+  document.getElementById('copyModal').classList.add('open');
+}
+
+function toggleCopyEmp(id) {
+  if(copySelectedEmps.has(id)) copySelectedEmps.delete(id);
+  else copySelectedEmps.add(id);
+  // Update UI
+  const el = document.getElementById('ce_'+id);
+  const cb = document.getElementById('cec_'+id);
+  if(el) el.classList.toggle('sel', copySelectedEmps.has(id));
+  if(cb) cb.textContent = copySelectedEmps.has(id)?'✓':'';
+}
+
+function closeCopyModal() {
+  document.getElementById('copyModal').classList.remove('open');
+  copySourceEntry = null;
+  copySelectedEmps = new Set();
+}
+
+async function executeCopy() {
+  if(!copySourceEntry) return;
+  if(copySelectedEmps.size === 0) return toast('Bitte mind. einen Mitarbeiter wählen.','⚠️','error');
+
+  const e = copySourceEntry;
+  const workers = mitarbeiter.filter(m=>copySelectedEmps.has(m.id));
+
+  setSyncStatus(false);
+  let success = 0;
+  try {
+    for(const m of workers) {
+      await sbFetch('zeiteintraege', {
+        method: 'POST',
+        body: JSON.stringify({
+          mitarbeiter_id: m.id,
+          mitarbeiter_name: m.name,
+          datum: e.datum,
+          von: e.von,
+          bis: e.bis,
+          pause_min: e.pause_min||0,
+          fahrzeit_min: e.fahrzeit_min||0,
+          netto_min: e.netto_min,
+          projekt: e.projekt,
+          typ: e.typ,
+          beschreibung: e.beschreibung||''
+        }),
+        prefer: 'return=minimal'
+      });
+      success++;
+    }
+    await loadEntries();
+    setSyncStatus(true);
+    closeCopyModal();
+    toast(`Eintrag für ${success} Mitarbeiter kopiert!`,'✓','success');
+    renderAdminEntries();
+    renderOverview();
+  } catch(err) {
+    setSyncStatus(false);
+    toast('Fehler: '+err.message,'⚠️','error');
+  }
 }
 
 // ===== KEYBOARD PIN =====
