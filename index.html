@@ -1168,10 +1168,19 @@ Trotzdem speichern?`);
   // Normalize time format to HH:MM for storage
   const normTime=(mins)=>String(Math.floor(mins/60)).padStart(2,'0')+':'+String(mins%60).padStart(2,'0');
   const frNorm=normTime(fromMins),toNorm=normTime(toMins);
+
+  // Determine which employee to save for
+  const sel3=document.getElementById('eEmpSelect');
+  let saveEmpId=currentUser.id, saveEmpName=currentUser.name;
+  if(currentUser.rolle==='admin'&&sel3&&sel3.value){
+    const selM=mitarbeiter.find(m=>m.id===sel3.value);
+    if(selM){saveEmpId=selM.id;saveEmpName=selM.name;}
+  }
+
   try{
     setSyncStatus(false);
     if(editingId){
-      await sbFetch(`zeiteintraege?id=eq.${editingId}`,{method:'PATCH',body:JSON.stringify({datum:date,von:fr,bis:to,pause_min:pause,fahrzeit_min:fz,netto_min:net,projekt:proj,typ:selectedType,beschreibung:desc}),prefer:'return=minimal'});
+      await sbFetch(`zeiteintraege?id=eq.${editingId}`,{method:'PATCH',body:JSON.stringify({datum:date,von:frNorm,bis:toNorm,pause_min:pause,fahrzeit_min:fz,netto_min:net,projekt:proj,typ:selectedType,beschreibung:desc}),prefer:'return=minimal'});
       editingId=null;document.getElementById('saveBtn').textContent='✓ Eintrag speichern';
       toast('Eintrag aktualisiert!','✓','success');
     }else{
