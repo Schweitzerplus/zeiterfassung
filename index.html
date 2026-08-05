@@ -1072,7 +1072,7 @@ async function deleteType(n){
   await loadTypes();renderTypePills();renderAdminTypes();
 }
 function renderTypePills(){
-  document.getElementById('typeGroup').innerHTML=types.map(t=>`<div class="pill${selectedType===t.name?' active':''}" data-type="${t.name}" onclick="selType(this)">${t.icon} ${t.name}</div>`).join('');
+  document.getElementById('typeGroup').innerHTML=types.map(t=>`<div class="pill${selectedType===t.name?' active':''}" data-type="${t.name}" onclick="selType(this)" ontouchend="event.preventDefault();selType(this)">${t.icon} ${t.name}</div>`).join('');
 }
 function selType(el){document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');selectedType=el.dataset.type;}
 function renderAdminTypes(){
@@ -1130,7 +1130,12 @@ async function saveEntry(andNew){
   if(!date)return toast('Bitte Datum wählen.','⚠️','error');
   if(!fr||!to)return toast('Bitte Zeiten eingeben.','⚠️','error');
   if(!proj)return toast('Bitte Projekt wählen.','⚠️','error');
-  if(!selectedType)return toast('Bitte Arbeitsgattung wählen.','⚠️','error');
+  if(!selectedType){
+    // Highlight the pill group to draw attention
+    const pg=document.getElementById('typeGroup');
+    if(pg){pg.style.border='2px solid var(--danger)';pg.style.borderRadius='8px';setTimeout(()=>{pg.style.border='';},2000);}
+    return toast('Bitte Arbeitsgattung antippen.','⚠️','error');
+  }
 
   // Duplicate check - which employee is being saved for?
   const sel2=document.getElementById('eEmpSelect');
@@ -1189,7 +1194,11 @@ Trotzdem speichern?`);
     }
     await loadEntries();setSyncStatus(true);updateStats();renderMyEntries();
     if(andNew){const d=document.getElementById('eDate').value;resetForm();document.getElementById('eDate').value=d;}else resetForm();
-  }catch(e){setSyncStatus(false);toast('Fehler: '+e.message,'⚠️','error');}
+  }catch(e){
+    setSyncStatus(false);
+    console.error('saveEntry error:',e);
+    toast('Fehler beim Speichern: '+(e.message||'Verbindungsfehler'),'⚠️','error');
+  }
 }
 function resetForm(){
   document.getElementById('eFrom').value='';document.getElementById('eTo').value='';
