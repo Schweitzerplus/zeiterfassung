@@ -314,8 +314,8 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 0}
   </div>
   <div class="login-card">
     <div class="login-mode-btns">
-      <button class="lmode-btn active" id="lmEmp">👤 Mitarbeiter</button>
-      <button class="lmode-btn" id="lmAdmin">⚙️ Admin</button>
+      <button class="lmode-btn active" id="lmEmp" onclick="setLoginMode('emp')">👤 Mitarbeiter</button>
+      <button class="lmode-btn" id="lmAdmin" onclick="setLoginMode('admin')">⚙️ Admin</button>
     </div>
     <div class="login-title" id="loginTitle">Willkommen</div>
     <div class="login-sub" id="loginSub">Bitte PIN eingeben</div>
@@ -324,20 +324,20 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 0}
       <div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
     </div>
     <div class="pin-keypad" id="pinKeypad">
-      <button class="pin-key" data-digit="1">1</button>
-      <button class="pin-key" data-digit="2">2</button>
-      <button class="pin-key" data-digit="3">3</button>
-      <button class="pin-key" data-digit="4">4</button>
-      <button class="pin-key" data-digit="5">5</button>
-      <button class="pin-key" data-digit="6">6</button>
-      <button class="pin-key" data-digit="7">7</button>
-      <button class="pin-key" data-digit="8">8</button>
-      <button class="pin-key" data-digit="9">9</button>
-      <button class="pin-key" data-digit="0">0</button>
-      <button class="pin-key" data-digit="del" style="font-size:14px">⌫</button>
+      <button class="pin-key" onclick="pinPress('1')">1</button>
+      <button class="pin-key" onclick="pinPress('2')">2</button>
+      <button class="pin-key" onclick="pinPress('3')">3</button>
+      <button class="pin-key" onclick="pinPress('4')">4</button>
+      <button class="pin-key" onclick="pinPress('5')">5</button>
+      <button class="pin-key" onclick="pinPress('6')">6</button>
+      <button class="pin-key" onclick="pinPress('7')">7</button>
+      <button class="pin-key" onclick="pinPress('8')">8</button>
+      <button class="pin-key" onclick="pinPress('9')">9</button>
+      <button class="pin-key" onclick="pinPress('0')">0</button>
+      <button class="pin-key" onclick="pinDel()" style="font-size:14px">⌫</button>
     </div>
     <div class="admin-pw-section" id="adminPwSection">
-      <input class="admin-pw-input" type="password" id="adminPwInput" placeholder="Admin-Passwort" id="adminPwInput">
+      <input class="admin-pw-input" type="password" id="adminPwInput" placeholder="Admin-Passwort" onkeydown="if(event.key==='Enter')adminLogin()">
       <button class="admin-pw-btn" onclick="adminLogin()">🔓 Admin öffnen</button>
     </div>
     <div class="pin-error" id="pinError"></div>
@@ -440,10 +440,10 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 0}
       <div class="field full"><label>Beschreibung (optional)</label><textarea id="eDesc" placeholder="Was wurde gemacht?"></textarea></div>
     </div>
     <div class="form-footer">
-      <button class="btn btn-sm" id="resetBtn" style="color:#666;background:#f3f4f6;border:1.5px solid var(--border)">Zurücksetzen</button>
-      <button class="btn btn-sm btn-outline admin-only" id="groupEntryBtn" style="display:none;background:#ECFDF5;color:#059669;border-color:#059669">👥 Gruppen-Eintrag</button>
-      <button class="btn btn-sm btn-outline" id="saveAndNewBtn">+ Speichern & Neu</button>
-      <button class="btn btn-sm btn-primary" id="saveBtn">✓ Eintrag speichern</button>
+      <button class="btn btn-sm" id="resetBtn" onclick="resetForm()" style="color:#666;background:#f3f4f6;border:1.5px solid var(--border)">Zurücksetzen</button>
+      <button class="btn btn-sm btn-outline admin-only" id="groupEntryBtn" onclick="openGroupEntry()" style="display:none;background:#ECFDF5;color:#059669;border-color:#059669">👥 Gruppen-Eintrag</button>
+      <button class="btn btn-sm btn-outline" id="saveAndNewBtn" onclick="saveEntry(true)">+ Speichern & Neu</button>
+      <button class="btn btn-sm btn-primary" id="saveBtn" onclick="saveEntry(false)">✓ Eintrag speichern</button>
     </div>
   </div>
   <div class="stats-row">
@@ -1073,17 +1073,17 @@ async function deleteType(n){
 }
 function renderTypePills(){
   const tg=document.getElementById('typeGroup');
-  tg.innerHTML=types.map(t=>`<div class="pill${selectedType===t.name?' active':''}" data-type="${t.name}">${t.icon} ${t.name}</div>`).join('');
-  tg.querySelectorAll('.pill').forEach(pill=>{
-    pill.addEventListener('click',function(){selType(this);});
-  });
+  // Use onclick directly in HTML - most reliable on Android
+  tg.innerHTML=types.map(t=>`<div class="pill${selectedType===t.name?' active':''}" data-type="${t.name}" onclick="selType(this)">${t.icon} ${t.name}</div>`).join('');
 }
 function selType(el){
   document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
   el.classList.add('active');
   selectedType=el.dataset.type;
-  // Show brief confirmation - helps on Android
-  toast('✓ '+selectedType,'','success');
+  // Visual feedback - update net badge color
+  document.getElementById('netBadge').style.background='var(--success-light)';
+  // Show selected type name briefly in netHint
+  document.getElementById('netHint').textContent='Gattung: '+selectedType;
 }
 function renderAdminTypes(){
   document.getElementById('typeList').innerHTML=types.map(t=>`<div class="admin-item"><span style="background:${t.bg};color:${t.color};padding:2px 8px;border-radius:20px;font-size:12px;font-weight:600">${t.icon} ${t.name}</span><button class="icon-btn d" onclick="deleteType('${t.name.replace(/'/g,"\\'")}')">✕</button></div>`).join('');
