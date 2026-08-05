@@ -314,8 +314,8 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 0}
   </div>
   <div class="login-card">
     <div class="login-mode-btns">
-      <button class="lmode-btn active" id="lmEmp" onclick="setLoginMode('emp')">👤 Mitarbeiter</button>
-      <button class="lmode-btn" id="lmAdmin" onclick="setLoginMode('admin')">⚙️ Admin</button>
+      <button class="lmode-btn active" id="lmEmp">👤 Mitarbeiter</button>
+      <button class="lmode-btn" id="lmAdmin">⚙️ Admin</button>
     </div>
     <div class="login-title" id="loginTitle">Willkommen</div>
     <div class="login-sub" id="loginSub">Bitte PIN eingeben</div>
@@ -324,20 +324,20 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 0}
       <div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
     </div>
     <div class="pin-keypad" id="pinKeypad">
-      <button class="pin-key" onclick="pinPress('1')">1</button>
-      <button class="pin-key" onclick="pinPress('2')">2</button>
-      <button class="pin-key" onclick="pinPress('3')">3</button>
-      <button class="pin-key" onclick="pinPress('4')">4</button>
-      <button class="pin-key" onclick="pinPress('5')">5</button>
-      <button class="pin-key" onclick="pinPress('6')">6</button>
-      <button class="pin-key" onclick="pinPress('7')">7</button>
-      <button class="pin-key" onclick="pinPress('8')">8</button>
-      <button class="pin-key" onclick="pinPress('9')">9</button>
-      <button class="pin-key" onclick="pinPress('0')">0</button>
-      <button class="pin-key" style="font-size:14px" onclick="pinDel()">⌫</button>
+      <button class="pin-key" data-digit="1">1</button>
+      <button class="pin-key" data-digit="2">2</button>
+      <button class="pin-key" data-digit="3">3</button>
+      <button class="pin-key" data-digit="4">4</button>
+      <button class="pin-key" data-digit="5">5</button>
+      <button class="pin-key" data-digit="6">6</button>
+      <button class="pin-key" data-digit="7">7</button>
+      <button class="pin-key" data-digit="8">8</button>
+      <button class="pin-key" data-digit="9">9</button>
+      <button class="pin-key" data-digit="0">0</button>
+      <button class="pin-key" data-digit="del" style="font-size:14px">⌫</button>
     </div>
     <div class="admin-pw-section" id="adminPwSection">
-      <input class="admin-pw-input" type="password" id="adminPwInput" placeholder="Admin-Passwort" onkeydown="if(event.key==='Enter')adminLogin()">
+      <input class="admin-pw-input" type="password" id="adminPwInput" placeholder="Admin-Passwort" id="adminPwInput">
       <button class="admin-pw-btn" onclick="adminLogin()">🔓 Admin öffnen</button>
     </div>
     <div class="pin-error" id="pinError"></div>
@@ -2528,26 +2528,58 @@ document.addEventListener('keydown',e=>{
 
 // ===== BUTTON EVENT LISTENERS (Android-safe) =====
 function initButtons(){
-  // Use both click and touchend for Android compatibility
-  function addBtn(id, fn){
+  function addBtn(id,fn){
     const el=document.getElementById(id);
     if(!el)return;
-    let touching=false;
-    el.addEventListener('touchend',function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      touching=true;
-      fn();
-      setTimeout(()=>{touching=false;},300);
-    },{passive:false});
-    el.addEventListener('click',function(e){
-      if(!touching)fn();
-    });
+    let t=false;
+    el.addEventListener('touchstart',function(e){e.preventDefault();t=true;fn();},{passive:false});
+    el.addEventListener('click',function(){if(!t)fn();t=false;});
   }
   addBtn('saveBtn',()=>saveEntry(false));
   addBtn('saveAndNewBtn',()=>saveEntry(true));
   addBtn('resetBtn',resetForm);
   addBtn('groupEntryBtn',openGroupEntry);
+
+  // PIN keypad - touch-safe
+  document.querySelectorAll('.pin-key').forEach(btn=>{
+    const digit=btn.dataset.digit;
+    let pt=false;
+    btn.addEventListener('touchstart',function(e){
+      e.preventDefault();
+      pt=true;
+      if(digit==='del') pinDel();
+      else pinPress(digit);
+    },{passive:false});
+    btn.addEventListener('click',function(){
+      if(!pt){
+        if(digit==='del') pinDel();
+        else pinPress(digit);
+      }
+      pt=false;
+    });
+  });
+
+  // Admin login button
+  const adminBtn=document.querySelector('.admin-pw-btn');
+  if(adminBtn){
+    let at=false;
+    adminBtn.addEventListener('touchstart',function(e){e.preventDefault();at=true;adminLogin();},{passive:false});
+    adminBtn.addEventListener('click',function(){if(!at)adminLogin();at=false;});
+  }
+
+  // Admin PW Enter key
+  const apw=document.getElementById('adminPwInput');
+  if(apw) apw.addEventListener('keydown',function(e){if(e.key==='Enter')adminLogin();});
+
+  // Login mode toggle buttons
+  ['lmEmp','lmAdmin'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    const mode=id==='lmEmp'?'emp':'admin';
+    let mt=false;
+    el.addEventListener('touchstart',function(e){e.preventDefault();mt=true;setLoginMode(mode);},{passive:false});
+    el.addEventListener('click',function(){if(!mt)setLoginMode(mode);mt=false;});
+  });
 }
 
 // ===== INIT =====
@@ -2580,6 +2612,18 @@ function init(){
 }
 setInterval(()=>{document.getElementById('dateNow').textContent=fmtLong(new Date());},60000);
 setInterval(()=>{if(currentUser)loadEntries().then(()=>{updateStats();renderMyEntries();});},60000);
+
+// Keep-alive ping every 6 hours to prevent Supabase free tier pause
+async function keepAlive(){
+  try{
+    await sbFetch('mitarbeiter?select=id&limit=1');
+    console.log('Supabase keep-alive ping OK',new Date().toLocaleTimeString());
+  }catch(e){console.warn('Keep-alive failed:',e.message);}
+}
+// Ping on load and every 6 hours
+keepAlive();
+setInterval(keepAlive, 6*60*60*1000);
+
 init();
 </script>
 </body>
