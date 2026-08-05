@@ -84,8 +84,8 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 0}
 .tsep{color:var(--text-3);font-size:16px;flex-shrink:0}
 .dur-pill{background:var(--accent-light);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap}
 .net-pill{background:var(--success-light);color:#16A34A;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap}
-.pill-group{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
-.pill{padding:5px 12px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-2);transition:all .12s;user-select:none}
+.pill-group{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;touch-action:manipulation}
+.pill{padding:8px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-2);transition:all .12s;user-select:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .pill:hover{border-color:var(--accent);color:var(--accent)}
 .pill.active{background:var(--accent);border-color:var(--accent);color:#fff}
 .form-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);flex-wrap:wrap}
@@ -232,7 +232,7 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 0}
 .pin-dot{width:13px;height:13px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:transparent;transition:all .15s}
 .pin-dot.filled{background:var(--accent);border-color:var(--accent)}
 .pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-.pin-key{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fff;font-family:'Inter',sans-serif;font-size:18px;font-weight:600;border-radius:10px;padding:14px;cursor:pointer;transition:all .1s;user-select:none}
+.pin-key{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fff;font-family:'Inter',sans-serif;font-size:18px;font-weight:600;border-radius:10px;padding:16px;cursor:pointer;transition:all .1s;user-select:none;touch-action:manipulation;-webkit-tap-highlight-color:rgba(59,111,255,.3)}
 .pin-key:hover,.pin-key:active{background:var(--accent);border-color:var(--accent);transform:scale(.96)}
 .pin-error{color:#FF6B6B;font-size:13px;font-weight:500;min-height:18px}
 .sync-ind{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,.4);margin-top:10px}
@@ -1074,14 +1074,17 @@ async function deleteType(n){
 function renderTypePills(){
   const tg=document.getElementById('typeGroup');
   tg.innerHTML=types.map(t=>`<div class="pill${selectedType===t.name?' active':''}" data-type="${t.name}">${t.icon} ${t.name}</div>`).join('');
-  // Add touch events programmatically
   tg.querySelectorAll('.pill').forEach(pill=>{
-    let ptouching=false;
-    pill.addEventListener('touchstart',function(e){e.preventDefault();ptouching=true;selType(this);},{passive:false});
-    pill.addEventListener('click',function(){if(!ptouching)selType(this);ptouching=false;});
+    pill.addEventListener('click',function(){selType(this);});
   });
 }
-function selType(el){document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');selectedType=el.dataset.type;}
+function selType(el){
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  selectedType=el.dataset.type;
+  // Show brief confirmation - helps on Android
+  toast('✓ '+selectedType,'','success');
+}
 function renderAdminTypes(){
   document.getElementById('typeList').innerHTML=types.map(t=>`<div class="admin-item"><span style="background:${t.bg};color:${t.color};padding:2px 8px;border-radius:20px;font-size:12px;font-weight:600">${t.icon} ${t.name}</span><button class="icon-btn d" onclick="deleteType('${t.name.replace(/'/g,"\\'")}')">✕</button></div>`).join('');
 }
@@ -1138,10 +1141,9 @@ async function saveEntry(andNew){
   if(!fr||!to)return toast('Bitte Zeiten eingeben.','⚠️','error');
   if(!proj)return toast('Bitte Projekt wählen.','⚠️','error');
   if(!selectedType){
-    // Highlight the pill group to draw attention
     const pg=document.getElementById('typeGroup');
-    if(pg){pg.style.border='2px solid var(--danger)';pg.style.borderRadius='8px';setTimeout(()=>{pg.style.border='';},2000);}
-    return toast('Bitte Arbeitsgattung antippen.','⚠️','error');
+    if(pg){pg.style.outline='3px solid var(--danger)';setTimeout(()=>{pg.style.outline='';},2000);}
+    return toast('Bitte Arbeitsgattung wählen!','⚠️','error');
   }
 
   // Duplicate check - which employee is being saved for?
@@ -2526,60 +2528,38 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Backspace')pinDel();
 });
 
-// ===== BUTTON EVENT LISTENERS (Android-safe) =====
+// ===== BUTTON EVENT LISTENERS =====
 function initButtons(){
-  function addBtn(id,fn){
+  // Simple click handler - works on all devices
+  function btn(id,fn){
     const el=document.getElementById(id);
-    if(!el)return;
-    let t=false;
-    el.addEventListener('touchstart',function(e){e.preventDefault();t=true;fn();},{passive:false});
-    el.addEventListener('click',function(){if(!t)fn();t=false;});
+    if(el) el.addEventListener('click',fn);
   }
-  addBtn('saveBtn',()=>saveEntry(false));
-  addBtn('saveAndNewBtn',()=>saveEntry(true));
-  addBtn('resetBtn',resetForm);
-  addBtn('groupEntryBtn',openGroupEntry);
+  btn('saveBtn',()=>saveEntry(false));
+  btn('saveAndNewBtn',()=>saveEntry(true));
+  btn('resetBtn',resetForm);
+  btn('groupEntryBtn',openGroupEntry);
 
-  // PIN keypad - touch-safe
-  document.querySelectorAll('.pin-key').forEach(btn=>{
-    const digit=btn.dataset.digit;
-    let pt=false;
-    btn.addEventListener('touchstart',function(e){
-      e.preventDefault();
-      pt=true;
-      if(digit==='del') pinDel();
-      else pinPress(digit);
-    },{passive:false});
-    btn.addEventListener('click',function(){
-      if(!pt){
-        if(digit==='del') pinDel();
-        else pinPress(digit);
-      }
-      pt=false;
+  // PIN keypad
+  document.querySelectorAll('.pin-key').forEach(b=>{
+    b.addEventListener('click',function(){
+      const d=this.dataset.digit;
+      if(d==='del') pinDel();
+      else pinPress(d);
     });
   });
 
+  // Login mode buttons
+  btn('lmEmp',()=>setLoginMode('emp'));
+  btn('lmAdmin',()=>setLoginMode('admin'));
+
   // Admin login button
-  const adminBtn=document.querySelector('.admin-pw-btn');
-  if(adminBtn){
-    let at=false;
-    adminBtn.addEventListener('touchstart',function(e){e.preventDefault();at=true;adminLogin();},{passive:false});
-    adminBtn.addEventListener('click',function(){if(!at)adminLogin();at=false;});
-  }
+  const ab=document.querySelector('.admin-pw-btn');
+  if(ab) ab.addEventListener('click',adminLogin);
 
   // Admin PW Enter key
   const apw=document.getElementById('adminPwInput');
-  if(apw) apw.addEventListener('keydown',function(e){if(e.key==='Enter')adminLogin();});
-
-  // Login mode toggle buttons
-  ['lmEmp','lmAdmin'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(!el)return;
-    const mode=id==='lmEmp'?'emp':'admin';
-    let mt=false;
-    el.addEventListener('touchstart',function(e){e.preventDefault();mt=true;setLoginMode(mode);},{passive:false});
-    el.addEventListener('click',function(){if(!mt)setLoginMode(mode);mt=false;});
-  });
+  if(apw) apw.addEventListener('keydown',e=>{if(e.key==='Enter')adminLogin();});
 }
 
 // ===== INIT =====
