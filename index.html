@@ -20,7 +20,7 @@
   --shadow-sm:0 1px 3px rgba(15,21,37,.07);--shadow:0 4px 16px rgba(15,21,37,.08);
   --shadow-lg:0 12px 40px rgba(15,21,37,.12);--radius:14px;--radius-sm:8px;
 }
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:200px}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
 
 /* HEADER */
 header{background:var(--text);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100}
@@ -35,8 +35,6 @@ header{background:var(--text);padding:0 20px;display:flex;align-items:center;jus
 .sync-badge.syncing{color:rgba(255,255,255,.4)}
 .sync-badge.syncing .sync-badge-dot{background:rgba(255,255,255,.3);animation:pulse 1s infinite}
 .btn-logout{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.6);font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:5px 12px;border-radius:8px;cursor:pointer}
-.hdr-nav-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.7);font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:6px 12px;border-radius:8px;cursor:pointer;transition:all .15s;white-space:nowrap}
-.hdr-nav-btn:hover,.hdr-nav-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
 
 /* BOTTOM NAV */
 .bottom-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--text);border-top:1px solid rgba(255,255,255,.1);z-index:200;padding-bottom:env(safe-area-inset-bottom)}
@@ -48,7 +46,7 @@ header{background:var(--text);padding:0 20px;display:flex;align-items:center;jus
 /* VIEWS */
 .view{display:none}
 .view.active{display:block}
-main{max-width:960px;margin:0 auto;padding:20px 16px 24px}
+main{max-width:960px;margin:0 auto;padding:20px 16px 0}
 
 /* CARDS */
 .card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:20px;margin-bottom:16px;box-shadow:var(--shadow-sm)}
@@ -84,11 +82,11 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 24px}
 .tsep{color:var(--text-3);font-size:16px;flex-shrink:0}
 .dur-pill{background:var(--accent-light);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap}
 .net-pill{background:var(--success-light);color:#16A34A;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap}
-.pill-group{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;touch-action:manipulation}
-.pill{padding:8px 14px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-2);transition:all .12s;user-select:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.pill-group{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.pill{padding:5px 12px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid var(--border);background:var(--surface-2);color:var(--text-2);transition:all .12s;user-select:none}
 .pill:hover{border-color:var(--accent);color:var(--accent)}
 .pill.active{background:var(--accent);border-color:var(--accent);color:#fff}
-.form-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;padding-top:16px;padding-bottom:16px;border-top:1px solid var(--border);flex-wrap:wrap}
+.form-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);flex-wrap:wrap}
 
 /* STATS */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
@@ -232,7 +230,7 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 24px}
 .pin-dot{width:13px;height:13px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:transparent;transition:all .15s}
 .pin-dot.filled{background:var(--accent);border-color:var(--accent)}
 .pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-.pin-key{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fff;font-family:'Inter',sans-serif;font-size:18px;font-weight:600;border-radius:10px;padding:16px;cursor:pointer;transition:all .1s;user-select:none;touch-action:manipulation;-webkit-tap-highlight-color:rgba(59,111,255,.3)}
+.pin-key{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);color:#fff;font-family:'Inter',sans-serif;font-size:18px;font-weight:600;border-radius:10px;padding:14px;cursor:pointer;transition:all .1s;user-select:none}
 .pin-key:hover,.pin-key:active{background:var(--accent);border-color:var(--accent);transform:scale(.96)}
 .pin-error{color:#FF6B6B;font-size:13px;font-weight:500;min-height:18px}
 .sync-ind{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:rgba(255,255,255,.4);margin-top:10px}
@@ -276,14 +274,12 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 24px}
 .add-mat-row{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-light);border:1px dashed var(--accent);border-radius:5px;padding:4px 10px;cursor:pointer;margin-top:5px}
 
 /* LOHN LIST ROW */
-.lohn-list-row{display:grid;grid-template-columns:1fr 110px 100px 130px auto auto;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid var(--border);cursor:pointer;border-radius:var(--radius-sm);transition:background .12s}
-.lohn-list-row:hover{background:var(--accent-light)}
+.lohn-list-row{display:grid;grid-template-columns:1fr auto auto auto auto auto;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px solid var(--border);cursor:pointer}
+.lohn-list-row:hover{background:var(--surface-2)}
 .lohn-list-row:last-child{border-bottom:none}
 
 /* MOBILE */
 @media(max-width:700px){
-  #desktopNav{display:none!important}
-
   .stats-row{grid-template-columns:1fr 1fr}
   .fg{grid-template-columns:1fr}
   .fg .full{grid-column:1}
@@ -334,7 +330,7 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 24px}
       <button class="pin-key" onclick="pinPress('8')">8</button>
       <button class="pin-key" onclick="pinPress('9')">9</button>
       <button class="pin-key" onclick="pinPress('0')">0</button>
-      <button class="pin-key" onclick="pinDel()" style="font-size:14px">⌫</button>
+      <button class="pin-key" style="font-size:14px" onclick="pinDel()">⌫</button>
     </div>
     <div class="admin-pw-section" id="adminPwSection">
       <input class="admin-pw-input" type="password" id="adminPwInput" placeholder="Admin-Passwort" onkeydown="if(event.key==='Enter')adminLogin()">
@@ -351,16 +347,8 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 24px}
     <span>Schweitzer plus GmbH</span>
     <span>Montagen / Service / Support</span>
   </div>
-  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+  <div style="display:flex;align-items:center;gap:10px">
     <div class="sync-badge syncing" id="syncBadge"><div class="sync-badge-dot"></div><span id="syncTxt">Verbinde…</span></div>
-    <!-- Desktop nav buttons (hidden on mobile) -->
-    <div id="desktopNav" style="display:flex;gap:4px">
-      <button class="hdr-nav-btn active" id="dnZeit" onclick="switchView('zeit')">⏱ Erfassen</button>
-      <button class="hdr-nav-btn" id="dnRapport" onclick="switchView('rapport')">📋 Rapport</button>
-      <button class="hdr-nav-btn admin-only" id="dnRegie" onclick="switchView('regie')" style="display:none">📄 Regie</button>
-      <button class="hdr-nav-btn admin-only" id="dnLohn" onclick="switchView('lohn')" style="display:none">💰 Lohn</button>
-      <button class="hdr-nav-btn admin-only" id="dnAdmin" onclick="switchView('admin')" style="display:none">⚙️ Admin</button>
-    </div>
     <div class="header-user" onclick="void(0)">
       <span class="header-name" id="hdrName">—</span>
       <div class="avatar" id="hdrAvatar">?</div>
@@ -396,18 +384,12 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 24px}
     <div class="card-title"><div class="ci">✏️</div>Eintrag erfassen</div>
     <div class="fg">
       <div class="field"><label>Datum *</label><input type="date" id="eDate"></div>
-      <div class="field"><label>Mitarbeiter</label>
-        <!-- Employee: readonly. Admin: dropdown -->
-        <input type="text" id="eEmpText" readonly style="background:var(--surface-2);cursor:default;display:block">
-        <select id="eEmpSel" onchange="onEmpSelChange()" style="display:none;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);background:var(--surface-2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;outline:none;width:100%">
-          <option value="">— Mitarbeiter wählen —</option>
-        </select>
-      </div>
+      <div class="field"><label>Mitarbeiter</label><input type="text" id="eEmp" readonly style="background:var(--surface-2);cursor:default"></div>
       <div class="field full"><label>Arbeitszeit *</label>
         <div class="time-row">
-          <input type="time" id="eFrom" oninput="calcDur()">
+          <input type="time" id="eFrom" step="300" oninput="calcDur()">
           <span class="tsep">→</span>
-          <input type="time" id="eTo" oninput="calcDur()">
+          <input type="time" id="eTo" step="300" oninput="calcDur()">
           <span class="dur-pill" id="durBadge">—</span>
         </div>
       </div>
@@ -439,17 +421,11 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 24px}
       <div class="field"><label>Arbeitsgattung *</label><div class="pill-group" id="typeGroup"></div></div>
       <div class="field full"><label>Beschreibung (optional)</label><textarea id="eDesc" placeholder="Was wurde gemacht?"></textarea></div>
     </div>
-    <div style="height:16px"></div>
-  </div><!-- end card -->
-
-  <!-- STICKY SAVE BAR - always visible above bottom nav -->
-  <div style="position:sticky;bottom:70px;z-index:150;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:12px;box-shadow:0 -4px 20px rgba(15,21,37,.12);display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap">
-    <button class="btn btn-sm" id="resetBtn" onclick="resetForm()" style="color:#666;background:#f3f4f6;border:1.5px solid var(--border)">Zurücksetzen</button>
-    <button class="btn btn-sm btn-outline admin-only" id="groupEntryBtn" onclick="openGroupEntry()" style="display:none;background:#ECFDF5;color:#059669;border-color:#059669">👥 Gruppen-Eintrag</button>
-    <button class="btn btn-sm btn-outline" id="saveAndNewBtn" onclick="saveEntry(true)">+ Speichern & Neu</button>
-    <button class="btn btn-sm btn-primary" id="saveBtn" onclick="saveEntry(false)">✓ Eintrag speichern</button>
-  </div>
-
+    <div class="form-footer">
+      <button class="btn btn-sm" onclick="resetForm()" style="color:#666;background:#f3f4f6;border:1.5px solid var(--border)">Zurücksetzen</button>
+      <button class="btn btn-sm btn-outline" onclick="saveEntry(true)">+ Speichern & Neu</button>
+      <button class="btn btn-sm btn-primary" id="saveBtn" onclick="saveEntry(false)">✓ Eintrag speichern</button>
+    </div>
   </div>
   <div class="stats-row">
     <div class="stat-card"><div class="stat-label">Heute</div><div class="stat-val accent" id="stToday">0:00 h</div></div>
@@ -655,17 +631,13 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 24px}
   <!-- ENTRIES -->
   <div id="aTab3" style="display:none">
     <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
         <div class="card-title" style="margin:0"><div class="ci">📋</div>Alle Einträge</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-          <select id="fMonat" onchange="renderAdminEntries()" style="font-family:'Inter',sans-serif;font-size:12px;border:1.5px solid var(--border);border-radius:8px;padding:5px 9px;background:var(--surface);outline:none;cursor:pointer"></select>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
           <select id="fEmp" onchange="renderAdminEntries()" style="font-family:'Inter',sans-serif;font-size:12px;border:1.5px solid var(--border);border-radius:8px;padding:5px 9px;background:var(--surface);outline:none"><option value="">Alle Mitarbeiter</option></select>
           <select id="fPrj" onchange="renderAdminEntries()" style="font-family:'Inter',sans-serif;font-size:12px;border:1.5px solid var(--border);border-radius:8px;padding:5px 9px;background:var(--surface);outline:none"><option value="">Alle Projekte</option></select>
-          <select id="fTyp" onchange="renderAdminEntries()" style="font-family:'Inter',sans-serif;font-size:12px;border:1.5px solid var(--border);border-radius:8px;padding:5px 9px;background:var(--surface);outline:none"><option value="">Alle Gattungen</option></select>
-          <button class="btn btn-sm btn-excel" onclick="exportFilteredEntries()">📥 Excel</button>
         </div>
       </div>
-      <div id="adminEntriesStats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px"></div>
       <div id="adminEntriesList"></div>
     </div>
   </div>
@@ -712,49 +684,9 @@ main{max-width:960px;margin:0 auto;padding:20px 16px 24px}
   </div>
 </div>
 
-<!-- GROUP ENTRY MODAL -->
-<div class="day-modal-overlay" id="groupModal">
-  <div class="day-modal" style="max-width:520px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-      <div style="font-size:15px;font-weight:700">👥 Gruppen-Eintrag</div>
-      <button onclick="closeGroupModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-3)">✕</button>
-    </div>
-    <div id="groupEntryPreview" style="background:var(--accent-light);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;font-size:13px"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-      <div style="font-size:12px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.6px">Mitarbeiter wählen</div>
-      <button onclick="selectAllGroupEmps()" style="font-size:11px;font-weight:600;color:var(--accent);background:var(--accent-light);border:1px solid var(--accent);border-radius:6px;padding:3px 10px;cursor:pointer">Alle wählen</button>
-    </div>
-    <div id="groupEmpList" style="max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:5px;margin-bottom:14px"></div>
-    <div id="groupWarnings" style="margin-bottom:10px"></div>
-    <div style="display:flex;gap:8px;justify-content:flex-end">
-      <button class="btn btn-sm btn-outline" onclick="closeGroupModal()">Abbrechen</button>
-      <button class="btn btn-sm btn-primary" onclick="executeGroupEntry()">✓ Alle speichern</button>
-    </div>
-  </div>
-</div>
-
-<!-- COPY ENTRY MODAL -->
-<div class="day-modal-overlay" id="copyModal">
-  <div class="day-modal" style="max-width:480px">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div style="font-size:15px;font-weight:700">📋 Eintrag kopieren</div>
-      <button onclick="closeCopyModal()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--text-3)">✕</button>
-    </div>
-    <!-- Entry preview -->
-    <div id="copyEntryPreview" style="background:var(--accent-light);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px;font-size:13px"></div>
-    <!-- Employee selection -->
-    <div style="font-size:12px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Mitarbeiter auswählen</div>
-    <div id="copyEmpList" style="max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;margin-bottom:16px"></div>
-    <div style="display:flex;gap:8px;justify-content:flex-end">
-      <button class="btn btn-sm btn-outline" onclick="closeCopyModal()">Abbrechen</button>
-      <button class="btn btn-sm btn-primary" onclick="executeCopy()">✓ Kopieren</button>
-    </div>
-  </div>
-</div>
-
 <div class="toast-wrap" id="toastWrap"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 // ===== SUPABASE =====
 const SB_URL='https://aephgpjgubmudgftnbnq.supabase.co';
@@ -773,44 +705,22 @@ const MASTER_CODE='ZT-2024-RESET';
 const WD=['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MN=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 const MS=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
-const AHV_P=5.30,ALV_P=1.10,NBUV_P=1.67,ZPK=19;
-
-// GAV Metallgewerbe Ferienzuschlag nach Alter
-function getFerienPct(geb, year) {
-  const y = year || new Date().getFullYear();
-  const age = y - (geb||1985);
-  if(age >= 60) return 13.04; // 6 Wochen
-  if(age >= 50) return 10.64; // 5 Wochen
-  return 9.70;                // 4 Wochen
-}
+const AHV_P=5.30,ALV_P=1.10,NBUV_P=1.67,ZPK=19,FER_P=9.70;
 const EMOJIS=['💻','🎨','💬','📅','📊','📄','🧪','🛠️','🚀','📞','✍️','🔍','📦','🏗️','🤝','📋','⚡','🔧'];
 const COLORS=[{c:'#3B6FFF',b:'#EEF3FF'},{c:'#A21CAF',b:'#FDF4FF'},{c:'#059669',b:'#ECFDF5'},{c:'#D97706',b:'#FFF7ED'},{c:'#0284C7',b:'#F0F9FF'},{c:'#374151',b:'#F9FAFB'},{c:'#CA8A04',b:'#FEFCE8'},{c:'#E11D48',b:'#FFF1F2'},{c:'#7C3AED',b:'#F5F3FF'}];
 
 // Employee lohn data
 const LOHN_DATA={
-  // age: Jahrgang (z.B. 1975). Ferienzuschlag: <50J=9.7%, 50-59J=10.64%, >=60J=13.04%
-  'Arman Andrei':     {ahv:'756.6146.6944.33',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:137.40,spesen:18,geb:1985},
-  'Andrei Arman':     {ahv:'756.6146.6944.33',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:137.40,spesen:18,geb:1985},
-  'Arman Ion':        {ahv:'756.1613.3994.60',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:18,geb:1985},
-  'Ion Arman':        {ahv:'756.1613.3994.60',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:18,geb:1985},
-  'Axenti Alexandru': {ahv:'756.7965.4494.26',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:18,geb:1985},
-  'Alexandru Axenti': {ahv:'756.7965.4494.26',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:18,geb:1985},
-  'Bulmaga Petru':    {ahv:'756.2220.0952.64',ansatz:22.79,kanton:'TG',tarif:'C0N',bvg:0,spesen:18,geb:1985},
-  'Petru Bulmaga':    {ahv:'756.2220.0952.64',ansatz:22.79,kanton:'TG',tarif:'C0N',bvg:0,spesen:18,geb:1985},
-  'Covali Sergiu':    {ahv:'756.3304.4626.51',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:0,spesen:18,geb:1985},
-  'Sergiu Covali':    {ahv:'756.3304.4626.51',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:0,spesen:18,geb:1985},
-  'Harlamov Ivan':    {ahv:'756.8045.2861.91',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:18,geb:1985},
-  'Ivan Harlamov':    {ahv:'756.8045.2861.91',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:18,geb:1985},
-  'Mitu Andrei':      {ahv:'756.8976.3092.66',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:18,geb:1985},
-  'Andrei Mitu':      {ahv:'756.8976.3092.66',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:18,geb:1985},
-  'Popa Ion':         {ahv:'756.0397.7496.21',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:18,geb:1985},
-  'Ion Popa':         {ahv:'756.0397.7496.21',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:18,geb:1985},
-  'Puiu Tudor':       {ahv:'756.2634.5896.49',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:18,geb:1985},
-  'Tudor Puiu':       {ahv:'756.2634.5896.49',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:18,geb:1985},
-  'Rauta Radu':       {ahv:'756.6759.8769.43',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:18,geb:1985},
-  'Radu Rauta':       {ahv:'756.6759.8769.43',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:18,geb:1985},
-  'Andrei Ungureanu': {ahv:'',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:18,geb:1985},
-  'Gheorghe Parfeni': {ahv:'',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:18,geb:1985},
+  'Arman Andrei':     {ahv:'756.6146.6944.33',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:137.40,spesen:15,ml13:false},
+  'Arman Ion':        {ahv:'756.1613.3994.60',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
+  'Axenti Alexandru': {ahv:'756.7965.4494.26',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
+  'Bulmaga Petru':    {ahv:'756.2220.0952.64',ansatz:22.79,kanton:'TG',tarif:'C0N',bvg:0,spesen:15,ml13:false},
+  'Covali Sergiu':    {ahv:'756.3304.4626.51',ansatz:23.70,kanton:'LU',tarif:'C0N',bvg:0,spesen:15,ml13:false},
+  'Harlamov Ivan':    {ahv:'756.8045.2861.91',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
+  'Mitu Andrei':      {ahv:'756.8976.3092.66',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
+  'Popa Ion':         {ahv:'756.0397.7496.21',ansatz:24.61,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
+  'Puiu Tudor':       {ahv:'756.2634.5896.49',ansatz:22.79,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:true},
+  'Rauta Radu':       {ahv:'756.6759.8769.43',ansatz:23.70,kanton:'LU',tarif:'A0N',bvg:0,spesen:15,ml13:false},
 };
 
 // ===== STATE =====
@@ -890,77 +800,30 @@ async function adminLogin(){
   }else{document.getElementById('pinError').textContent='Falsches Passwort.';document.getElementById('adminPwInput').value='';}
 }
 async function afterLogin(){
-  try {
-    entries=[];
-    document.getElementById('loginScreen').classList.add('hidden');
-    setSyncStatus(false);
-    // Apply user info
-    const n=currentUser.name;
-    document.getElementById('hdrName').textContent=n;
-    document.getElementById('hdrAvatar').textContent=n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-    document.getElementById('eEmpText').value=n;
-    document.getElementById('rapportName').textContent=n;
-    // Show employee selector based on role
-    const empText=document.getElementById('eEmpText');
-    const empSel=document.getElementById('eEmpSel');
-    if(currentUser.rolle==='admin'){
-      if(empText) empText.style.display='none';
-      if(empSel){
-        empSel.style.display='block';
-        // Populate with all employees
-        rebuildEmpSelector();
-      }
-    } else {
-      if(empText){empText.style.display='block';empText.value=currentUser.name;}
-      if(empSel) empSel.style.display='none';
-    }
-    // Set date limit based on role
-    const di=document.getElementById('eDate');
-    if(di){
-      const tod=new Date();
-      di.max=fmtDate(tod);
-      if(currentUser.rolle==='admin'){
-        di.min='2020-01-01'; // Admin: no practical limit
-      } else {
-        const minD=new Date(tod);minD.setDate(tod.getDate()-8);
-        di.min=fmtDate(minD); // Employee: 8 days
-      }
-    }
-    // Show admin nav if admin
-    if(currentUser.rolle==='admin'||adminUnlocked){
-      document.querySelectorAll('.admin-only').forEach(el=>{
-        if(el.classList.contains('bn-btn')) el.style.display='flex';
-        else el.style.display='inline-flex';
-      });
-      adminUnlocked=true;
-    } else {
-      // Check group entry permission for employees
-      const grpPerms=JSON.parse(localStorage.getItem('sp_grp_perms')||'{}');
-      if(grpPerms[currentUser.id]){
-        const gb=document.getElementById('groupEntryBtn');
-        if(gb)gb.style.display='inline-flex';
-      }
-    }
-    // Load data - each independently so one failure doesn't block others
-    try{await loadEntries();}catch(e){console.error('loadEntries:',e);}
-    try{await loadProjects();}catch(e){console.error('loadProjects:',e);}
-    try{await loadTypes();}catch(e){console.error('loadTypes:',e);}
-    try{await loadMitarbeiter();}catch(e){console.error('loadMitarbeiter:',e);}
-    setSyncStatus(true);
-    try{renderMyEntries();}catch(e){console.error(e);}
-    try{rebuildProjectDropdown();}catch(e){console.error(e);}
-    try{rebuildEmpDropdown();}catch(e){console.error(e);}
-    try{renderTypePills();}catch(e){console.error(e);}
-    try{updateStats();}catch(e){console.error(e);}
-    try{buildLohnMonthOptions();}catch(e){console.error(e);}
-  } catch(e) {
-    console.error('afterLogin crash:', e);
-    // If login crashes, go back to login screen
-    document.getElementById('loginScreen').classList.remove('hidden');
-    document.getElementById('pinError').textContent = 'Verbindungsfehler – bitte neu laden.';
-    localStorage.removeItem('sp_session');
-    currentUser = null;
+  entries=[];
+  document.getElementById('loginScreen').classList.add('hidden');
+  setSyncStatus(false);
+  // Apply user info
+  const n=currentUser.name;
+  document.getElementById('hdrName').textContent=n;
+  document.getElementById('hdrAvatar').textContent=n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('eEmp').value=n;
+  document.getElementById('rapportName').textContent=n;
+  // Show admin tabs if admin
+  if(currentUser.rolle==='admin'||adminUnlocked){
+    document.querySelectorAll('.admin-only').forEach(el=>el.style.display='');
+    adminUnlocked=true;
   }
+  // Load data
+  try{await loadEntries();}catch(e){console.error(e);}
+  try{await loadProjects();}catch(e){console.error(e);}
+  try{await loadTypes();}catch(e){console.error(e);}
+  setSyncStatus(true);
+  renderMyEntries();
+  rebuildProjectDropdown();
+  renderTypePills();
+  updateStats();
+  buildLohnMonthOptions();
 }
 function logout(){
   currentUser=null;adminUnlocked=false;entries=[];
@@ -970,9 +833,6 @@ function logout(){
   document.getElementById('adminPwInput').value='';
   document.getElementById('loginScreen').classList.remove('hidden');
   document.querySelectorAll('.admin-only').forEach(el=>el.style.display='none');
-  // Reset desktop nav active state
-  document.querySelectorAll('.hdr-nav-btn').forEach(b=>b.classList.remove('active'));
-  const dnZ=document.getElementById('dnZeit');if(dnZ)dnZ.classList.add('active');
   setLoginMode('emp');
 }
 
@@ -981,12 +841,8 @@ function switchView(v){
   const views=['zeit','rapport','regie','lohn','admin'];
   views.forEach(id=>{
     document.getElementById('view'+id.charAt(0).toUpperCase()+id.slice(1)).classList.toggle('active',v===id);
-    // Bottom nav
     const bn=document.getElementById('bn'+id.charAt(0).toUpperCase()+id.slice(1));
     if(bn)bn.classList.toggle('active',v===id);
-    // Desktop nav
-    const dn=document.getElementById('dn'+id.charAt(0).toUpperCase()+id.slice(1));
-    if(dn)dn.classList.toggle('active',v===id);
   });
   if(v==='rapport'){rYear=new Date().getFullYear();rMonth=new Date().getMonth();renderRapport();}
   if(v==='admin'){switchAdminTab(0);loadMitarbeiter();renderAdminProjects();renderAdminTypes();renderEmojiPicker();renderColorPicker();}
@@ -1016,7 +872,7 @@ document.getElementById('pwOverlay').addEventListener('click',e=>{if(e.target===
 // ===== DATA LOADING =====
 async function loadEntries(){
   setSyncStatus(false);
-  let url='zeiteintraege?select=*&order=datum.desc,erstellt_am.desc&limit=500';
+  let url='zeiteintraege?select=*&order=datum.desc,erstellt_am.desc';
   if(currentUser.rolle!=='admin')url+=`&mitarbeiter_id=eq.${currentUser.id}`;
   entries=await sbFetch(url);
   setSyncStatus(true);
@@ -1032,8 +888,6 @@ async function loadTypes(){
 async function loadMitarbeiter(){
   mitarbeiter=await sbFetch('mitarbeiter?select=*&order=name.asc');
   renderPinTable();rebuildEmpFilter();buildRegieEmpList();renderLohnEmpTable();
-  rebuildEmpDropdown();
-  if(currentUser&&currentUser.rolle==='admin') rebuildEmpSelector();
 }
 
 // ===== PROJECTS =====
@@ -1077,19 +931,9 @@ async function deleteType(n){
   await loadTypes();renderTypePills();renderAdminTypes();
 }
 function renderTypePills(){
-  const tg=document.getElementById('typeGroup');
-  // Use onclick directly in HTML - most reliable on Android
-  tg.innerHTML=types.map(t=>`<div class="pill${selectedType===t.name?' active':''}" data-type="${t.name}" onclick="selType(this)">${t.icon} ${t.name}</div>`).join('');
+  document.getElementById('typeGroup').innerHTML=types.map(t=>`<div class="pill${selectedType===t.name?' active':''}" data-type="${t.name}" onclick="selType(this)">${t.icon} ${t.name}</div>`).join('');
 }
-function selType(el){
-  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-  selectedType=el.dataset.type;
-  // Visual feedback - update net badge color
-  document.getElementById('netBadge').style.background='var(--success-light)';
-  // Show selected type name briefly in netHint
-  document.getElementById('netHint').textContent='Gattung: '+selectedType;
-}
+function selType(el){document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');selectedType=el.dataset.type;}
 function renderAdminTypes(){
   document.getElementById('typeList').innerHTML=types.map(t=>`<div class="admin-item"><span style="background:${t.bg};color:${t.color};padding:2px 8px;border-radius:20px;font-size:12px;font-weight:600">${t.icon} ${t.name}</span><button class="icon-btn d" onclick="deleteType('${t.name.replace(/'/g,"\\'")}')">✕</button></div>`).join('');
 }
@@ -1145,74 +989,25 @@ async function saveEntry(andNew){
   if(!date)return toast('Bitte Datum wählen.','⚠️','error');
   if(!fr||!to)return toast('Bitte Zeiten eingeben.','⚠️','error');
   if(!proj)return toast('Bitte Projekt wählen.','⚠️','error');
-  if(!selectedType){
-    const pg=document.getElementById('typeGroup');
-    if(pg){pg.style.outline='3px solid var(--danger)';setTimeout(()=>{pg.style.outline='';},2000);}
-    return toast('Bitte Arbeitsgattung wählen!','⚠️','error');
-  }
-
-  // Duplicate check - which employee is being saved for?
-  const sel2=document.getElementById('eEmpSelect');
-  let chkEmpId=currentUser.id;
-  if(editingId){
-    chkEmpId=entries.find(e=>e.id===editingId)?.mitarbeiter_id||currentUser.id;
-  } else if(currentUser.rolle==='admin'&&sel2&&sel2.value){
-    chkEmpId=sel2.value;
-  }
-  if(!editingId&&date){
-    const existing=entries.filter(e=>e.mitarbeiter_id===chkEmpId&&e.datum===date);
-    if(existing.length>0){
-      const tot=existing.reduce((s,e)=>s+e.netto_min,0);
-      const dupName=(sel2&&sel2.value)?( mitarbeiter.find(m=>m.id===sel2.value)?.name||currentUser.name):currentUser.name;
-      const ok=confirm(`⚠️ ${dupName} hat am ${date} bereits ${existing.length} Eintrag (${fmtMins(tot)}).
-
-Trotzdem speichern?`);
-      if(!ok)return;
-    }
-  }
-  // Robust time parsing for Android (handles "7:00", "07:00", "7:00 AM" etc)
-  function parseTime(t){
-    if(!t)return null;
-    const clean=t.trim().replace(/\s*(AM|PM)$/i,'');
-    const parts=clean.split(':').map(Number);
-    if(parts.length<2||isNaN(parts[0])||isNaN(parts[1]))return null;
-    return parts[0]*60+parts[1];
-  }
-  const fromMins=parseTime(fr),toMins=parseTime(to);
-  if(fromMins===null||toMins===null)return toast('Ungültige Zeitangabe. Bitte nochmals eingeben.','⚠️','error');
-  const total=toMins-fromMins;
+  if(!selectedType)return toast('Bitte Arbeitsgattung wählen.','⚠️','error');
+  const[fh,fm]=fr.split(':').map(Number),[th,tm]=to.split(':').map(Number);
+  const total=(th*60+tm)-(fh*60+fm);
   if(total<=0)return toast('Endzeit muss nach Startzeit liegen.','⚠️','error');
   const net=total-pause-fz;
   if(net<=0)return toast('Pause/Fahrzeit länger als Arbeitszeit!','⚠️','error');
-  // Normalize time format to HH:MM for storage
-  const normTime=(mins)=>String(Math.floor(mins/60)).padStart(2,'0')+':'+String(mins%60).padStart(2,'0');
-  const frNorm=normTime(fromMins),toNorm=normTime(toMins);
-
-  // Determine which employee to save for
-  const sel3=document.getElementById('eEmpSel');
-  let saveEmpId=currentUser.id, saveEmpName=currentUser.name;
-  if(currentUser.rolle==='admin'&&sel3&&sel3.value){
-    const selM=mitarbeiter.find(m=>m.id===sel3.value);
-    if(selM){saveEmpId=selM.id;saveEmpName=selM.name;}
-  }
-
   try{
     setSyncStatus(false);
     if(editingId){
-      await sbFetch(`zeiteintraege?id=eq.${editingId}`,{method:'PATCH',body:JSON.stringify({datum:date,von:frNorm,bis:toNorm,pause_min:pause,fahrzeit_min:fz,netto_min:net,projekt:proj,typ:selectedType,beschreibung:desc}),prefer:'return=minimal'});
+      await sbFetch(`zeiteintraege?id=eq.${editingId}`,{method:'PATCH',body:JSON.stringify({datum:date,von:fr,bis:to,pause_min:pause,fahrzeit_min:fz,netto_min:net,projekt:proj,typ:selectedType,beschreibung:desc}),prefer:'return=minimal'});
       editingId=null;document.getElementById('saveBtn').textContent='✓ Eintrag speichern';
       toast('Eintrag aktualisiert!','✓','success');
     }else{
-      await sbFetch('zeiteintraege',{method:'POST',body:JSON.stringify({mitarbeiter_id:saveEmpId,mitarbeiter_name:saveEmpName,datum:date,von:frNorm,bis:toNorm,pause_min:pause,fahrzeit_min:fz,netto_min:net,projekt:proj,typ:selectedType,beschreibung:desc}),prefer:'return=minimal'});
+      await sbFetch('zeiteintraege',{method:'POST',body:JSON.stringify({mitarbeiter_id:currentUser.id,mitarbeiter_name:currentUser.name,datum:date,von:fr,bis:to,pause_min:pause,fahrzeit_min:fz,netto_min:net,projekt:proj,typ:selectedType,beschreibung:desc}),prefer:'return=minimal'});
       toast(`Gespeichert: ${fmtMins(net)} Netto`,'✓','success');
     }
     await loadEntries();setSyncStatus(true);updateStats();renderMyEntries();
     if(andNew){const d=document.getElementById('eDate').value;resetForm();document.getElementById('eDate').value=d;}else resetForm();
-  }catch(e){
-    setSyncStatus(false);
-    console.error('saveEntry error:',e);
-    toast('Fehler beim Speichern: '+(e.message||'Verbindungsfehler'),'⚠️','error');
-  }
+  }catch(e){setSyncStatus(false);toast('Fehler: '+e.message,'⚠️','error');}
 }
 function resetForm(){
   document.getElementById('eFrom').value='';document.getElementById('eTo').value='';
@@ -1241,18 +1036,7 @@ function editEntry(id){
   document.getElementById('ePrj').value=e.projekt;document.getElementById('eDesc').value=e.beschreibung||'';
   selectedType=e.typ;document.querySelectorAll('.pill').forEach(p=>p.classList.toggle('active',p.dataset.type===e.typ));
   calcDur();editingId=id;document.getElementById('saveBtn').textContent='✓ Eintrag aktualisieren';
-  // Set employee in form
-  if(currentUser.rolle==='admin'){
-    const sel=document.getElementById('eEmpSel');
-    if(sel){
-      // Find matching option
-      for(let i=0;i<sel.options.length;i++){
-        if(sel.options[i].value===e.mitarbeiter_name){sel.selectedIndex=i;break;}
-      }
-    }
-  } else {
-    document.getElementById('eEmpText').value=e.mitarbeiter_name||currentUser.name;
-  }
+  document.getElementById('eEmp').value=e.mitarbeiter_name||currentUser.name;
   switchView('zeit');window.scrollTo(0,200);
   toast('Eintrag wird bearbeitet.','✏️','success');
 }
@@ -1409,7 +1193,6 @@ function showDayModal(date){
         <span style="background:${t.bg};color:${t.color};padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600">${t.icon} ${e.typ}</span>
         <div style="display:flex;gap:5px;margin-left:auto">
           ${canEdit?`<button onclick="closeDayModal();editEntry('${e.id}')" style="padding:5px 12px;border-radius:7px;border:1.5px solid var(--accent);color:var(--accent);background:var(--accent-light);font-family:Inter,sans-serif;font-size:12px;font-weight:600;cursor:pointer">✏️ Bearbeiten</button>
-          ${isAdmin?`<button onclick="closeDayModal();openCopyModal('${e.id}')" style="padding:5px 12px;border-radius:7px;border:1.5px solid #059669;color:#059669;background:#ECFDF5;font-family:Inter,sans-serif;font-size:12px;font-weight:600;cursor:pointer">📋 Kopieren</button>`:''}
           <button onclick="if(confirm('Löschen?')){closeDayModal();deleteEntry('${e.id}')}" style="padding:5px 12px;border-radius:7px;border:1.5px solid var(--danger);color:var(--danger);background:#FEF2F2;font-family:Inter,sans-serif;font-size:12px;font-weight:600;cursor:pointer">✕</button>`
           :`<span style="font-size:11px;color:var(--text-3)">🔒 Nicht bearbeitbar</span>`}
         </div>
@@ -1428,28 +1211,7 @@ function switchAdminTab(n){
   for(let i=0;i<4;i++){document.getElementById('aTab'+i).style.display=i===n?'block':'none';document.getElementById('at'+i).classList.toggle('active',i===n);}
   if(n===0)renderOverview();
   if(n===1)loadMitarbeiter();
-  if(n===2){renderAdminProjects();renderAdminTypes();renderEmojiPicker();renderColorPicker();}
-  if(n===3){
-    buildMonthFilter();
-    rebuildEmpFilter();
-    rebuildTypeFilter();
-    rebuildProjFilter();
-    renderAdminEntries();
-  }
-}
-
-function rebuildTypeFilter(){
-  const ft=document.getElementById('fTyp');if(!ft)return;
-  const cur=ft.value;
-  ft.innerHTML='<option value="">Alle Gattungen</option>';
-  types.forEach(t=>{const o=new Option(t.name,t.name);if(t.name===cur)o.selected=true;ft.appendChild(o);});
-}
-
-function rebuildProjFilter(){
-  const fp=document.getElementById('fPrj');if(!fp)return;
-  const cur=fp.value;
-  fp.innerHTML='<option value="">Alle Projekte</option>';
-  projects.forEach(p=>{const o=new Option(p,p);if(p===cur)o.selected=true;fp.appendChild(o);});
+  if(n===3){rebuildEmpFilter();renderAdminEntries();}
 }
 function renderOverview(){
   document.getElementById('ovMonthTitle').textContent=`${MN[ovMonth]} ${ovYear}`;
@@ -1484,107 +1246,28 @@ function renderOverview(){
 }
 
 // ===== ADMIN ENTRIES =====
-function rebuildEmpSelector(){
-  const sel=document.getElementById('eEmpSel');if(!sel)return;
-  const cur=sel.value;
-  sel.innerHTML='<option value="">— Mitarbeiter wählen —</option>';
-  const workers=mitarbeiter.filter(m=>m.rolle==='mitarbeiter');
-  workers.forEach(m=>{const o=new Option(m.name,m.name);if(m.name===cur)o.selected=true;sel.appendChild(o);});
-}
-
-function onEmpSelChange(){
-  // nothing extra needed - value is read in saveEntry
-}
-
 function rebuildEmpFilter(){
   const fe=document.getElementById('fEmp');if(!fe)return;
   const emps=[...new Set(entries.map(e=>e.mitarbeiter_name).filter(Boolean))].sort();
   const cur=fe.value;fe.innerHTML='<option value="">Alle Mitarbeiter</option>';
   emps.forEach(n=>{const o=new Option(n,n);if(n===cur)o.selected=true;fe.appendChild(o);});
 }
-function buildMonthFilter(){
-  const sel=document.getElementById('fMonat');if(!sel)return;
-  const cur=sel.value;
-  const months=[];
-  for(let i=0;i<12;i++){const d=new Date();d.setMonth(d.getMonth()-i);const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0');months.push(`${y}-${m}`);}
-  sel.innerHTML=`<option value="">Alle Monate</option>`+months.map(m=>{
-    const[y,mo]=m.split('-');return`<option value="${m}" ${m===cur?'selected':''}>${MN[parseInt(mo)-1]} ${y}</option>`;
-  }).join('');
-  // Default to current month
-  if(!sel.value)sel.value=months[0];
-}
-
 function renderAdminEntries(){
-  const fm=document.getElementById('fMonat')?.value||'';
-  const fe=document.getElementById('fEmp')?.value||'';
-  const fp=document.getElementById('fPrj')?.value||'';
-  const ft=document.getElementById('fTyp')?.value||'';
-
-  let fl=[...entries];
-  if(fm) fl=fl.filter(e=>e.datum&&e.datum.startsWith(fm));
-  if(fe) fl=fl.filter(e=>e.mitarbeiter_name===fe);
-  if(fp) fl=fl.filter(e=>e.projekt===fp);
-  if(ft) fl=fl.filter(e=>e.typ===ft);
-
-  // Sort: date desc, then employee
-  fl.sort((a,b)=>b.datum.localeCompare(a.datum)||( a.mitarbeiter_name||'').localeCompare(b.mitarbeiter_name||''));
-
-  // Stats
-  const totalMins=fl.reduce((s,e)=>s+e.netto_min,0);
-  const uniqueEmps=new Set(fl.map(e=>e.mitarbeiter_name)).size;
-  const uniqueProjs=new Set(fl.map(e=>e.projekt)).size;
-  const statsEl=document.getElementById('adminEntriesStats');
-  if(statsEl){
-    statsEl.innerHTML=`
-      <div class="stat-card"><div class="stat-label">Einträge</div><div class="stat-val">${fl.length}</div></div>
-      <div class="stat-card"><div class="stat-label">Total Stunden</div><div class="stat-val accent">${fmtH(totalMins)}</div></div>
-      <div class="stat-card"><div class="stat-label">Mitarbeitende</div><div class="stat-val">${uniqueEmps}</div></div>
-      <div class="stat-card"><div class="stat-label">Projekte</div><div class="stat-val">${uniqueProjs}</div></div>`;
-  }
-
+  const fe=document.getElementById('fEmp')?.value||'',fp=document.getElementById('fPrj')?.value||'';
+  const fl=entries.filter(e=>(!fe||e.mitarbeiter_name===fe)&&(!fp||e.projekt===fp));
   const el=document.getElementById('adminEntriesList');
-  if(!fl.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--text-3)"><div style="font-size:28px;margin-bottom:8px">📭</div><div style="font-weight:600">Keine Einträge</div></div>';return;}
-
-  // Group by date for better readability
-  let lastDate='';
+  if(!fl.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--text-3)">Keine Einträge.</div>';return;}
   el.innerHTML=fl.map(e=>{
     const t=types.find(t=>t.name===e.typ)||{color:'#6b7280',bg:'#f3f4f6',icon:'📌'};
-    const d=new Date(e.datum+'T00:00:00');
-    let dateHeader='';
-    if(e.datum!==lastDate){
-      lastDate=e.datum;
-      dateHeader=`<div style="font-size:11px;font-weight:700;color:var(--text-2);background:var(--surface-2);padding:5px 8px;border-radius:6px;margin:6px 0 2px">${WD[d.getDay()]}, ${d.getDate()}. ${MS[d.getMonth()]} ${d.getFullYear()}</div>`;
-    }
-    return`${dateHeader}<div style="display:grid;grid-template-columns:1fr auto auto auto auto;align-items:center;gap:8px;padding:8px 4px;border-bottom:1px solid var(--border)">
-      <div>
-        <div style="font-size:13px;font-weight:600">${e.projekt} <span style="font-size:11px;color:var(--text-3);font-weight:400">· ${e.mitarbeiter_name||'—'}</span></div>
-        <div style="font-size:11px;color:var(--text-3);margin-top:1px">${e.von}–${e.bis}${e.pause_min>0?' · Pause '+e.pause_min+'min':''}${e.fahrzeit_min>0?' · Fz '+e.fahrzeit_min+'min':''}</div>
-      </div>
-      <span style="background:${t.bg};color:${t.color};padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;white-space:nowrap">${t.icon} ${e.typ}</span>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--accent);white-space:nowrap">${fmtMins(e.netto_min)}</div>
-      <button class="icon-btn" onclick="editEntry('${e.id}')" title="Bearbeiten">✏️</button>
-      <button class="icon-btn" onclick="openCopyModal('${e.id}')" title="Kopieren für andere Mitarbeiter" style="font-size:13px">📋</button>
-      <button class="icon-btn d" onclick="deleteEntry('${e.id}')" title="Löschen">✕</button>
+    return`<div style="display:grid;grid-template-columns:75px 1fr auto auto auto auto;align-items:center;gap:8px;padding:10px 2px;border-bottom:1px solid var(--border)">
+      <div><div style="font-size:12px;font-weight:600">${fmtDateShort(e.datum)}</div><div style="font-size:10px;color:var(--text-3)">${getWD(e.datum)}</div></div>
+      <div><div style="font-size:12px;font-weight:500">${e.projekt}</div><div style="font-size:10px;color:var(--text-3)">👤 ${e.mitarbeiter_name||'—'}</div></div>
+      <div style="font-size:10px;color:var(--text-3)">${e.von}–${e.bis}</div>
+      <div><span style="background:${t.bg};color:${t.color};padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600">${t.icon} ${e.typ}</span></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--accent)">${fmtMins(e.netto_min)}</div>
+      <div style="display:flex;gap:4px"><button class="icon-btn" onclick="editEntry('${e.id}')" title="Bearbeiten">✏️</button><button class="icon-btn d" onclick="deleteEntry('${e.id}')" title="Löschen">✕</button></div>
     </div>`;
   }).join('');
-}
-
-function exportFilteredEntries(){
-  const fm=document.getElementById('fMonat')?.value||'';
-  const fe=document.getElementById('fEmp')?.value||'';
-  const fp=document.getElementById('fPrj')?.value||'';
-  let fl=[...entries];
-  if(fm)fl=fl.filter(e=>e.datum&&e.datum.startsWith(fm));
-  if(fe)fl=fl.filter(e=>e.mitarbeiter_name===fe);
-  if(fp)fl=fl.filter(e=>e.projekt===fp);
-  fl.sort((a,b)=>b.datum.localeCompare(a.datum));
-  const sep=';',bom='﻿';
-  const rows=[bom+['Datum','Wochentag','Mitarbeiter','Projekt','Gattung','Von','Bis','Pause','Fahrzeit','Netto'].join(sep)];
-  fl.forEach(e=>{const d=new Date(e.datum+'T00:00:00');rows.push([e.datum,WD[d.getDay()],e.mitarbeiter_name||'',e.projekt,e.typ,e.von,e.bis,e.pause_min||0,e.fahrzeit_min||0,fmtMins(e.netto_min)].join(sep));});
-  const blob=new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'});
-  const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download=`Eintraege_${fm||'alle'}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);
-  toast(`${fl.length} Einträge exportiert.`,'📥','success');
 }
 
 // ===== MITARBEITER =====
@@ -1611,19 +1294,11 @@ function renderPinTable(){
 // ===== EXCEL EXPORT (ZEITERFASSUNG) =====
 function exportZeitExcel(){
   if(!entries.length)return toast('Keine Einträge.','⚠️','error');
-  // Filter to current overview month
-  const monat=`${ovYear}-${String(ovMonth+1).padStart(2,'0')}`;
-  const monthEntries=entries.filter(e=>e.datum&&e.datum.startsWith(monat));
-  if(!monthEntries.length)return toast(`Keine Einträge für ${MN[ovMonth]} ${ovYear}.`,'⚠️','error');
   const sep=';',bom='\uFEFF';
-  const sorted=[...monthEntries].sort((a,b)=>{
-    const na=(a.mitarbeiter_name||'').toLowerCase(),nb=(b.mitarbeiter_name||'').toLowerCase();
-    if(na<nb)return-1;if(na>nb)return 1;return a.datum.localeCompare(b.datum);
-  });
-  const grouped={};
-  sorted.forEach(e=>{const n=e.mitarbeiter_name||'Unbekannt';if(!grouped[n])grouped[n]=[];grouped[n].push(e);});
+  const sorted=[...entries].sort((a,b)=>{const na=(a.mitarbeiter_name||'').toLowerCase(),nb=(b.mitarbeiter_name||'').toLowerCase();if(na<nb)return-1;if(na>nb)return 1;return a.datum.localeCompare(b.datum);});
+  const grouped={};sorted.forEach(e=>{const n=e.mitarbeiter_name||'Unbekannt';if(!grouped[n])grouped[n]=[];grouped[n].push(e);});
   const header=['Mitarbeiter','Datum','Wochentag','Von','Bis','Pause (min)','Fahrzeit (min)','Netto','Projekt','Arbeitsgattung','Beschreibung'];
-  const rows=[bom+`Zeiterfassung ${MN[ovMonth]} ${ovYear}`,'' ,header.join(sep)];
+  const rows=[bom+header.join(sep)];
   Object.entries(grouped).forEach(([emp,ee])=>{
     ee.forEach(e=>{const d=new Date(e.datum+'T00:00:00');rows.push([emp,e.datum,WD[d.getDay()],e.von,e.bis,e.pause_min||0,e.fahrzeit_min||0,fmtMins(e.netto_min),e.projekt,e.typ,(e.beschreibung||'').replace(/;/g,',')].join(sep));});
     rows.push([emp+' — TOTAL','','','','','','',fmtMins(ee.reduce((s,e)=>s+e.netto_min,0)),'','',''].join(sep));
@@ -1631,9 +1306,9 @@ function exportZeitExcel(){
   });
   const blob=new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download=`Zeiterfassung_${monat}.csv`;
+  a.href=url;a.download=`Zeiterfassung_${fmtDate(new Date())}.csv`;
   document.body.appendChild(a);a.click();document.body.removeChild(a);
-  toast(`${monthEntries.length} Einträge für ${MN[ovMonth]} ${ovYear} exportiert.`,'📥','success');
+  toast(`${entries.length} Einträge exportiert.`,'📥','success');
 }
 
 // ===== REGIE =====
@@ -1804,7 +1479,6 @@ function renderRegieList(){
 function deleteRegie(id){if(!confirm('Rapport löschen?'))return;regieRapporte=regieRapporte.filter(r=>r.id!==id);localStorage.setItem('sp_rapporte',JSON.stringify(regieRapporte));renderRegieList();}
 
 function generateRegiePDF(r){
-  if(!window.jspdf){toast('PDF-Bibliothek lädt noch, bitte kurz warten…','⚠️','error');return;}
   try{
     const{jsPDF}=window.jspdf;const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
     const pw=210,ml=15,mr=15;let y=15;
@@ -1847,49 +1521,23 @@ function generateRegiePDF(r){
 
 // ===== LOHN =====
 function getQST(brutto,kanton,tarif){
-  // QST tables based on verified payslips (2026)
-  // LU A0N: verified from actual Lohnblätter
-  const luA0N=[
-    [1500,0.95],[2000,2.5],[2500,4.0],[3000,5.0],[3500,5.5],[3800,6.0],
-    [4200,6.85],[4350,7.12],[4430,7.20],[4850,7.61],[5100,8.18],[5350,8.48],
-    [5500,8.74],[6000,9.50],[7000,10.0],[9999999,11.0]
-  ];
-  // LU C0N: verified from payslips (Arman Andrei, Covali)
-  const luC0N=[
-    [1500,0.5],[2000,1.5],[3000,3.5],[3500,5.04],[4300,6.93],[5000,7.5],[9999999,8.5]
-  ];
-  // TG C0N: verified from Bulmaga payslip
-  const tgC0N=[
-    [1500,0.5],[2000,1.5],[3000,3.5],[4000,5.46],[5000,6.5],[9999999,7.5]
-  ];
-  // TG A0N: estimated
-  const tgA0N=[
-    [1500,0.5],[2000,2.0],[3000,4.0],[4000,6.0],[5000,7.5],[9999999,9.0]
-  ];
-  // NW A0N: estimated
-  const nwA0N=[
-    [1500,0.5],[2000,1.5],[3000,3.5],[4000,6.0],[5000,7.5],[9999999,9.0]
-  ];
+  const luA0N=[[1400,0.95],[2000,3.5],[2500,4.5],[3000,5.5],[3500,6.0],[3800,6.5],[4000,6.85],[4200,7.12],[4400,7.2],[4600,7.61],[4800,7.8],[5000,8.18],[5200,8.48],[5400,8.74],[5600,9.0],[6000,9.5],[9999999,11.0]];
+  const luC0N=[[2000,2.0],[3000,4.0],[3400,5.04],[3800,5.5],[4200,6.5],[4500,6.93],[5000,7.5],[9999999,8.5]];
+  const tgC0N=[[2000,2.0],[3000,4.0],[3800,5.46],[4500,6.0],[9999999,7.0]];
+  const tgA0N=[[2000,1.5],[3000,4.0],[4000,6.0],[5000,7.5],[9999999,9.0]];
+  const nwA0N=[[2000,1.0],[3000,3.5],[4000,6.0],[5000,7.5],[9999999,9.0]];
   let t=luA0N;
   if(kanton==='LU'&&tarif==='C0N')t=luC0N;else if(kanton==='TG'&&tarif==='C0N')t=tgC0N;else if(kanton==='TG'&&tarif==='A0N')t=tgA0N;else if(kanton==='NW'&&tarif==='A0N')t=nwA0N;
   for(const[l,r]of t)if(brutto<=l)return r;return t[t.length-1][1];
 }
-function calcLohn(empName,stunden,spesenTage,year){
+function calcLohn(empName,stunden,spesenTage){
   const d=LOHN_DATA[empName];if(!d)return null;
-  const ferPct=getFerienPct(d.geb,year);
-  // Bruttolohn = Stunden × Ansatz (Ansatz enthält bereits alles OHNE Ferien)
-  const br=stunden*d.ansatz;
-  const fz=Math.round(br*(ferPct/100)*20)/20; // Ferienzuschlag separat
-  const brutto=br+fz;
-  const ahv=Math.round(brutto*AHV_P*100)/10000;
-  const alv=Math.round(brutto*ALV_P*100)/10000;
-  const nbuv=Math.round(brutto*NBUV_P*100)/10000;
-  const bvg=d.bvg||0,qstPct=getQST(brutto,d.kanton,d.tarif),qst=Math.round(brutto*qstPct*100)/10000;
-  const totAbz=Math.round((ahv+alv+nbuv+ZPK+bvg+qst)*20)/20;
-  const netto=Math.round((brutto-totAbz)*20)/20;
-  const spesen=spesenTage*(d.spesen||15),auszahlung=Math.round((netto+spesen)*20)/20;
-  const age=year?(year-(d.geb||1985)):(new Date().getFullYear()-(d.geb||1985));
-  return{stunden,ansatz:d.ansatz,ferPct,br:Math.round(br*20)/20,fz,brutto:Math.round(brutto*20)/20,ahv:Math.round(ahv*20)/20,alv:Math.round(alv*20)/20,nbuv:Math.round(nbuv*20)/20,zpk:ZPK,bvg,qstPct,qst:Math.round(qst*20)/20,totAbz,netto,spesen,spesenTage,auszahlung,kanton:d.kanton,tarif:d.tarif,ahvNr:d.ahv,ml13:d.ml13};
+  const br=stunden*d.ansatz,fz=stunden*d.ansatz*(FER_P/100),brutto=br+fz;
+  const ahv=Math.round(brutto*AHV_P)/100,alv=Math.round(brutto*ALV_P)/100,nbuv=Math.round(brutto*NBUV_P)/100;
+  const bvg=d.bvg||0,qstPct=getQST(brutto,d.kanton,d.tarif),qst=Math.round(brutto*qstPct)/100;
+  const totAbz=ahv+alv+nbuv+ZPK+bvg+qst,netto=brutto-totAbz;
+  const spesen=spesenTage*(d.spesen||15),auszahlung=netto+spesen;
+  return{stunden,ansatz:d.ansatz,br,fz,brutto,ahv,alv,nbuv,zpk:ZPK,bvg,qstPct,qst,totAbz,netto,spesen,spesenTage,auszahlung,kanton:d.kanton,tarif:d.tarif,ahvNr:d.ahv,ml13:d.ml13};
 }
 function buildLohnMonthOptions(){
   const sel=document.getElementById('lohnMonat');if(!sel)return;
@@ -1904,32 +1552,15 @@ async function renderLohn(){
   let allEntries=[];
   try{allEntries=await sbFetch(`zeiteintraege?datum=gte.${monat}-01&datum=lte.${monat}-31&select=*`);}catch(e){}
   const groups={};
-  allEntries.forEach(e=>{
-    const n=e.mitarbeiter_name||'Unbekannt';
-    if(!groups[n])groups[n]={mins:0,dayMins:{}};
-    groups[n].mins+=e.netto_min;
-    // Accumulate minutes per day for spesen calculation
-    if(!groups[n].dayMins[e.datum])groups[n].dayMins[e.datum]=0;
-    groups[n].dayMins[e.datum]+=e.netto_min;
-  });
+  allEntries.forEach(e=>{const n=e.mitarbeiter_name||'Unbekannt';if(!groups[n])groups[n]={mins:0,days:new Set()};groups[n].mins+=e.netto_min;groups[n].days.add(e.datum);});
   const el=document.getElementById('lohnListe');
   if(!Object.keys(groups).length){el.innerHTML=`<div style="text-align:center;padding:40px;color:var(--text-3)"><div style="font-size:32px;margin-bottom:10px">📭</div><div style="font-weight:600">Keine Einträge für ${mn}</div></div>`;return;}
   let totalAus=0;
   const rows=Object.entries(groups).sort((a,b)=>a[0].localeCompare(b[0])).map(([name,g])=>{
-    const std=Math.round(g.mins/60*10)/10;
-    // Spesen: only Mon-Fri AND >= 7.5h (450 min) net work that day
-    const spesenTage=Object.entries(g.dayMins).filter(([date,mins])=>{
-      const wd=new Date(date+'T00:00:00').getDay();
-      return wd>=1&&wd<=5&&mins>=450; // Mon-Fri and >=7.5h
-    }).length;
-    const l=calcLohn(name,std,spesenTage,y);
+    const std=Math.round(g.mins/60*10)/10,tage=g.days.size,l=calcLohn(name,std,tage);
     if(l)totalAus+=l.auszahlung;
-    const totalTage=Object.keys(g.dayMins).length;
     return`<div class="lohn-list-row" onclick="openLohnDetail('${name}','${monat}')">
-      <div>
-        <div style="font-size:13px;font-weight:600">${name}</div>
-        <div style="font-size:11px;color:var(--text-3)">${std.toFixed(1)} h · ${totalTage} Arbeitstage · ${spesenTage} Spesen-Tage</div>
-      </div>
+      <div><div style="font-size:13px;font-weight:600">${name}</div><div style="font-size:11px;color:var(--text-3)">${std.toFixed(1)} h · ${tage} Tage</div></div>
       <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);font-weight:700">${l?'CHF '+fmtChf(l.brutto):'—'}</div>
       <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--danger)">${l?'−'+fmtChf(l.totAbz):'—'}</div>
       <div style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:800;color:var(--success)">${l?'CHF '+fmtChf(l.auszahlung):'—'}</div>
@@ -1937,20 +1568,10 @@ async function renderLohn(){
       <button class="btn btn-sm btn-pdf" onclick="event.stopPropagation();openLohnDetail('${name}','${monat}')">📄 PDF</button>
     </div>`;
   });
-  el.innerHTML=`
-  <div style="display:grid;grid-template-columns:1fr auto auto auto auto auto;gap:10px;padding:6px 4px 10px;border-bottom:2px solid var(--border);margin-bottom:6px">
-    <span style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase">Mitarbeiter</span>
-    <span style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase">Brutto</span>
-    <span style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase">Abzüge</span>
-    <span style="font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase">Auszahlung</span>
-    <span></span><span></span>
-  </div>
+  el.innerHTML=`<div style="border-bottom:2px solid var(--border);padding-bottom:4px;margin-bottom:4px;display:grid;grid-template-columns:1fr auto auto auto auto auto;gap:10px;padding:4px 4px 8px"><span style="font-size:11px;font-weight:700;color:var(--text-3)">MITARBEITER</span><span style="font-size:11px;font-weight:700;color:var(--text-3)">BRUTTO</span><span style="font-size:11px;font-weight:700;color:var(--text-3)">ABZÜGE</span><span style="font-size:11px;font-weight:700;color:var(--text-3)">AUSZAHLUNG</span><span></span><span></span></div>
   ${rows.join('')}
-  <div style="display:flex;justify-content:flex-end;padding:14px 4px 4px;margin-top:8px;border-top:2px solid var(--border)">
-    <div style="text-align:right">
-      <div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px">Total Auszahlung ${mn}</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:800;color:var(--accent)">CHF ${fmtChf(totalAus)}</div>
-    </div>
+  <div style="display:flex;justify-content:flex-end;padding:12px 4px;background:var(--surface-2);border-radius:var(--radius-sm);margin-top:8px">
+    <div style="text-align:right"><div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.6px">Total Auszahlung ${mn}</div><div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:800;color:var(--accent)">CHF ${fmtChf(totalAus)}</div></div>
   </div>`;
 }
 
@@ -1959,60 +1580,44 @@ async function openLohnDetail(empName,monat){
   let empEntries=[];
   try{empEntries=await sbFetch(`zeiteintraege?datum=gte.${monat}-01&datum=lte.${monat}-31&mitarbeiter_name=eq.${encodeURIComponent(empName)}&select=*&order=datum.asc`);}catch(e){}
   const std=empEntries.reduce((s,e)=>s+e.netto_min/60,0);
-  // Calculate spesen days: Mon-Fri only, >= 7.5h net work
-  const dayMins={};
-  empEntries.forEach(e=>{if(!dayMins[e.datum])dayMins[e.datum]=0;dayMins[e.datum]+=e.netto_min;});
-  const spesenTage=Object.entries(dayMins).filter(([date,mins])=>{
-    const wd=new Date(date+'T00:00:00').getDay();
-    return wd>=1&&wd<=5&&mins>=450;
-  }).length;
-  const l=calcLohn(empName,Math.round(std*10)/10,spesenTage,y);
+  const tage=new Set(empEntries.map(e=>e.datum)).size;
+  const l=calcLohn(empName,Math.round(std*10)/10,tage);
   if(!l){toast('Keine Lohndaten für diesen Mitarbeiter.','⚠️','error');return;}
   const d=LOHN_DATA[empName];
   currentLohnblatt={empName,monat,mn,l,empEntries,d};
   document.getElementById('lohnModalTitle').textContent=`Lohnblatt ${empName} — ${mn}`;
-  // Simple hours summary - no project breakdown
-  const entHtml=`<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:2px solid var(--border);margin-bottom:14px">
-    <div style="font-size:13px;font-weight:700;color:var(--text)">Geleistete Stunden ${mn}</div>
-    <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:800;color:var(--accent)">${Math.round(std*100)/100} h</div>
-  </div>`;
-  const lr=(label,val,cls='pos',bold=false)=>`<div class="lohn-row" style="${bold?'font-weight:700':''}"><span class="lohn-label" style="${bold?'font-weight:700':'color:var(--text-2)'}">${label}</span><span class="lohn-val ${cls}">${val}</span></div>`;
-  const age=y-(d?.geb||1985);
+  const entHtml=empEntries.length?`<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;margin-bottom:6px">STUNDEN DETAIL</div><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:var(--surface-2)"><th style="padding:5px 7px;text-align:left;font-size:10px;font-weight:700;color:var(--text-3)">Datum</th><th style="padding:5px 7px;text-align:left;font-size:10px;font-weight:700;color:var(--text-3)">Projekt</th><th style="padding:5px 7px;text-align:right;font-size:10px;font-weight:700;color:var(--text-3)">Stunden</th></tr></thead><tbody>${empEntries.map(e=>{const dt=new Date(e.datum+'T00:00:00');return`<tr style="border-bottom:1px solid var(--border)"><td style="padding:5px 7px">${WD[dt.getDay()]} ${dt.getDate()}. ${MS[dt.getMonth()]}</td><td style="padding:5px 7px;color:var(--text-2)">${e.projekt}</td><td style="padding:5px 7px;text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--accent)">${(e.netto_min/60).toFixed(2)} h</td></tr>`;}).join('')}<tr style="background:var(--surface-2)"><td colspan="2" style="padding:6px 7px;font-weight:700">Total</td><td style="padding:6px 7px;text-align:right;font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent)">${std.toFixed(2)} h</td></tr></tbody></table></div>`:'';
+  const lr=(label,val,cls='pos')=>`<div class="lohn-row"><span class="lohn-label">${label}</span><span class="lohn-val ${cls}">${val}</span></div>`;
   document.getElementById('lohnModalContent').innerHTML=`
-    <!-- Employee info -->
     <div style="background:var(--surface-2);border-radius:var(--radius-sm);padding:12px;margin-bottom:14px">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
-        <div><div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;margin-bottom:2px">AHV-Nr.</div><div style="font-size:12px;font-weight:600">${d?.ahvNr||d?.ahv||'—'}</div></div>
-        <div><div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;margin-bottom:2px">Kanton / QST-Tarif</div><div style="font-size:12px;font-weight:600">${l.kanton} / ${l.tarif}</div></div>
-        <div><div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;margin-bottom:2px">Alter / Ferien</div><div style="font-size:12px;font-weight:600">${age} J. / ${l.ferPct}%</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase">AHV-Nr.</div><div style="font-size:12px;font-weight:600">${d?.ahvNr||d?.ahv||'—'}</div></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase">Kanton / Tarif</div><div style="font-size:12px;font-weight:600">${l.kanton} / ${l.tarif}</div></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase">Stundenansatz</div><div style="font-size:12px;font-weight:600">CHF ${fmtChf(l.ansatz)}</div></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase">Stunden</div><div style="font-size:12px;font-weight:600">${l.stunden.toFixed(2)} h</div></div>
       </div>
     </div>
-    <!-- Hours summary -->
     ${entHtml}
-    <!-- Calculation -->
-    <div class="lohn-sec">LOHNBERECHNUNG</div>
-    ${lr(`Stundenlohn (${l.stunden.toFixed(2)} h × CHF ${fmtChf(l.ansatz)})`,`CHF ${fmtChf(l.br)}`)}
-    ${lr(`Ferienzuschlag ${l.ferPct}% (${age>=60?'6 Wo.':age>=50?'5 Wo.':'4 Wo.'})`,`CHF ${fmtChf(l.fz)}`,'pos')}
-    <div style="height:1px;background:var(--border);margin:4px 0"></div>
-    ${lr('BRUTTOLOHN',`CHF ${fmtChf(l.brutto)}`,'blue',true)}
+    <div class="lohn-sec">BRUTTOLOHN</div>
+    ${lr(`Stundenlohn (${l.stunden.toFixed(2)} h × CHF ${fmtChf(l.ansatz)})${l.ml13?' inkl. 13. ML':''}`,`CHF ${fmtChf(l.br)}`)}
+    ${lr(`Ferienzuschlag ${FER_P}%`,`CHF ${fmtChf(l.fz)}`)}
+    ${lr('BRUTTOLOHN',`CHF ${fmtChf(l.brutto)}`,'blue')}
     <div class="lohn-sec">ABZÜGE</div>
-    ${lr(`AHV-Abzug ${AHV_P}%`,`−CHF ${fmtChf(l.ahv)}`,'neg')}
-    ${lr(`ALV-Abzug ${ALV_P}%`,`−CHF ${fmtChf(l.alv)}`,'neg')}
-    ${lr(`NBUV-Abzug ${NBUV_P}%`,`−CHF ${fmtChf(l.nbuv)}`,'neg')}
-    ${lr(`ZPK`,`−CHF ${fmtChf(l.zpk)}`,'neg')}
-    ${l.bvg>0?lr(`BVG-Prämie`,`−CHF ${fmtChf(l.bvg)}`,'neg'):''}
+    ${lr(`AHV ${AHV_P}%`,`−CHF ${fmtChf(l.ahv)}`,'neg')}
+    ${lr(`ALV ${ALV_P}%`,`−CHF ${fmtChf(l.alv)}`,'neg')}
+    ${lr(`NBUV ${NBUV_P}%`,`−CHF ${fmtChf(l.nbuv)}`,'neg')}
+    ${lr('ZPK',`−CHF ${fmtChf(l.zpk)}`,'neg')}
+    ${l.bvg>0?lr('BVG',`−CHF ${fmtChf(l.bvg)}`,'neg'):''}
     ${lr(`Quellensteuer ${l.qstPct}% (${l.tarif} ${l.kanton})`,`−CHF ${fmtChf(l.qst)}`,'neg')}
-    <div style="height:1px;background:var(--border);margin:4px 0"></div>
-    ${lr('Total Abzüge',`−CHF ${fmtChf(l.totAbz)}`,'neg',true)}
+    ${lr('Total Abzüge',`−CHF ${fmtChf(l.totAbz)}`,'neg')}
     <div style="height:1px;background:var(--border);margin:6px 0"></div>
-    ${lr('NETTOLOHN',`CHF ${fmtChf(l.netto)}`,'green',true)}
-    ${spesenTage>0?`
+    ${lr('NETTOLOHN',`CHF ${fmtChf(l.netto)}`,'green')}
     <div class="lohn-sec">SPESEN</div>
-    ${lr(`${spesenTage} Tage × CHF ${d?.spesen||18}`,`CHF ${fmtChf(l.spesen)}`)}
-    <div style="height:1px;background:var(--border);margin:4px 0"></div>`:''}
-    <div style="background:linear-gradient(135deg,#0F1525,#3B6FFF);border-radius:var(--radius-sm);padding:14px;margin-top:8px;display:flex;justify-content:space-between;align-items:center">
-      <span style="font-size:14px;font-weight:800;color:#fff">AUSZAHLUNG</span>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:800;color:#fff">CHF ${fmtChf(l.auszahlung)}</span>
+    ${lr(`${l.spesenTage} Tage × CHF ${d?.spesen||15}`,`CHF ${fmtChf(l.spesen)}`)}
+    <div style="height:1px;background:var(--border);margin:6px 0"></div>
+    <div style="background:var(--accent-light);border-radius:var(--radius-sm);padding:12px;margin-top:6px;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:14px;font-weight:800">AUSZAHLUNG</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:800;color:var(--accent)">CHF ${fmtChf(l.auszahlung)}</span>
     </div>`;
   document.getElementById('lohnModal').classList.add('open');
 }
@@ -2020,152 +1625,67 @@ function closeLohnModal(){document.getElementById('lohnModal').classList.remove(
 document.getElementById('lohnModal').addEventListener('click',e=>{if(e.target===document.getElementById('lohnModal'))closeLohnModal();});
 
 function generateLohnPDF(){
-  if(!currentLohnblatt){toast('Kein Lohnblatt geöffnet.','⚠️','error');return;}
-  if(!window.jspdf){toast('PDF-Bibliothek lädt…','⚠️','error');return;}
-  const{empName,mn,monat,l,empEntries,d}=currentLohnblatt;
-  const[py]=monat.split('-').map(Number);
-  const pAge=py-(d?.geb||1985);
+  if(!currentLohnblatt)return;
+  const{empName,mn,l,empEntries,d}=currentLohnblatt;
   try{
-    const{jsPDF}=window.jspdf;
-    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-    const pw=210, lm=15, rm=15, cw=pw-lm-rm;
-    let y=0;
-
-    // HEADER
-    doc.setFillColor(15,21,37);
-    doc.rect(0,0,pw,26,'F');
-    doc.setTextColor(255,255,255);
-    doc.setFontSize(14);doc.setFont('helvetica','bold');
-    doc.text('Schweitzer plus GmbH',lm,11);
-    doc.setFontSize(7.5);doc.setFont('helvetica','normal');
-    doc.setTextColor(120,150,220);
-    doc.text('Montagen / Service / Support',lm,17);
-    doc.setTextColor(255,255,255);
-    doc.setFontSize(16);doc.setFont('helvetica','bold');
-    doc.text('LOHNABRECHNUNG',pw-rm,11,{align:'right'});
-    doc.setFontSize(9);doc.setFont('helvetica','normal');
-    doc.setTextColor(180,200,240);
-    doc.text(mn,pw-rm,18,{align:'right'});
-    y=34;
-
-    // MITARBEITER BOX
-    doc.setFillColor(248,249,251);
-    doc.rect(lm,y,cw,20,'F');
-    doc.setDrawColor(215,220,230);doc.setLineWidth(0.25);
-    doc.rect(lm,y,cw,20);
-    doc.setTextColor(140,150,170);doc.setFontSize(6.5);doc.setFont('helvetica','bold');
-    doc.text('MITARBEITER',lm+4,y+5.5);
-    doc.text('AHV-NUMMER',lm+68,y+5.5);
-    doc.text('KANTON',lm+128,y+5.5);
-    doc.text('QST-TARIF',lm+158,y+5.5);
-    doc.setTextColor(15,21,37);doc.setFontSize(11);doc.setFont('helvetica','bold');
-    doc.text(empName,lm+4,y+13);
-    doc.setFontSize(8.5);doc.setFont('helvetica','normal');
-    doc.text(d?.ahv||'—',lm+68,y+13);
-    doc.text(l.kanton,lm+128,y+13);
-    doc.text(l.tarif,lm+158,y+13);
-    doc.setTextColor(140,150,170);doc.setFontSize(7);
-    doc.text(pAge+' Jahre  ·  Ferienzuschlag '+l.ferPct+'%',lm+4,y+18.5);
-    y+=28;
-
-    // HELPERS
-    const xL=lm+4;
-    const xR=pw-rm-4;
-    const rh=7;
-
-    // Standard row: label left, value right, all black
-    const R=(lbl,val,opts={})=>{
-      if(y>265){doc.addPage();y=18;}
-      const{bold=false,blue=false,green=false,shade=false}=opts;
-      if(shade||bold){
-        doc.setFillColor(243,244,248);
-        doc.rect(lm,y-4.5,cw,rh,'F');
-      }
-      doc.setFont('helvetica',bold?'bold':'normal');
-      doc.setFontSize(8.5);
-      doc.setTextColor(15,21,37);
-      doc.text(String(lbl),xL,y);
-      if(green) doc.setTextColor(22,140,70);
-      else if(blue) doc.setTextColor(40,90,210);
-      else doc.setTextColor(15,21,37);
-      doc.text(String(val),xR,y,{align:'right'});
-      y+=rh;
-    };
-
-    const LINE=()=>{
-      doc.setDrawColor(210,215,225);
-      doc.setLineWidth(0.2);
-      doc.line(lm,y-2.5,pw-rm,y-2.5);
-    };
-
-    const SEC=(t)=>{
-      doc.setFillColor(15,21,37);
-      doc.rect(lm,y,cw,6.5,'F');
-      doc.setTextColor(185,205,240);
-      doc.setFontSize(7);doc.setFont('helvetica','bold');
-      doc.text(t,xL-1,y+4.5);
-      y+=10;
-    };
-
-    const GAP=(n=3)=>{y+=n;};
-
-    // BRUTTOLOHN
-    SEC('BRUTTOLOHN');
-    R('Stundenlohn  '+l.stunden.toFixed(2)+' h × CHF '+fmtChf(l.ansatz),'CHF '+fmtChf(l.br));
-    R('Ferienzuschlag '+l.ferPct+'%  ('+(pAge>=60?'6 Wochen':pAge>=50?'5 Wochen':'4 Wochen')+')','CHF '+fmtChf(l.fz));
-    LINE();GAP(2);
-    R('BRUTTOLOHN','CHF '+fmtChf(l.brutto),{bold:true,blue:true,shade:true});
-    GAP(6);
-
-    // ABZÜGE
-    SEC('ABZÜGE');
-    R('AHV-Beitrag '+AHV_P+'%','CHF '+fmtChf(l.ahv));
-    R('ALV-Beitrag '+ALV_P+'%','CHF '+fmtChf(l.alv));
-    R('NBUV-Beitrag '+NBUV_P+'%','CHF '+fmtChf(l.nbuv));
-    R('ZPK Arbeitnehmerbeitrag','CHF '+fmtChf(l.zpk));
-    if(l.bvg>0) R('BVG-Prämie','CHF '+fmtChf(l.bvg));
-    R('Quellensteuer '+l.qstPct+'%  (Tarif '+l.tarif+', '+l.kanton+')','CHF '+fmtChf(l.qst));
-    LINE();GAP(2);
-    R('Total Abzüge','CHF '+fmtChf(l.totAbz),{bold:true,shade:true});
-    GAP(6);
-
-    // NETTOLOHN
-    LINE();GAP(1);
-    R('NETTOLOHN','CHF '+fmtChf(l.netto),{bold:true,green:true,shade:true});
-    GAP(6);
-
-    // SPESEN
-    if(l.spesen>0){
-      SEC('SPESEN');
-      R(l.spesenTage+' Tage × CHF '+(d?.spesen||15),'CHF '+fmtChf(l.spesen));
-      GAP(3);
+    const{jsPDF}=window.jspdf;const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const pw=210,ml=15,mr=15;let y=15;
+    doc.setFillColor(15,21,37);doc.rect(0,0,pw,28,'F');
+    doc.setTextColor(255,255,255);doc.setFontSize(14);doc.setFont('helvetica','bold');doc.text('Schweitzer plus GmbH',ml,11);
+    doc.setFontSize(8);doc.setFont('helvetica','normal');doc.setTextColor(59,111,255);doc.text('Montagen / Service / Support',ml,17);
+    doc.setTextColor(255,255,255);doc.setFontSize(16);doc.setFont('helvetica','bold');doc.text('LOHNBLATT',pw-mr,11,{align:'right'});
+    doc.setFontSize(10);doc.setFont('helvetica','normal');doc.text(mn,pw-mr,17,{align:'right'});y=36;
+    doc.setFillColor(247,248,250);doc.roundedRect(ml,y,pw-ml-mr,20,2,2,'F');
+    doc.setTextColor(139,147,176);doc.setFontSize(8);doc.setFont('helvetica','bold');
+    doc.text('MITARBEITER',ml+4,y+6);doc.text('AHV-NR.',ml+80,y+6);doc.text('KANTON / TARIF',ml+140,y+6);
+    doc.setTextColor(15,21,37);doc.setFontSize(12);doc.setFont('helvetica','bold');doc.text(empName,ml+4,y+14);
+    doc.setFontSize(9);doc.setFont('helvetica','normal');doc.text(d?.ahvNr||d?.ahv||'—',ml+80,y+14);doc.text(`${l.kanton} / ${l.tarif}`,ml+140,y+14);y+=28;
+    if(empEntries.length){
+      doc.setFillColor(15,21,37);doc.rect(ml,y,pw-ml-mr,6,'F');
+      doc.setTextColor(255,255,255);doc.setFontSize(8);doc.setFont('helvetica','bold');doc.text('STUNDEN DETAIL',ml+2,y+4.2);y+=7;
+      let alt=false;
+      empEntries.forEach(e=>{
+        if(y>250){doc.addPage();y=15;}
+        if(alt){doc.setFillColor(247,248,250);doc.rect(ml,y,pw-ml-mr,6,'F');}
+        const dt=new Date(e.datum+'T00:00:00');
+        doc.setTextColor(15,21,37);doc.setFontSize(9);doc.setFont('helvetica','normal');
+        doc.text(`${WD[dt.getDay()]} ${dt.getDate()}. ${MS[dt.getMonth()]}`,ml+2,y+4.2);
+        doc.text(e.projekt,ml+40,y+4.2);
+        doc.setFont('helvetica','bold');doc.setTextColor(59,111,255);
+        doc.text(`${(e.netto_min/60).toFixed(2)} h`,pw-mr-2,y+4.2,{align:'right'});
+        y+=6;alt=!alt;
+      });
+      doc.setFillColor(238,243,255);doc.rect(ml,y,pw-ml-mr,7,'F');
+      doc.setTextColor(15,21,37);doc.setFontSize(9);doc.setFont('helvetica','bold');doc.text('Total',ml+2,y+4.8);
+      doc.setTextColor(59,111,255);doc.text(`${l.stunden.toFixed(2)} h`,pw-mr-2,y+4.8,{align:'right'});y+=12;
     }
-
-    // AUSZAHLUNG BOX
-    LINE();GAP(4);
-    doc.setFillColor(15,21,37);
-    doc.rect(lm,y,cw,14,'F');
-    doc.setTextColor(170,195,240);doc.setFontSize(8.5);doc.setFont('helvetica','bold');
-    doc.text('AUSZAHLUNG',xL-1,y+6);
-    doc.setTextColor(160,180,220);doc.setFontSize(6.5);doc.setFont('helvetica','normal');
-    const subTxt='Nettolohn CHF '+fmtChf(l.netto)+(l.spesen>0?' + Spesen CHF '+fmtChf(l.spesen):'');
-    doc.text(subTxt,xL-1,y+11);
-    doc.setTextColor(255,255,255);doc.setFontSize(15);doc.setFont('helvetica','bold');
-    doc.text('CHF '+fmtChf(l.auszahlung),xR,y+9,{align:'right'});
-    y+=20;
-
-    // FOOTER
-    doc.setFillColor(244,245,248);
-    doc.rect(0,287,pw,10,'F');
-    doc.setTextColor(155,165,178);doc.setFontSize(6);doc.setFont('helvetica','normal');
-    doc.text('Schweitzer plus GmbH  ·  Montagen / Service / Support  ·  Lohnabrechnung '+mn+'  ·  Erstellt '+new Date().toLocaleDateString('de-CH'),pw/2,293,{align:'center'});
-
-    doc.save('Lohnblatt_'+empName.replace(/\s+/g,'_')+'_'+monat+'.pdf');
+    const ar=(lbl,val,col=[15,21,37],b=false)=>{if(y>268){doc.addPage();y=15;}doc.setTextColor(...col);doc.setFont('helvetica',b?'bold':'normal');doc.setFontSize(9);doc.text(lbl,ml+2,y);doc.text(val,pw-mr-2,y,{align:'right'});y+=6;};
+    const aDiv=()=>{doc.setDrawColor(226,230,239);doc.line(ml,y,pw-mr,y);y+=4;};
+    const aSec=(t)=>{doc.setTextColor(139,147,176);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text(t,ml+2,y);y+=6;};
+    aSec('BRUTTOLOHN');
+    ar(`Stundenlohn (${l.stunden.toFixed(2)} h × CHF ${fmtChf(l.ansatz)})${l.ml13?' inkl. 13. ML':''}`,`CHF ${fmtChf(l.br)}`);
+    ar(`Ferienzuschlag ${FER_P}%`,`CHF ${fmtChf(l.fz)}`);
+    ar('BRUTTOLOHN',`CHF ${fmtChf(l.brutto)}`,[59,111,255],true);y+=2;aDiv();
+    aSec('ABZÜGE');
+    ar(`AHV ${AHV_P}%`,`−CHF ${fmtChf(l.ahv)}`,[239,68,68]);
+    ar(`ALV ${ALV_P}%`,`−CHF ${fmtChf(l.alv)}`,[239,68,68]);
+    ar(`NBUV ${NBUV_P}%`,`−CHF ${fmtChf(l.nbuv)}`,[239,68,68]);
+    ar('ZPK',`−CHF ${fmtChf(l.zpk)}`,[239,68,68]);
+    if(l.bvg>0)ar('BVG',`−CHF ${fmtChf(l.bvg)}`,[239,68,68]);
+    ar(`QST ${l.qstPct}% (${l.tarif} ${l.kanton})`,`−CHF ${fmtChf(l.qst)}`,[239,68,68]);
+    ar('Total Abzüge',`−CHF ${fmtChf(l.totAbz)}`,[239,68,68],true);y+=2;aDiv();
+    ar('NETTOLOHN',`CHF ${fmtChf(l.netto)}`,[34,197,94],true);y+=2;aDiv();
+    aSec('SPESEN');ar(`${l.spesenTage} Tage × CHF ${d?.spesen||15}`,`CHF ${fmtChf(l.spesen)}`);y+=2;aDiv();
+    doc.setFillColor(238,243,255);doc.roundedRect(ml,y,pw-ml-mr,12,2,2,'F');
+    doc.setTextColor(15,21,37);doc.setFontSize(12);doc.setFont('helvetica','bold');doc.text('AUSZAHLUNG',ml+4,y+8);
+    doc.setTextColor(59,111,255);doc.setFontSize(14);doc.text(`CHF ${fmtChf(l.auszahlung)}`,pw-mr-4,y+8,{align:'right'});y+=18;
+    doc.setDrawColor(226,230,239);doc.line(ml,y,ml+70,y);doc.line(ml+90,y,ml+160,y);
+    doc.setTextColor(139,147,176);doc.setFontSize(8);doc.text('Mitarbeiter',ml,y+5);doc.text('Schweitzer plus GmbH',ml+90,y+5);
+    doc.setFillColor(15,21,37);doc.rect(0,285,pw,12,'F');
+    doc.setTextColor(139,147,176);doc.setFontSize(7);doc.text(`Schweitzer plus GmbH | Lohnblatt ${mn} | ${new Date().toLocaleDateString('de-CH')}`,pw/2,291,{align:'center'});
+    doc.save(`Lohnblatt_${empName.replace(' ','_')}_${currentLohnblatt.monat}.pdf`);
     toast('PDF erstellt!','📄','success');
-  }catch(e){
-    console.error(e);
-    toast('PDF-Fehler: '+e.message,'⚠️','error');
-  }
+  }catch(e){toast('PDF-Fehler: '+e.message,'⚠️','error');}
 }
 
 function exportLohnExcel(){
@@ -2191,329 +1711,16 @@ function exportLohnExcel(){
 }
 
 function renderLohnEmpTable(){
-  // Show only unique entries (no duplicates from both name formats)
-  const seen=new Set();
-  const uniqueEntries=Object.entries(LOHN_DATA).filter(([name])=>{
-    // Show only the "Vorname Nachname" format (first word is usually first name)
-    const parts=name.split(' ');
-    if(seen.has(name.split(' ').sort().join(' '))){return false;}
-    seen.add(name.split(' ').sort().join(' '));
-    return true;
-  });
-  document.getElementById('lohnEmpBody').innerHTML=uniqueEntries.map(([name,d])=>{
-    const age=new Date().getFullYear()-(d.geb||1985);
-    const ferPct=getFerienPct(d.geb);
-    return`<tr>
+  document.getElementById('lohnEmpBody').innerHTML=Object.entries(LOHN_DATA).map(([name,d])=>`
+    <tr>
       <td style="font-weight:600">${name}</td>
-      <td><input type="number" value="${d.ansatz}" step="0.01" onchange="updateAllNameFormats('${name}','ansatz',parseFloat(this.value))" style="width:75px"></td>
-      <td><select onchange="updateAllNameFormats('${name}','kanton',this.value)" style="width:55px"><option ${d.kanton==='LU'?'selected':''}>LU</option><option ${d.kanton==='NW'?'selected':''}>NW</option><option ${d.kanton==='TG'?'selected':''}>TG</option></select></td>
-      <td><select onchange="updateAllNameFormats('${name}','tarif',this.value)" style="width:65px"><option ${d.tarif==='A0N'?'selected':''}>A0N</option><option ${d.tarif==='C0N'?'selected':''}>C0N</option><option ${d.tarif==='B0N'?'selected':''}>B0N</option></select></td>
-      <td><input type="number" value="${d.bvg}" step="0.1" onchange="updateAllNameFormats('${name}','bvg',parseFloat(this.value)||0)" style="width:65px"></td>
-      <td><input type="number" value="${d.spesen}" step="0.5" onchange="updateAllNameFormats('${name}','spesen',parseFloat(this.value)||18)" style="width:65px"><span style="font-size:10px;color:var(--text-3)"> CHF/Tag</span></td>
-      <td><input type="number" value="${d.geb||1985}" step="1" min="1940" max="2005" onchange="updateAllNameFormats('${name}','geb',parseInt(this.value))" style="width:65px"></td>
-      <td style="font-size:11px;color:var(--accent);font-weight:600">${ferPct}%<br><span style="color:var(--text-3)">${age} J.</span></td>
-    </tr>`;}).join('');
-}
-
-// Update both name formats (Vorname Nachname AND Nachname Vorname)
-function updateAllNameFormats(name,field,val){
-  const parts=name.split(' ');
-  const reversed=parts.slice().reverse().join(' ');
-  if(LOHN_DATA[name])LOHN_DATA[name][field]=val;
-  if(LOHN_DATA[reversed])LOHN_DATA[reversed][field]=val;
-  toast(`Gespeichert: ${name} — ${field}`,'✓','success');
-}
-
-// ===== COPY ENTRY =====
-let copySourceEntry = null;
-let copySelectedEmps = new Set();
-
-function openCopyModal(entryId) {
-  const e = entries.find(e=>e.id===entryId);
-  if(!e) return;
-  copySourceEntry = e;
-  copySelectedEmps = new Set();
-
-  // Show entry preview
-  const d = new Date(e.datum+'T00:00:00');
-  document.getElementById('copyEntryPreview').innerHTML = `
-    <div style="font-weight:700;margin-bottom:4px">${WD[d.getDay()]}, ${d.getDate()}. ${MS[d.getMonth()]} ${d.getFullYear()}</div>
-    <div style="color:var(--text-2)">${e.projekt} · ${e.typ}</div>
-    <div style="color:var(--text-2)">${e.von} – ${e.bis} · ${fmtMins(e.netto_min)} Netto${e.pause_min>0?' · Pause '+e.pause_min+'min':''}${e.fahrzeit_min>0?' · Fz '+e.fahrzeit_min+'min':''}</div>
-    <div style="color:var(--text-3);font-size:11px;margin-top:3px">Original: ${e.mitarbeiter_name||'—'}</div>
-  `;
-
-  // Show employee list (exclude original employee)
-  const workers = mitarbeiter.filter(m=>m.rolle==='mitarbeiter' && m.name!==e.mitarbeiter_name);
-  document.getElementById('copyEmpList').innerHTML = workers.map(m=>`
-    <div class="emp-sel-item${copySelectedEmps.has(m.id)?' sel':''}" id="ce_${m.id}" onclick="toggleCopyEmp('${m.id}')">
-      <div class="emp-check-box" id="cec_${m.id}">${copySelectedEmps.has(m.id)?'✓':''}</div>
-      <div style="font-size:13px;font-weight:600">${m.name}</div>
-    </div>`).join('');
-
-  document.getElementById('copyModal').classList.add('open');
-}
-
-function toggleCopyEmp(id) {
-  if(copySelectedEmps.has(id)) copySelectedEmps.delete(id);
-  else copySelectedEmps.add(id);
-  // Update UI
-  const el = document.getElementById('ce_'+id);
-  const cb = document.getElementById('cec_'+id);
-  if(el) el.classList.toggle('sel', copySelectedEmps.has(id));
-  if(cb) cb.textContent = copySelectedEmps.has(id)?'✓':'';
-}
-
-function closeCopyModal() {
-  document.getElementById('copyModal').classList.remove('open');
-  copySourceEntry = null;
-  copySelectedEmps = new Set();
-}
-
-// executeCopy moved above
-
-// ===== DUPLICATE CHECK =====
-async function checkDuplicate(empId, datum) {
-  // Check if employee already has entry on this date
-  const existing = entries.filter(e => e.mitarbeiter_id===empId && e.datum===datum);
-  return existing;
-}
-
-// ===== SAVE ENTRY WITH DUPLICATE CHECK =====
-// Patch into saveEntry - wrap the existing save with duplicate chec
-
-// ===== GROUP ENTRY =====
-let groupSelectedEmps = new Set();
-
-function openGroupEntry() {
-  if(!currentUser) return;
-  // Check permission: admin always allowed, others need explicit permission
-  if(currentUser.rolle !== 'admin'){
-    const grpPerms=JSON.parse(localStorage.getItem('sp_grp_perms')||'{}');
-    if(!grpPerms[currentUser.id]){
-      toast('Keine Berechtigung für Gruppen-Einträge.','⚠️','error');
-      return;
-    }
-  }
-  
-  // Validate form first
-  const date = document.getElementById('eDate').value;
-  const fr = document.getElementById('eFrom').value;
-  const to = document.getElementById('eTo').value;
-  const proj = document.getElementById('ePrj').value;
-  
-  if(!date) return toast('Bitte zuerst Datum eingeben.','⚠️','error');
-  if(!fr||!to) return toast('Bitte zuerst Zeiten eingeben.','⚠️','error');
-  if(!proj) return toast('Bitte zuerst Projekt wählen.','⚠️','error');
-  if(!selectedType) return toast('Bitte zuerst Arbeitsgattung wählen.','⚠️','error');
-  
-  groupSelectedEmps = new Set();
-  
-  // Show preview
-  const pause = parseInt(document.getElementById('ePause').value)||0;
-  const fz = parseInt(document.getElementById('eFz').value)||0;
-  const [fh,fm] = fr.split(':').map(Number);
-  const [th,tm] = to.split(':').map(Number);
-  const net = (th*60+tm)-(fh*60+fm)-pause-fz;
-  const d = new Date(date+'T00:00:00');
-  
-  document.getElementById('groupEntryPreview').innerHTML = `
-    <div style="font-weight:700;margin-bottom:4px">${WD[d.getDay()]}, ${d.getDate()}. ${MS[d.getMonth()]} ${d.getFullYear()}</div>
-    <div style="color:var(--text-2)">${proj} · ${selectedType}</div>
-    <div style="color:var(--text-2)">${fr} – ${to} · ${fmtMins(net)} Netto${pause>0?' · Pause '+pause+'min':''}${fz>0?' · Fz '+fz+'min':''}</div>
-  `;
-  
-  renderGroupEmpList(date);
-  document.getElementById('groupModal').classList.add('open');
-}
-
-async function renderGroupEmpList(date) {
-  const workers = mitarbeiter.filter(m=>m.rolle==='mitarbeiter');
-  
-  // Check who already has entries this day
-  const dayEntries = entries.filter(e=>e.datum===date);
-  const hasEntry = new Set(dayEntries.map(e=>e.mitarbeiter_id));
-  
-  document.getElementById('groupEmpList').innerHTML = workers.map(m=>{
-    const already = hasEntry.has(m.id);
-    const empDayMins = dayEntries.filter(e=>e.mitarbeiter_id===m.id).reduce((s,e)=>s+e.netto_min,0);
-    return `<div class="emp-sel-item${groupSelectedEmps.has(m.id)?' sel':''}" 
-      id="ge_${m.id}" onclick="toggleGroupEmp('${m.id}')"
-      style="${already?'border-color:#F59E0B;background:#FFFBEB;':''}"
-    >
-      <div class="emp-check-box" id="gec_${m.id}">${groupSelectedEmps.has(m.id)?'✓':''}</div>
-      <div style="flex:1">
-        <div style="font-size:13px;font-weight:600">${m.name}</div>
-        ${already?`<div style="font-size:10px;color:#D97706;font-weight:600">⚠️ Bereits ${fmtMins(empDayMins)} an diesem Tag</div>`:''}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function toggleGroupEmp(id) {
-  if(groupSelectedEmps.has(id)) groupSelectedEmps.delete(id);
-  else groupSelectedEmps.add(id);
-  const el = document.getElementById('ge_'+id);
-  const cb = document.getElementById('gec_'+id);
-  if(el) el.classList.toggle('sel', groupSelectedEmps.has(id));
-  if(cb) cb.textContent = groupSelectedEmps.has(id)?'✓':'';
-}
-
-function selectAllGroupEmps() {
-  const workers = mitarbeiter.filter(m=>m.rolle==='mitarbeiter');
-  workers.forEach(m=>groupSelectedEmps.add(m.id));
-  const date = document.getElementById('eDate').value;
-  renderGroupEmpList(date);
-}
-
-function closeGroupModal() {
-  document.getElementById('groupModal').classList.remove('open');
-  groupSelectedEmps = new Set();
-}
-
-async function executeGroupEntry() {
-  if(groupSelectedEmps.size === 0) return toast('Bitte mind. einen Mitarbeiter wählen.','⚠️','error');
-  
-  const date = document.getElementById('eDate').value;
-  const fr = document.getElementById('eFrom').value;
-  const to = document.getElementById('eTo').value;
-  const pause = parseInt(document.getElementById('ePause').value)||0;
-  const fz = parseInt(document.getElementById('eFz').value)||0;
-  const proj = document.getElementById('ePrj').value;
-  const desc = document.getElementById('eDesc').value.trim();
-  const [fh,fm] = fr.split(':').map(Number);
-  const [th,tm] = to.split(':').map(Number);
-  const net = (th*60+tm)-(fh*60+fm)-pause-fz;
-  
-  if(net<=0) return toast('Ungültige Zeiten.','⚠️','error');
-  
-  // Check for duplicates
-  const workers = mitarbeiter.filter(m=>groupSelectedEmps.has(m.id));
-  const dayEntries = entries.filter(e=>e.datum===date);
-  const withDuplicate = workers.filter(m=>dayEntries.some(e=>e.mitarbeiter_id===m.id));
-  
-  if(withDuplicate.length > 0) {
-    const names = withDuplicate.map(m=>m.name).join(', ');
-    const ok = confirm(`⚠️ ${names} haben bereits Einträge am ${date}.
-
-Trotzdem für alle speichern?`);
-    if(!ok) return;
-  }
-  
-  setSyncStatus(false);
-  let saved = 0;
-  const errors = [];
-  
-  for(const m of workers) {
-    try {
-      await sbFetch('zeiteintraege', {
-        method: 'POST',
-        body: JSON.stringify({
-          mitarbeiter_id: m.id,
-          mitarbeiter_name: m.name,
-          datum: date, von: fr, bis: to,
-          pause_min: pause, fahrzeit_min: fz, netto_min: net,
-          projekt: proj, typ: selectedType, beschreibung: desc
-        }),
-        prefer: 'return=minimal'
-      });
-      saved++;
-    } catch(e) {
-      errors.push(m.name);
-    }
-  }
-  
-  await loadEntries();
-  setSyncStatus(true);
-  closeGroupModal();
-  resetForm();
-  updateStats();
-  renderMyEntries();
-  
-  if(errors.length > 0) {
-    toast(`${saved} gespeichert, ${errors.length} Fehler: ${errors.join(', ')}`, '⚠️', 'error');
-  } else {
-    toast(`✓ ${saved} Einträge gespeichert!`, '✓', 'success');
-  }
-}
-
-// ===== COPY WITH DUPLICATE WARNING =====
-async function executeCopy() {
-  if(!copySourceEntry) return;
-  if(copySelectedEmps.size === 0) return toast('Bitte mind. einen Mitarbeiter wählen.','⚠️','error');
-
-  const e = copySourceEntry;
-  const workers = mitarbeiter.filter(m=>copySelectedEmps.has(m.id));
-  
-  // Check duplicates
-  const dayEntries = entries.filter(ex=>ex.datum===e.datum);
-  const withDup = workers.filter(m=>dayEntries.some(ex=>ex.mitarbeiter_id===m.id));
-  
-  if(withDup.length > 0) {
-    const names = withDup.map(m=>m.name).join(', ');
-    const ok = confirm(`⚠️ ${names} haben bereits Einträge am ${e.datum}.
-
-Trotzdem kopieren?`);
-    if(!ok) return;
-  }
-  
-  setSyncStatus(false);
-  let success = 0;
-  try {
-    for(const m of workers) {
-      await sbFetch('zeiteintraege', {
-        method: 'POST',
-        body: JSON.stringify({
-          mitarbeiter_id: m.id,
-          mitarbeiter_name: m.name,
-          datum: e.datum, von: e.von, bis: e.bis,
-          pause_min: e.pause_min||0, fahrzeit_min: e.fahrzeit_min||0, netto_min: e.netto_min,
-          projekt: e.projekt, typ: e.typ, beschreibung: e.beschreibung||''
-        }),
-        prefer: 'return=minimal'
-      });
-      success++;
-    }
-    await loadEntries();
-    setSyncStatus(true);
-    closeCopyModal();
-    toast(`Eintrag für ${success} Mitarbeiter kopiert!`,'✓','success');
-    renderAdminEntries();
-    renderOverview();
-  } catch(err) {
-    setSyncStatus(false);
-    toast('Fehler: '+err.message,'⚠️','error');
-  }
-}
-
-// ===== EMPLOYEE DROPDOWN FOR ADMIN =====
-function rebuildEmpDropdown(){
-  const sel=document.getElementById('eEmpSel');
-  const inp=document.getElementById('eEmpText');
-  if(!sel||!inp)return;
-
-  if(currentUser&&currentUser.rolle==='admin'){
-    sel.style.display='block';
-    inp.style.display='none';
-    const cur=sel.value;
-    sel.innerHTML='<option value="">— Mitarbeiter wählen —</option>';
-    mitarbeiter.filter(m=>m.rolle==='mitarbeiter').forEach(m=>{
-      const o=new Option(m.name,m.id);
-      if(m.id===cur)o.selected=true;
-      sel.appendChild(o);
-    });
-  } else {
-    sel.style.display='none';
-    inp.style.display='block';
-    if(currentUser) inp.value=currentUser.name;
-  }
-}
-
-function onEmpSelChange(){
-  const sel=document.getElementById('eEmpSel');
-  const m=mitarbeiter.find(m=>m.id===sel.value);
-  const inp=document.getElementById('eEmpText');
-  if(inp) inp.value=m?m.name:'';
+      <td><input type="number" value="${d.ansatz}" step="0.01" onchange="LOHN_DATA['${name}'].ansatz=parseFloat(this.value)" style="width:70px"></td>
+      <td><select onchange="LOHN_DATA['${name}'].kanton=this.value" style="width:55px"><option ${d.kanton==='LU'?'selected':''}>LU</option><option ${d.kanton==='NW'?'selected':''}>NW</option><option ${d.kanton==='TG'?'selected':''}>TG</option></select></td>
+      <td><select onchange="LOHN_DATA['${name}'].tarif=this.value" style="width:65px"><option ${d.tarif==='A0N'?'selected':''}>A0N</option><option ${d.tarif==='C0N'?'selected':''}>C0N</option><option ${d.tarif==='B0N'?'selected':''}>B0N</option></select></td>
+      <td><input type="number" value="${d.bvg}" step="0.1" onchange="LOHN_DATA['${name}'].bvg=parseFloat(this.value)||0" style="width:65px"></td>
+      <td><input type="number" value="${d.spesen}" step="0.5" onchange="LOHN_DATA['${name}'].spesen=parseFloat(this.value)||15" style="width:55px"></td>
+      <td><input type="checkbox" ${d.ml13?'checked':''} onchange="LOHN_DATA['${name}'].ml13=this.checked"></td>
+    </tr>`).join('');
 }
 
 // ===== KEYBOARD PIN =====
@@ -2524,83 +1731,21 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Backspace')pinDel();
 });
 
-// ===== BUTTON EVENT LISTENERS =====
-function initButtons(){
-  // Simple click handler - works on all devices
-  function btn(id,fn){
-    const el=document.getElementById(id);
-    if(el) el.addEventListener('click',fn);
-  }
-  btn('saveBtn',()=>saveEntry(false));
-  btn('saveAndNewBtn',()=>saveEntry(true));
-  btn('resetBtn',resetForm);
-  btn('groupEntryBtn',openGroupEntry);
-
-  // PIN keypad
-  document.querySelectorAll('.pin-key').forEach(b=>{
-    b.addEventListener('click',function(){
-      const d=this.dataset.digit;
-      if(d==='del') pinDel();
-      else pinPress(d);
-    });
-  });
-
-  // Login mode buttons
-  btn('lmEmp',()=>setLoginMode('emp'));
-  btn('lmAdmin',()=>setLoginMode('admin'));
-
-  // Admin login button
-  const ab=document.querySelector('.admin-pw-btn');
-  if(ab) ab.addEventListener('click',adminLogin);
-
-  // Admin PW Enter key
-  const apw=document.getElementById('adminPwInput');
-  if(apw) apw.addEventListener('keydown',e=>{if(e.key==='Enter')adminLogin();});
-}
-
 // ===== INIT =====
 function init(){
   document.getElementById('dateNow').textContent=fmtLong(new Date());
-  const today=new Date();
+  const today=new Date(),minD=new Date(today);minD.setDate(today.getDate()-20);
   const di=document.getElementById('eDate');
-  di.value=fmtDate(today);di.max=fmtDate(today);
-  // min will be set after login based on role
+  di.value=fmtDate(today);di.max=fmtDate(today);di.min=fmtDate(minD);
   buildLohnMonthOptions();
-  initButtons();
   // Check saved session
   const saved=localStorage.getItem('sp_session');
-  if(saved){
-    try{
-      const parsed=JSON.parse(saved);
-      if(parsed&&parsed.id&&parsed.pin){
-        currentUser=parsed;
-        afterLogin().catch(e=>{
-          console.error('Session restore failed:',e);
-          localStorage.removeItem('sp_session');
-          currentUser=null;
-          document.getElementById('loginScreen').classList.remove('hidden');
-        });
-      } else {
-        localStorage.removeItem('sp_session');
-      }
-    }catch(e){localStorage.removeItem('sp_session');}
-  }
+  if(saved){try{currentUser=JSON.parse(saved);afterLogin();}catch(e){localStorage.removeItem('sp_session');}}
 }
 setInterval(()=>{document.getElementById('dateNow').textContent=fmtLong(new Date());},60000);
 setInterval(()=>{if(currentUser)loadEntries().then(()=>{updateStats();renderMyEntries();});},60000);
-
-// Keep-alive ping every 6 hours to prevent Supabase free tier pause
-async function keepAlive(){
-  try{
-    await sbFetch('mitarbeiter?select=id&limit=1');
-    console.log('Supabase keep-alive ping OK',new Date().toLocaleTimeString());
-  }catch(e){console.warn('Keep-alive failed:',e.message);}
-}
-// Ping on load and every 6 hours
-keepAlive();
-setInterval(keepAlive, 6*60*60*1000);
-
 init();
 </script>
 </body>
 </html>
+
