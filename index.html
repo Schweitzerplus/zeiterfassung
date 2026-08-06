@@ -823,9 +823,11 @@ async function saveEntry(andNew){
     if(m){empId=m.id;empName=m.name;}
   }
 
+  // Show loading state on button
+  const saveBtn=document.getElementById('saveBtn');
+  if(saveBtn){saveBtn.disabled=true;saveBtn.style.opacity='0.6';}
   try{
     setSyncStatus(false);
-    toast('Speichern läuft...','⏳','success');
     if(editingId){
       await sbFetch('zeiteintraege?id=eq.'+editingId,{method:'PATCH',body:JSON.stringify({datum:date,von:frN,bis:toN,pause_min:pause,fahrzeit_min:fz,netto_min:net,projekt:proj,typ:selectedType,beschreibung:desc}),prefer:'return=minimal'});
       editingId=null;toast('Eintrag aktualisiert!','✓','success');
@@ -836,13 +838,15 @@ async function saveEntry(andNew){
     await loadEntries();setSyncStatus(true);updateStats();renderMyEntries();
     if(andNew){const d=date;resetForm();document.getElementById('eDate').value=d;}
     else resetForm();
+    // Re-enable save button explicitly
+    const sb=document.getElementById('saveBtn');
+    if(sb){sb.disabled=false;sb.style.opacity='1';sb.style.pointerEvents='';}
   }catch(e){
     setSyncStatus(false);
-    // Show full error on screen
-    const msg=e.message||'Unbekannter Fehler';
-    toast('FEHLER: '+msg,'❌','error');
-    // Also show alert so user can read it
-    setTimeout(()=>alert('Speichern fehlgeschlagen:\n\n'+msg+'\n\nBitte Foto machen und senden!'),500);
+    toast('Fehler: '+(e.message||'Verbindungsfehler'),'⚠️','error');
+  } finally {
+    const sb=document.getElementById('saveBtn');
+    if(sb){sb.disabled=false;sb.style.opacity='1';sb.style.pointerEvents='';}
   }
 }
 
