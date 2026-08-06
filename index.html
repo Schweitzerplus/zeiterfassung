@@ -825,6 +825,7 @@ async function saveEntry(andNew){
 
   try{
     setSyncStatus(false);
+    toast('Speichern läuft...','⏳','success');
     if(editingId){
       await sbFetch('zeiteintraege?id=eq.'+editingId,{method:'PATCH',body:JSON.stringify({datum:date,von:frN,bis:toN,pause_min:pause,fahrzeit_min:fz,netto_min:net,projekt:proj,typ:selectedType,beschreibung:desc}),prefer:'return=minimal'});
       editingId=null;toast('Eintrag aktualisiert!','✓','success');
@@ -837,7 +838,11 @@ async function saveEntry(andNew){
     else resetForm();
   }catch(e){
     setSyncStatus(false);
-    toast('Fehler: '+(e.message||'Verbindungsfehler'),'⚠️','error');
+    // Show full error on screen
+    const msg=e.message||'Unbekannter Fehler';
+    toast('FEHLER: '+msg,'❌','error');
+    // Also show alert so user can read it
+    setTimeout(()=>alert('Speichern fehlgeschlagen:\n\n'+msg+'\n\nBitte Foto machen und senden!'),500);
   }
 }
 
