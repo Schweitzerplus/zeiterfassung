@@ -663,6 +663,7 @@ async function afterLogin(){
     try{await loadEntries();}catch(e){console.error(e);}
     try{await loadProjects();}catch(e){console.error(e);}
     try{await loadTypes();}catch(e){console.error(e);}
+    if(currentUser.rolle==='admin'||adminUnlocked){try{await loadMitarbeiter();}catch(e){console.error(e);}}
     setSyncStatus(true);
     rebuildProjectDropdown();renderTypePills();updateStats();renderMyEntries();
     if(currentUser.rolle==='admin'||adminUnlocked) rebuildEmpDropdown();
@@ -949,7 +950,7 @@ function renderMyEntries(){
         '<div><div style="font-size:12px;font-weight:500">'+e.projekt+'</div><div style="font-size:10px;color:var(--text-3)">'+e.typ+'</div></div>'+
         '<div style="font-size:9px;color:var(--text-3)">'+e.von+'–'+e.bis+'</div>'+
         '<div style="font-family:\'JetBrains Mono\',monospace;font-size:12px;font-weight:700;color:var(--accent)">'+fmtMins(e.netto_min)+'</div>'+
-        '<div>'+(canEdit?'<button class="icon-btn" onclick="editEntry(\''+e.id+'\')">✏️</button>':'<span style="font-size:14px">🔒</span>')+'</div>'+
+        '<div style="display:flex;gap:4px">'+(canEdit?'<button class="icon-btn" onclick="editEntry(\''+e.id+'\')">✏️</button><button class="icon-btn d" onclick="deleteEntry(\''+e.id+'\')">🗑</button>':'<span style="font-size:14px">🔒</span>')+'</div>'+
         '</div>';
     }).join('');
 }
@@ -1016,7 +1017,8 @@ function showDayModal(date){
       '<span style="background:'+t.bg+';color:'+t.color+';padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600">'+t.icon+' '+t.name+'</span>'+
       '<div style="display:flex;gap:4px;margin-left:auto">'+
       (canEdit?'<button onclick="document.getElementById(\'dayModal\').classList.remove(\'open\');editEntry(\''+e.id+'\')" style="padding:4px 10px;border-radius:6px;border:1.5px solid var(--accent);color:var(--accent);background:var(--accent-light);font-family:Inter,sans-serif;font-size:11px;font-weight:600;cursor:pointer;touch-action:manipulation">✏️ Bearbeiten</button>'+
-      (isAdmin?'<button onclick="document.getElementById(\'dayModal\').classList.remove(\'open\');openCopyModal(\''+e.id+'\')" style="padding:4px 10px;border-radius:6px;border:1.5px solid #059669;color:#059669;background:#ECFDF5;font-family:Inter,sans-serif;font-size:11px;font-weight:600;cursor:pointer;touch-action:manipulation">📋</button>':'')+'':'<span style="font-size:10px;color:var(--text-3)">🔒</span>')+
+      (isAdmin?'<button onclick="document.getElementById(\'dayModal\').classList.remove(\'open\');openCopyModal(\''+e.id+'\')" style="padding:4px 10px;border-radius:6px;border:1.5px solid #059669;color:#059669;background:#ECFDF5;font-family:Inter,sans-serif;font-size:11px;font-weight:600;cursor:pointer;touch-action:manipulation">📋</button>':'')+
+      '<button onclick="document.getElementById(\'dayModal\').classList.remove(\'open\');deleteEntry(\''+e.id+'\')" style="padding:4px 10px;border-radius:6px;border:1.5px solid var(--danger);color:var(--danger);background:#FEF2F2;font-family:Inter,sans-serif;font-size:11px;font-weight:600;cursor:pointer;touch-action:manipulation">🗑</button>'+'':'<span style="font-size:10px;color:var(--text-3)">🔒</span>')+
       '</div></div></div>';
   }).join('');
   document.getElementById('dayModal').classList.add('open');
@@ -1099,6 +1101,7 @@ function renderAdminEntries(){
       '<div style="font-family:\'JetBrains Mono\',monospace;font-size:12px;font-weight:700;color:var(--accent);white-space:nowrap">'+fmtMins(e.netto_min)+'</div>'+
       '<button class="icon-btn" onclick="editEntry(\''+e.id+'\')">✏️</button>'+
       '<button class="icon-btn" onclick="openCopyModal(\''+e.id+'\')" title="Kopieren">📋</button>'+
+      '<button class="icon-btn d" onclick="deleteEntry(\''+e.id+'\')" title="Löschen">🗑</button>'+
       '</div>';
   }).join('');
 }
@@ -1271,12 +1274,9 @@ document.addEventListener('keydown',e=>{
 });
 
 // ===== GROUP ENTRY PERMISSIONS =====
-// Store which employees can use group entry (in localStorage)
+// Stored in Supabase (mitarbeiter.gruppe_berechtigt) so it survives across devices/domains
 function getGroupPerms(){
-  try{return JSON.parse(localStorage.getItem('sp_groupperms')||'[]');}catch(e){return[];}
-}
-function saveGroupPermsToStorage(ids){
-  localStorage.setItem('sp_groupperms',JSON.stringify(ids));
+  return mitarbeiter.filter(m=>m.gruppe_berechtigt).map(m=>m.id);
 }
 
 function openGroupEmpCard(){
@@ -1288,10 +1288,9 @@ function openGroupEmpCard(){
 }
 
 function renderGroupEmpPermList(){
-  const perms=getGroupPerms();
   const workers=mitarbeiter.filter(m=>m.rolle==='mitarbeiter');
   document.getElementById('groupEmpPermList').innerHTML=workers.map(m=>{
-    const hasP=perms.includes(m.id);
+    const hasP=!!m.gruppe_berechtigt;
     return'<div class="emp-sel-item'+(hasP?' sel':'')+'" id="gp_'+m.id+'" onclick="toggleGroupPerm(this.dataset.id)" data-id="'+m.id+'">'+
       '<div class="emp-check-box" id="gpc_'+m.id+'">'+(hasP?'✓':'')+'</div>'+
       '<div style="font-size:13px;font-weight:600">'+m.name+'</div>'+
@@ -1299,23 +1298,30 @@ function renderGroupEmpPermList(){
   }).join('');
 }
 
-function toggleGroupPerm(elOrId){
+async function toggleGroupPerm(elOrId){
   const id=typeof elOrId==='string'?elOrId:elOrId.dataset.id;
-  const perms=getGroupPerms();
-  const idx=perms.indexOf(id);
-  if(idx>-1)perms.splice(idx,1);else perms.push(id);
-  saveGroupPermsToStorage(perms);
+  const m=mitarbeiter.find(m=>m.id===id);if(!m)return;
+  const newVal=!m.gruppe_berechtigt;
   const row=document.getElementById('gp_'+id),cb=document.getElementById('gpc_'+id);
-  const has=perms.includes(id);
-  if(row)row.classList.toggle('sel',has);
-  if(cb)cb.textContent=has?'✓':'';
+  if(row)row.classList.toggle('sel',newVal);
+  if(cb)cb.textContent=newVal?'✓':'';
+  try{
+    await sbFetch('mitarbeiter?id=eq.'+id,{method:'PATCH',body:JSON.stringify({gruppe_berechtigt:newVal}),prefer:'return=minimal'});
+    m.gruppe_berechtigt=newVal;
+  }catch(e){
+    if(row)row.classList.toggle('sel',!newVal);
+    if(cb)cb.textContent=(!newVal)?'✓':'';
+    toast('Fehler beim Speichern der Berechtigung.','⚠️','error');
+  }
 }
 
-function selectAllGroupPerms(){
+async function selectAllGroupPerms(){
   const workers=mitarbeiter.filter(m=>m.rolle==='mitarbeiter');
-  const ids=workers.map(m=>m.id);
-  saveGroupPermsToStorage(ids);
-  renderGroupEmpPermList();
+  try{
+    await Promise.all(workers.map(m=>sbFetch('mitarbeiter?id=eq.'+m.id,{method:'PATCH',body:JSON.stringify({gruppe_berechtigt:true}),prefer:'return=minimal'})));
+    workers.forEach(m=>m.gruppe_berechtigt=true);
+    renderGroupEmpPermList();
+  }catch(e){toast('Fehler beim Speichern.','⚠️','error');}
 }
 
 function saveGroupPerms(){
@@ -1325,8 +1331,7 @@ function saveGroupPerms(){
 
 function canUseGroupEntry(){
   if(currentUser.rolle==='admin'||adminUnlocked)return true;
-  const perms=getGroupPerms();
-  return perms.includes(currentUser.id);
+  return !!currentUser.gruppe_berechtigt;
 }
 
 // ===== KEEP ALIVE =====
