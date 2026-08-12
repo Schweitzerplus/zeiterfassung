@@ -387,6 +387,19 @@ main{max-width:960px;margin:0 auto;padding:16px 12px 0}
 
   <!-- ÜBERSICHT -->
   <div id="aTab0">
+    <!-- Group entry employee selector -->
+    <div class="card" id="groupEmpCard" style="display:none;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div class="card-title" style="margin:0"><div class="ci">👥</div>Gruppen-Eintrag: Mitarbeiter wählen</div>
+        <button onclick="document.getElementById('groupEmpCard').style.display='none'" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--text-3)">✕</button>
+      </div>
+      <div style="font-size:11px;color:var(--text-3);margin-bottom:10px">Wähle welche Mitarbeiter Gruppen-Einträge erfassen dürfen:</div>
+      <div id="groupEmpPermList" style="display:flex;flex-direction:column;gap:5px;max-height:300px;overflow-y:auto;margin-bottom:12px"></div>
+      <div style="display:flex;gap:7px;justify-content:flex-end">
+        <button class="btn btn-sm btn-outline" onclick="selectAllGroupPerms()">Alle wählen</button>
+        <button class="btn btn-sm btn-primary" onclick="saveGroupPerms()">✓ Speichern</button>
+      </div>
+    </div>
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
         <div class="card-title" style="margin:0"><div class="ci">👥</div>Alle Mitarbeitenden</div>
@@ -396,6 +409,7 @@ main{max-width:960px;margin:0 auto;padding:16px 12px 0}
             <div class="month-title" id="ovMonthTitle" style="font-size:13px;min-width:120px">—</div>
             <button class="mnav-btn" onclick="ovNext()">›</button>
           </div>
+          <button class="btn btn-sm" onclick="openGroupEmpCard()" style="background:#ECFDF5;color:#059669;border:1.5px solid #059669">👥 Gruppe verwalten</button>
           <button class="btn btn-sm btn-excel" onclick="exportZeitExcel()">📥 Excel</button>
         </div>
       </div>
@@ -640,6 +654,11 @@ async function afterLogin(){
       document.getElementById('eEmpText').style.display='block';
       document.getElementById('eEmpText').value=n;
       document.getElementById('eEmpSel').style.display='none';
+      // Show group entry button if employee has permission
+      if(canUseGroupEntry()){
+        const gb=document.getElementById('groupEntryBtn');
+        if(gb)gb.style.display='inline-flex';
+      }
     }
     try{await loadEntries();}catch(e){console.error(e);}
     try{await loadProjects();}catch(e){console.error(e);}
@@ -861,8 +880,18 @@ function resetForm(){
 }
 
 async function deleteEntry(id){
-  try{await sbFetch('zeiteintraege?id=eq.'+id,{method:'DELETE',prefer:'return=minimal'});await loadEntries();updateStats();renderMyEntries();renderAdminEntries();toast('Gelöscht.','🗑','error');}
-  catch(e){toast('Fehler.','⚠️','error');}
+  const e=entries.find(e=>e.id===id);
+  if(!e)return;
+  // Check 8-day limit for non-admin
+  if(currentUser.rolle!=='admin'&&!adminUnlocked){
+    const ed=new Date(e.datum+'T00:00:00'),td=new Date();td.setHours(0,0,0,0);
+    if(Math.floor((td-ed)/(864e5))>8){toast('Nur innerhalb von 8 Tagen löschbar.','⚠️','error');return;}
+  }
+  try{
+    await sbFetch('zeiteintraege?id=eq.'+id,{method:'DELETE',prefer:'return=minimal'});
+    await loadEntries();updateStats();renderMyEntries();renderAdminEntries();
+    toast('Eintrag gelöscht.','🗑','error');
+  }catch(e){toast('Fehler beim Löschen.','⚠️','error');}
 }
 
 function editEntry(id){
@@ -1240,6 +1269,65 @@ document.addEventListener('keydown',e=>{
   if(e.key>='0'&&e.key<='9')pinPress(e.key);
   if(e.key==='Backspace')pinDel();
 });
+
+// ===== GROUP ENTRY PERMISSIONS =====
+// Store which employees can use group entry (in localStorage)
+function getGroupPerms(){
+  try{return JSON.parse(localStorage.getItem('sp_groupperms')||'[]');}catch(e){return[];}
+}
+function saveGroupPermsToStorage(ids){
+  localStorage.setItem('sp_groupperms',JSON.stringify(ids));
+}
+
+function openGroupEmpCard(){
+  const card=document.getElementById('groupEmpCard');
+  card.style.display='block';
+  renderGroupEmpPermList();
+  // Scroll to top
+  card.scrollIntoView({behavior:'smooth'});
+}
+
+function renderGroupEmpPermList(){
+  const perms=getGroupPerms();
+  const workers=mitarbeiter.filter(m=>m.rolle==='mitarbeiter');
+  document.getElementById('groupEmpPermList').innerHTML=workers.map(m=>{
+    const hasP=perms.includes(m.id);
+    return'<div class="emp-sel-item'+(hasP?' sel':'')+'" id="gp_'+m.id+'" onclick="toggleGroupPerm(this.dataset.id)" data-id="'+m.id+'">'+
+      '<div class="emp-check-box" id="gpc_'+m.id+'">'+(hasP?'✓':'')+'</div>'+
+      '<div style="font-size:13px;font-weight:600">'+m.name+'</div>'+
+      '</div>';
+  }).join('');
+}
+
+function toggleGroupPerm(elOrId){
+  const id=typeof elOrId==='string'?elOrId:elOrId.dataset.id;
+  const perms=getGroupPerms();
+  const idx=perms.indexOf(id);
+  if(idx>-1)perms.splice(idx,1);else perms.push(id);
+  saveGroupPermsToStorage(perms);
+  const row=document.getElementById('gp_'+id),cb=document.getElementById('gpc_'+id);
+  const has=perms.includes(id);
+  if(row)row.classList.toggle('sel',has);
+  if(cb)cb.textContent=has?'✓':'';
+}
+
+function selectAllGroupPerms(){
+  const workers=mitarbeiter.filter(m=>m.rolle==='mitarbeiter');
+  const ids=workers.map(m=>m.id);
+  saveGroupPermsToStorage(ids);
+  renderGroupEmpPermList();
+}
+
+function saveGroupPerms(){
+  document.getElementById('groupEmpCard').style.display='none';
+  toast('Gruppen-Berechtigungen gespeichert!','✓','success');
+}
+
+function canUseGroupEntry(){
+  if(currentUser.rolle==='admin'||adminUnlocked)return true;
+  const perms=getGroupPerms();
+  return perms.includes(currentUser.id);
+}
 
 // ===== KEEP ALIVE =====
 async function keepAlive(){try{await sbFetch('mitarbeiter?select=id&limit=1');}catch(e){}}
