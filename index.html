@@ -421,7 +421,7 @@ main{max-width:960px;margin:0 auto;padding:16px 12px 0}
   <div id="aTab1" style="display:none">
     <div class="card">
       <div class="card-title"><div class="ci">👥</div>Mitarbeitende & PINs</div>
-      <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Name</th><th>PIN</th><th>Rolle</th><th></th></tr></thead><tbody id="pinBody"></tbody></table></div>
+      <div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Name</th><th>PIN</th><th>Rolle</th><th>Gruppen-Rapport</th><th></th></tr></thead><tbody id="pinBody"></tbody></table></div>
       <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
         <div style="font-size:11px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:9px">Neuer Mitarbeiter</div>
         <div class="fg" style="grid-template-columns:1fr 1fr 1fr;gap:9px">
@@ -429,6 +429,7 @@ main{max-width:960px;margin:0 auto;padding:16px 12px 0}
           <div class="field"><label>PIN (4-stellig)</label><input type="text" id="newEmpPin" placeholder="1234" maxlength="4"></div>
           <div class="field"><label>Rolle</label><select id="newEmpRole"><option value="mitarbeiter">Mitarbeiter</option><option value="admin">Admin</option></select></div>
         </div>
+        <div style="margin-top:9px;display:flex;align-items:center;gap:6px"><input type="checkbox" id="newEmpGroupPerm" style="width:16px;height:16px"><label for="newEmpGroupPerm" style="font-size:12px;font-weight:600;color:var(--text-2)">Darf Gruppen-Rapporte erfassen</label></div>
         <div style="margin-top:9px"><button class="btn btn-sm btn-primary" onclick="addMitarbeiter()">+ Hinzufügen</button></div>
       </div>
     </div>
@@ -1146,10 +1147,10 @@ function exportZeitExcel(){
 
 // ===== MITARBEITER =====
 async function addMitarbeiter(){
-  const name=document.getElementById('newEmpName').value.trim(),pin=document.getElementById('newEmpPin').value.trim(),rolle=document.getElementById('newEmpRole').value;
+  const name=document.getElementById('newEmpName').value.trim(),pin=document.getElementById('newEmpPin').value.trim(),rolle=document.getElementById('newEmpRole').value,gruppe_berechtigt=document.getElementById('newEmpGroupPerm').checked;
   if(!name)return toast('Bitte Namen eingeben.','⚠️','error');
   if(!/^\d{4}$/.test(pin))return toast('PIN muss 4-stellig sein.','⚠️','error');
-  try{await sbFetch('mitarbeiter',{method:'POST',body:JSON.stringify({name,pin,rolle}),prefer:'return=minimal'});document.getElementById('newEmpName').value='';document.getElementById('newEmpPin').value='';await loadMitarbeiter();toast(name+' hinzugefügt.','✓','success');}
+  try{await sbFetch('mitarbeiter',{method:'POST',body:JSON.stringify({name,pin,rolle,gruppe_berechtigt}),prefer:'return=minimal'});document.getElementById('newEmpName').value='';document.getElementById('newEmpPin').value='';document.getElementById('newEmpGroupPerm').checked=false;await loadMitarbeiter();toast(name+' hinzugefügt.','✓','success');}
   catch(e){if(e.message.includes('unique'))toast('PIN bereits vergeben.','⚠️','error');else toast('Fehler: '+e.message,'⚠️','error');}
 }
 async function deleteMitarbeiter(id,name){
@@ -1158,7 +1159,7 @@ async function deleteMitarbeiter(id,name){
   catch(e){toast('Fehler.','⚠️','error');}
 }
 function renderPinTable(){
-  document.getElementById('pinBody').innerHTML=mitarbeiter.map(m=>'<tr><td style="font-weight:600">'+m.name+'</td><td><span class="pin-code">'+m.pin+'</span></td><td><span class="badge '+(m.rolle==='admin'?'badge-warn':'badge-ok')+'">'+(m.rolle==='admin'?'Admin':'Mitarbeiter')+'</span></td><td><button class="icon-btn d" onclick="deleteMitarbeiter(\''+m.id+'\',\''+m.name+'\')" style="width:24px;height:24px;font-size:11px">✕</button></td></tr>').join('');
+  document.getElementById('pinBody').innerHTML=mitarbeiter.map(m=>'<tr><td style="font-weight:600">'+m.name+'</td><td><span class="pin-code">'+m.pin+'</span></td><td><span class="badge '+(m.rolle==='admin'?'badge-warn':'badge-ok')+'">'+(m.rolle==='admin'?'Admin':'Mitarbeiter')+'</span></td><td>'+(m.rolle==='admin'?'<span style="font-size:11px;color:var(--text-3)">—</span>':'<span class="badge '+(m.gruppe_berechtigt?'badge-ok':'')+'" style="cursor:pointer;'+(m.gruppe_berechtigt?'':'background:var(--surface-2);color:var(--text-3);border:1px solid var(--border)')+'" onclick="toggleGroupPerm(\''+m.id+'\')">'+(m.gruppe_berechtigt?'✓ Erlaubt':'Nicht erlaubt')+'</span>')+'</td><td><button class="icon-btn d" onclick="deleteMitarbeiter(\''+m.id+'\',\''+m.name+'\')" style="width:24px;height:24px;font-size:11px">✕</button></td></tr>').join('');
 }
 function changePw(){
   const cur=document.getElementById('pwCur').value,n1=document.getElementById('pwNew1').value,n2=document.getElementById('pwNew2').value;
@@ -1302,15 +1303,15 @@ async function toggleGroupPerm(elOrId){
   const id=typeof elOrId==='string'?elOrId:elOrId.dataset.id;
   const m=mitarbeiter.find(m=>m.id===id);if(!m)return;
   const newVal=!m.gruppe_berechtigt;
-  const row=document.getElementById('gp_'+id),cb=document.getElementById('gpc_'+id);
-  if(row)row.classList.toggle('sel',newVal);
-  if(cb)cb.textContent=newVal?'✓':'';
+  m.gruppe_berechtigt=newVal;
+  renderPinTable();
+  if(document.getElementById('groupEmpCard').style.display!=='none') renderGroupEmpPermList();
   try{
     await sbFetch('mitarbeiter?id=eq.'+id,{method:'PATCH',body:JSON.stringify({gruppe_berechtigt:newVal}),prefer:'return=minimal'});
-    m.gruppe_berechtigt=newVal;
   }catch(e){
-    if(row)row.classList.toggle('sel',!newVal);
-    if(cb)cb.textContent=(!newVal)?'✓':'';
+    m.gruppe_berechtigt=!newVal;
+    renderPinTable();
+    if(document.getElementById('groupEmpCard').style.display!=='none') renderGroupEmpPermList();
     toast('Fehler beim Speichern der Berechtigung.','⚠️','error');
   }
 }
