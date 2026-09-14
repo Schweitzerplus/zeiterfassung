@@ -741,7 +741,7 @@ async function loadEntries(){
 }
 async function loadProjects(){const r=await sbFetch('projekte?select=name&order=name.asc');projects=r.map(x=>x.name);}
 async function loadTypes(){const r=await sbFetch('arbeitsgattungen?select=*&order=name.asc');types=r.map(x=>({name:x.name,icon:x.icon,color:x.color,bg:x.bg}));}
-const DEFAULT_VEHICLES=['Opel Movano NW 30090','Megan Benzin NW24874','Zafira NW20544','Twingo NW34526','Passat NW23772','Golf LU'];
+const DEFAULT_VEHICLES=['kein Auto','Opel Movano NW 30090','Megan Benzin NW24874','Zafira NW20544','Twingo NW34526','Passat NW23772','Golf LU'];
 async function loadVehicles(){
   try{
     let r=await sbFetch('fahrzeuge?select=name&order=name.asc');
@@ -751,8 +751,18 @@ async function loadVehicles(){
         for(const n of DEFAULT_VEHICLES){await sbFetch('fahrzeuge',{method:'POST',body:JSON.stringify({name:n}),prefer:'return=minimal'});}
         r=await sbFetch('fahrzeuge?select=name&order=name.asc');
       }catch(seedErr){console.error('Seed vehicles failed:',seedErr);}
+    }else{
+      // Tabelle hat schon Einträge -> fehlende Standard-Fahrzeuge (z.B. neu ergänzte) nachtragen
+      const existing=r.map(x=>x.name);
+      const missing=DEFAULT_VEHICLES.filter(n=>!existing.includes(n));
+      if(missing.length){
+        try{
+          for(const n of missing){await sbFetch('fahrzeuge',{method:'POST',body:JSON.stringify({name:n}),prefer:'return=minimal'});}
+          r=await sbFetch('fahrzeuge?select=name&order=name.asc');
+        }catch(seedErr){console.error('Seed missing vehicles failed:',seedErr);}
+      }
     }
-    vehicles=r.map(x=>x.name);
+    vehicles=r.length?r.map(x=>x.name):[...DEFAULT_VEHICLES];
   }catch(e){
     // Tabelle 'fahrzeuge' existiert noch nicht in Supabase -> lokale Fallback-Liste verwenden
     console.error('loadVehicles failed, using fallback:',e);
