@@ -316,7 +316,7 @@ main{max-width:960px;margin:0 auto;padding:16px 12px 0}
       <div class="field"><label>Projekt *</label>
         <select id="ePrj"><option value="">— Projekt wählen —</option></select>
       </div>
-      <div class="field"><label>Fahrzeug (optional)</label>
+      <div class="field"><label>Fahrzeug *</label>
         <select id="eVehicle"><option value="">— Fahrzeug wählen —</option></select>
       </div>
       <div class="field"><label>Arbeitsgattung *</label>
@@ -908,6 +908,7 @@ async function saveEntry(andNew){
   if(!date)return toast('Bitte Datum wählen.','⚠️','error');
   if(!fr||!to)return toast('Bitte Zeiten eingeben.','⚠️','error');
   if(!proj)return toast('Bitte Projekt wählen.','⚠️','error');
+  if(!vehicle)return toast('Bitte Fahrzeug wählen.','⚠️','error');
   if(!selectedType)return toast('Bitte Arbeitsgattung wählen!','⚠️','error');
 
   // Time parsing - robust for all devices
@@ -1357,13 +1358,15 @@ function openGroupModal(){
   const fr=document.getElementById('eFrom').value;
   const to=document.getElementById('eTo').value;
   const proj=document.getElementById('ePrj').value;
+  const vehicle=document.getElementById('eVehicle')?document.getElementById('eVehicle').value:'';
   if(!date)return toast('Bitte zuerst Datum eingeben.','⚠️','error');
   if(!fr||!to)return toast('Bitte zuerst Zeiten eingeben.','⚠️','error');
   if(!proj)return toast('Bitte zuerst Projekt wählen.','⚠️','error');
+  if(!vehicle)return toast('Bitte zuerst Fahrzeug wählen.','⚠️','error');
   if(!selectedType)return toast('Bitte zuerst Arbeitsgattung wählen.','⚠️','error');
   groupSelectedEmps=new Set();
   const d=new Date(date+'T00:00:00');
-  document.getElementById('groupEntryPreview').innerHTML='<div style="font-weight:700;margin-bottom:3px">'+WD[d.getDay()]+', '+d.getDate()+'. '+MS[d.getMonth()]+' '+d.getFullYear()+'</div><div style="color:var(--text-2)">'+proj+' · '+selectedType+'</div><div style="color:var(--text-2)">'+fr+' – '+to+'</div>';
+  document.getElementById('groupEntryPreview').innerHTML='<div style="font-weight:700;margin-bottom:3px">'+WD[d.getDay()]+', '+d.getDate()+'. '+MS[d.getMonth()]+' '+d.getFullYear()+'</div><div style="color:var(--text-2)">'+proj+' · '+selectedType+(vehicle?' · 🚗 '+vehicle:'')+'</div><div style="color:var(--text-2)">'+fr+' – '+to+'</div>';
   const workers=mitarbeiter.filter(m=>m.rolle==='mitarbeiter');
   const dayE=entries.filter(e=>e.datum===date);
   const hasEntry=new Set(dayE.map(e=>e.mitarbeiter_id));
