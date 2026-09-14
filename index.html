@@ -569,6 +569,22 @@ async function sbFetch(path,opts={}){
   if(!r.ok)throw new Error(await r.text());
   const t=await r.text();return t?JSON.parse(t):[];
 }
+// Resilient save for zeiteintraege: if the 'fahrzeug' column doesn't exist yet in Supabase,
+// automatically retry without it so normal entry saving never breaks.
+let fahrzeugColumnMissing=false;
+async function zSave(method,path,body){
+  if(fahrzeugColumnMissing)delete body.fahrzeug;
+  try{
+    return await sbFetch(path,{method,body:JSON.stringify(body),prefer:'return=minimal'});
+  }catch(e){
+    if(!fahrzeugColumnMissing&&/fahrzeug/i.test(e.message||'')){
+      fahrzeugColumnMissing=true;
+      delete body.fahrzeug;
+      return await sbFetch(path,{method,body:JSON.stringify(body),prefer:'return=minimal'});
+    }
+    throw e;
+  }
+}
 
 // ===== CONSTANTS =====
 const MASTER_CODE='ZT-2024-RESET';
@@ -725,7 +741,25 @@ async function loadEntries(){
 }
 async function loadProjects(){const r=await sbFetch('projekte?select=name&order=name.asc');projects=r.map(x=>x.name);}
 async function loadTypes(){const r=await sbFetch('arbeitsgattungen?select=*&order=name.asc');types=r.map(x=>({name:x.name,icon:x.icon,color:x.color,bg:x.bg}));}
-async function loadVehicles(){const r=await sbFetch('fahrzeuge?select=name&order=name.asc');vehicles=r.map(x=>x.name);rebuildVehicleFilter();}
+const DEFAULT_VEHICLES=['Opel Movano NW 30090','Megan Benzin NW24874','Zafira NW20544','Twingo NW34526','Passat NW23772','Golf LU'];
+async function loadVehicles(){
+  try{
+    let r=await sbFetch('fahrzeuge?select=name&order=name.asc');
+    if(r.length===0){
+      // Tabelle existiert, ist aber leer -> Standard-Fahrzeuge automatisch anlegen
+      try{
+        for(const n of DEFAULT_VEHICLES){await sbFetch('fahrzeuge',{method:'POST',body:JSON.stringify({name:n}),prefer:'return=minimal'});}
+        r=await sbFetch('fahrzeuge?select=name&order=name.asc');
+      }catch(seedErr){console.error('Seed vehicles failed:',seedErr);}
+    }
+    vehicles=r.map(x=>x.name);
+  }catch(e){
+    // Tabelle 'fahrzeuge' existiert noch nicht in Supabase -> lokale Fallback-Liste verwenden
+    console.error('loadVehicles failed, using fallback:',e);
+    vehicles=[...DEFAULT_VEHICLES];
+  }
+  rebuildVehicleFilter();
+}
 async function loadMitarbeiter(){mitarbeiter=await sbFetch('mitarbeiter?select=*&order=name.asc');renderPinTable();rebuildEmpDropdown();rebuildEmpFilter();}
 
 // ===== VEHICLES =====
@@ -737,13 +771,17 @@ function rebuildVehicleDropdown(){
 async function addVehicle(){
   const n=document.getElementById('newVehicleName').value.trim();
   if(!n||vehicles.includes(n))return toast(n?'Existiert bereits.':'Bitte Namen eingeben.','⚠️','error');
-  await sbFetch('fahrzeuge',{method:'POST',body:JSON.stringify({name:n}),prefer:'return=minimal'});
-  document.getElementById('newVehicleName').value='';await loadVehicles();rebuildVehicleDropdown();renderAdminVehicles();
-  toast('Fahrzeug «'+n+'» hinzugefügt.','✓','success');
+  try{
+    await sbFetch('fahrzeuge',{method:'POST',body:JSON.stringify({name:n}),prefer:'return=minimal'});
+    document.getElementById('newVehicleName').value='';await loadVehicles();rebuildVehicleDropdown();renderAdminVehicles();
+    toast('Fahrzeug «'+n+'» hinzugefügt.','✓','success');
+  }catch(e){toast('Fehler: Fahrzeug-Tabelle fehlt evtl. noch in Supabase.','⚠️','error');}
 }
 async function deleteVehicle(n){
-  await sbFetch('fahrzeuge?name=eq.'+encodeURIComponent(n),{method:'DELETE',prefer:'return=minimal'});
-  await loadVehicles();rebuildVehicleDropdown();renderAdminVehicles();
+  try{
+    await sbFetch('fahrzeuge?name=eq.'+encodeURIComponent(n),{method:'DELETE',prefer:'return=minimal'});
+    await loadVehicles();rebuildVehicleDropdown();renderAdminVehicles();
+  }catch(e){toast('Fehler beim Löschen.','⚠️','error');}
 }
 function renderAdminVehicles(){
   document.getElementById('vehicleList').innerHTML=vehicles.map(v=>'<div class="admin-item"><span>🚗 '+v+'</span><button class="icon-btn d" onclick="deleteVehicle(\''+v.replace(/'/g,"\\'")+'\')" style="width:24px;height:24px;font-size:11px">✕</button></div>').join('')||'<div style="font-size:12px;color:var(--text-3);padding:6px">Keine Fahrzeuge.</div>';
@@ -893,10 +931,10 @@ async function saveEntry(andNew){
   try{
     setSyncStatus(false);
     if(editingId){
-      await sbFetch('zeiteintraege?id=eq.'+editingId,{method:'PATCH',body:JSON.stringify({datum:date,von:frN,bis:toN,pause_min:pause,fahrzeit_min:fz,netto_min:net,projekt:proj,fahrzeug:vehicle,typ:selectedType,beschreibung:desc}),prefer:'return=minimal'});
+      await zSave('PATCH','zeiteintraege?id=eq.'+editingId,{datum:date,von:frN,bis:toN,pause_min:pause,fahrzeit_min:fz,netto_min:net,projekt:proj,fahrzeug:vehicle,typ:selectedType,beschreibung:desc});
       editingId=null;toast('Eintrag aktualisiert!','✓','success');
     }else{
-      await sbFetch('zeiteintraege',{method:'POST',body:JSON.stringify({mitarbeiter_id:empId,mitarbeiter_name:empName,datum:date,von:frN,bis:toN,pause_min:pause,fahrzeit_min:fz,netto_min:net,projekt:proj,fahrzeug:vehicle,typ:selectedType,beschreibung:desc}),prefer:'return=minimal'});
+      await zSave('POST','zeiteintraege',{mitarbeiter_id:empId,mitarbeiter_name:empName,datum:date,von:frN,bis:toN,pause_min:pause,fahrzeit_min:fz,netto_min:net,projekt:proj,fahrzeug:vehicle,typ:selectedType,beschreibung:desc});
       toast('Gespeichert: '+fmtMins(net),'✓','success');
     }
     await loadEntries();setSyncStatus(true);updateStats();renderMyEntries();
@@ -1353,7 +1391,7 @@ async function executeGroupEntry(){
   const workers=mitarbeiter.filter(m=>groupSelectedEmps.has(m.id));
   setSyncStatus(false);let saved=0;const errors=[];
   for(const m of workers){
-    try{await sbFetch('zeiteintraege',{method:'POST',body:JSON.stringify({mitarbeiter_id:m.id,mitarbeiter_name:m.name,datum:date,von:frN,bis:toN,pause_min:pause,fahrzeit_min:fz,netto_min:net,projekt:proj,fahrzeug:vehicle,typ:typ,beschreibung:desc}),prefer:'return=minimal'});saved++;}
+    try{await zSave('POST','zeiteintraege',{mitarbeiter_id:m.id,mitarbeiter_name:m.name,datum:date,von:frN,bis:toN,pause_min:pause,fahrzeit_min:fz,netto_min:net,projekt:proj,fahrzeug:vehicle,typ:typ,beschreibung:desc});saved++;}
     catch(e){errors.push(m.name);}
   }
   await loadEntries();setSyncStatus(true);
@@ -1388,7 +1426,7 @@ async function executeCopy(){
   const e=copySourceEntry,workers=mitarbeiter.filter(m=>copySelectedEmps.has(m.id));
   setSyncStatus(false);let saved=0;const errors=[];
   for(const m of workers){
-    try{await sbFetch('zeiteintraege',{method:'POST',body:JSON.stringify({mitarbeiter_id:m.id,mitarbeiter_name:m.name,datum:e.datum,von:e.von,bis:e.bis,pause_min:e.pause_min||0,fahrzeit_min:e.fahrzeit_min||0,netto_min:e.netto_min,projekt:e.projekt,fahrzeug:e.fahrzeug||'',typ:e.typ,beschreibung:e.beschreibung||''}),prefer:'return=minimal'});saved++;}
+    try{await zSave('POST','zeiteintraege',{mitarbeiter_id:m.id,mitarbeiter_name:m.name,datum:e.datum,von:e.von,bis:e.bis,pause_min:e.pause_min||0,fahrzeit_min:e.fahrzeit_min||0,netto_min:e.netto_min,projekt:e.projekt,fahrzeug:e.fahrzeug||'',typ:e.typ,beschreibung:e.beschreibung||''});saved++;}
     catch(ex){errors.push(m.name);}
   }
   await loadEntries();setSyncStatus(true);
